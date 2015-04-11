@@ -124,7 +124,7 @@ void MangaListWidget::initModel(void) {
 
   _model->removeRows(0, _model->rowCount());
 
-  foreach (const QString& mangaName, dirsList) {
+  for (const QString& mangaName: dirsList) {
     QString currDirStr = _scansDirectory.path() + "/" + mangaName;
 
     QStandardItem* currItem = new QStandardItem(mangaName);
@@ -140,7 +140,7 @@ void MangaListWidget::initModel(void) {
       currItem->setFont(QFont("", -1, 99));
 
     int k = 0;
-    foreach (const QString& currChStr, currDirsList) {
+    for (const QString& currChStr: currDirsList) {
       if (k >= areChaptersRead.size()) {
         QMessageBox::critical(this, "List error", "Error while tempting to edit manga read flags whithin MangaListWidget::initModel.");
         return;
@@ -255,7 +255,7 @@ void MangaListWidget::updateChaptersInfo(QModelIndex index) {
     return;
 
   qint64 totalSize = 0;
-  foreach (const QString& pageName, pagesList) {
+  for (const QString& pageName: pagesList) {
     QFile currFile(chapterDir.path()+"/"+pageName);
     totalSize += currFile.size();
   }
@@ -302,7 +302,7 @@ void MangaListWidget::updateMangaInfo(QModelIndex index) {
     inFile.setCodec("UTF-8");
 
     QStringList infosList = inFile.readAll().split("\n", QString::SkipEmptyParts);
-    foreach (const QString& info, infosList) {
+    for (const QString& info: infosList) {
       if (info.isEmpty())
         break;
 

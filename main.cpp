@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
   QStringList mangasList = scanDirectory.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 
   int row = 0;
-  foreach (const QString& manga, mangasList) {
+  for (const QString& manga: mangasList) {
     model->insertRow(row, QModelIndex());
 
     QDir mangaDirectory(scanDirectory.path()+"/"+manga);

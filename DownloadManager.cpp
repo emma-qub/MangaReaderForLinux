@@ -32,7 +32,7 @@ DownloadManager::DownloadManager(const QString& mangaName, QObject* parent) :
 }
 
 void DownloadManager::append(const QStringList& urlList) {
-  foreach (const QString& url, urlList)
+  for (const QString& url: urlList)
     append(QUrl::fromEncoded(url.toLocal8Bit()));
 
   emit message("Adding "+QString::number(urlList.size())+" files to download queue...", Information);

@@ -20,7 +20,7 @@ MangaReadWidget::MangaReadWidget(QWidget* parent) :
   _selectLineEdit->setCompleter(completer);
 
   _mangasComboBox = new QComboBox;
-  foreach (const QString& manga, mangaList)
+  for (const QString& manga: mangaList)
     _mangasComboBox->addItem(manga);
   _mangasComboBox->setFixedWidth(250);
   _mangasComboBox->setLineEdit(_selectLineEdit);

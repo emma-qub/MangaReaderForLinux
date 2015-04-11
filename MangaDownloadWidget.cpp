@@ -186,7 +186,7 @@ void MangaDownloadWidget::chaptersUpdated(bool) {
   QString chaptersString = chaptersStringList.at(1);
   QStringList rawChapterNames = chaptersString.split("href=\"/Manga-Scan/"+_selectLineEdit->text()+"/");
   rawChapterNames.removeFirst();
-  foreach (const QString& chapterName, rawChapterNames) {
+  for (const QString& chapterName: rawChapterNames) {
     QStringList urlArgs = chapterName.split("/");
     if (urlArgs.size() < 1) {
       editMessage("Warning: cannot find chapter name. Skip it.", DownloadManager::Warning);
@@ -199,7 +199,7 @@ void MangaDownloadWidget::chaptersUpdated(bool) {
   QStringList everyChaptersOnPCList = Utils::dirList(_currentMangaDirectory);
 
   QStringList newChaptersList;
-  foreach (const QString& chapter, everyChaptersOnWebList) {
+  for (const QString& chapter: everyChaptersOnWebList) {
     if (!everyChaptersOnPCList.contains(chapter))
       newChaptersList << chapter;
   }
@@ -228,7 +228,7 @@ void MangaDownloadWidget::downloadChapters(void) {
 
   editMessage("Searching for pages to download...", DownloadManager::Information);
   QModelIndexList chaptersSelectedIndexes = _chaptersOnWebView->selectionModel()->selectedIndexes();
-  foreach (const QModelIndex& chapterIndex, chaptersSelectedIndexes) {
+  for (const QModelIndex& chapterIndex: chaptersSelectedIndexes) {
     QString currChapter = _chaptersOnWebModel->data(chapterIndex, Qt::DisplayRole).toString();
     _downloadQueue.enqueue("http://eatmanga.com/Manga-Scan/"+_selectLineEdit->text()+"/"+currChapter);
   }
@@ -291,7 +291,7 @@ void MangaDownloadWidget::chapterDownloaded(bool) {
 
   QStringList rawPageNames = selectString.split("value=\"/Manga-Scan/"+_selectLineEdit->text()+"/");
   rawPageNames.removeFirst();
-  foreach (const QString& pageName, rawPageNames) {
+  for (const QString& pageName: rawPageNames) {
     QString urlBaseName = "http://eatmanga.com/Manga-Scan/"+_selectLineEdit->text()+"/";
     QStringList currUrlStringList = pageName.split("\"");
     if (currUrlStringList.size() < 1) {
@@ -309,7 +309,7 @@ void MangaDownloadWidget::pageDownloaded(void) {
   QStringList htmlPagesStringList = _downloadHTMLManager.getHTMLPages();
 
   QStringList urls;
-  foreach (const QString& htmlPage, htmlPagesStringList) {
+  for (const QString& htmlPage: htmlPagesStringList) {
     QStringList imgStringListDirty = htmlPage.split("<img id=\"eatmanga_image");
     if (imgStringListDirty.size() < 2) {
       editMessage("Warning: cannot find current page from selected chapter (any). Skip it", DownloadManager::Warning);

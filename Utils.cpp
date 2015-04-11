@@ -36,7 +36,7 @@ QStringList Utils::filesList(QDir& dir, const QStringList& nameFilters) {
 void Utils::initdb(void) {
     QStringList mangasList = dirList(_scansDirectory);
 
-    foreach (const QString& mangaName, mangasList) {
+    for (const QString& mangaName: mangasList) {
         initdb(mangaName);
     }
 }
@@ -118,7 +118,7 @@ QList<bool> Utils::areChaptersRead(const QString& mangaName) {
 
     QDir mangaDir(_scansDirectory.path()+"/"+mangaName);
     QStringList chaptersDir = dirList(mangaDir, true);
-    foreach (const QString& chapterName, chaptersDir) {
+    for (const QString& chapterName: chaptersDir) {
         res << isChapterRead(mangaName, chapterName);
     }
 
@@ -126,7 +126,7 @@ QList<bool> Utils::areChaptersRead(const QString& mangaName) {
 }
 
 bool Utils::isMangaRead(QList<bool> chaptersRead) {
-  foreach (bool isChapterRead, chaptersRead) {
+  for (bool isChapterRead: chaptersRead) {
     if (!isChapterRead)
       return false;
   }
@@ -146,7 +146,7 @@ void Utils::initdb(const QString& mangaName) {
     QTextStream inFile(&file);
     inFile.setCodec("UTF-8");
 
-    foreach (const QString& chapterName, chaptersList) {
+    for (const QString& chapterName: chaptersList) {
         inFile << chapterName+":0\n";
     }
 
@@ -189,7 +189,7 @@ bool Utils::removeDirectory(const QString& dirName) {
     QDir dir(dirName);
 
     if (dir.exists(dirName)) {
-        foreach (const QFileInfo& info, dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden  | QDir::AllDirs | QDir::Files, QDir::DirsFirst)) {
+        for (const QFileInfo& info: dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden  | QDir::AllDirs | QDir::Files, QDir::DirsFirst)) {
             if (info.isDir()) {
                 result = removeDirectory(info.absoluteFilePath());
             } else {
