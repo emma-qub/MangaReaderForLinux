@@ -2,6 +2,7 @@
 #include <QDebug>
 
 #include "MainWindow.h"
+#include "BrowseDirectoryDialog.h"
 #include "Utils.h"
 
 #define GUI 1
@@ -16,17 +17,17 @@
 void checkScansDirectoryExists(void){
   QSettings settings("ValentinMicheletINC", "MangaReader");
 
-  /// TO BE REMOVED
-  settings.setValue("ScansDirectory", "");
-
   if (settings.value("ScansDirectory").toString().isEmpty()) {
     bool ok;
     QString mangaDirectory;
+    BrowseDirectoryDialog* browseDialog = new BrowseDirectoryDialog;
     do {
-      mangaDirectory = QInputDialog::getText(NULL, "Set your scans directory", "Scans directory", QLineEdit::Normal, QDir::homePath(), &ok);
+      ok = (browseDialog->exec() == QDialog::Accepted);
+      mangaDirectory = browseDialog->getScansDirectory();
     } while (!ok || mangaDirectory.isEmpty());
     settings.setValue("ScansDirectory", mangaDirectory);
     Utils::_scansDirectory = QDir(mangaDirectory);
+    delete browseDialog;
   }
 }
 

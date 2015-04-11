@@ -12,7 +12,8 @@ SOURCES += \
     ChapterInfoWidget.cpp \
     AddMangaDialog.cpp \
     ChaptersOnWebView.cpp \
-    ChaptersOnPCView.cpp
+    ChaptersOnPCView.cpp \
+    BrowseDirectoryDialog.cpp
 
 HEADERS += \
     MainWindow.h \
@@ -27,9 +28,12 @@ HEADERS += \
     ChapterInfoWidget.h \
     AddMangaDialog.h \
     ChaptersOnWebView.h \
-    ChaptersOnPCView.h
+    ChaptersOnPCView.h \
+    BrowseDirectoryDialog.h
 
 QT += \
     widgets \
     network \
     webkitwidgets
+
+CONFIG += c++11

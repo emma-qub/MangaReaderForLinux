@@ -28,8 +28,6 @@ DownloadManager::DownloadManager(const QString& mangaName, QObject* parent) :
   isOnPause(false),
   currentUrl() {
 
-  std::cerr << "DownloadManager::DownloadManager " << _scansDirectory.path().toStdString() << std::endl;
-
   _mangaDirectory = QDir(_scansDirectory.path()+"/"+_mangaName+"/");
 }
 
