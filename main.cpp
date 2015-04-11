@@ -1,53 +1,81 @@
 #include <QApplication>
-
 #include <QDebug>
 
 #include "MainWindow.h"
-#include "DownloadManager.h"
-#include "PieView.h"
+#include "Utils.h"
+
+#define GUI 1
+#define PIE 0
+
+#if PIE
+# include "DownloadManager.h"
+# include "PieView.h"
+#endif
+
+
+void checkScansDirectoryExists(void){
+  QSettings settings("ValentinMicheletINC", "MangaReader");
+
+  /// TO BE REMOVED
+  settings.setValue("ScansDirectory", "");
+
+  if (settings.value("ScansDirectory").toString().isEmpty()) {
+    bool ok;
+    QString mangaDirectory;
+    do {
+      mangaDirectory = QInputDialog::getText(NULL, "Set your scans directory", "Scans directory", QLineEdit::Normal, QDir::homePath(), &ok);
+    } while (!ok || mangaDirectory.isEmpty());
+    settings.setValue("ScansDirectory", mangaDirectory);
+    Utils::_scansDirectory = QDir(mangaDirectory);
+  }
+}
+
 
 int main(int argc, char** argv) {
-    QApplication app(argc, argv);
-/////////////////////////////////////////////////
+  QApplication app(argc, argv);
 
-//    QStandardItemModel* model = new QStandardItemModel(0, 2);
-//    model->setHeaderData(0, Qt::Horizontal, "Label");
-//    model->setHeaderData(1, Qt::Horizontal, "Quantity");
+#if GUI
+  checkScansDirectoryExists();
 
-//    QDir scanDirectory("/home/valentin/Images/Scans");
-//    QStringList mangasList = scanDirectory.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+  MainWindow window;
+  window.show();
+#endif
 
-//    int row = 0;
-//    foreach (const QString& manga, mangasList) {
-//        model->insertRow(row, QModelIndex());
+#if PIE
+  QStandardItemModel* model = new QStandardItemModel(0, 2);
+  model->setHeaderData(0, Qt::Horizontal, "Label");
+  model->setHeaderData(1, Qt::Horizontal, "Quantity");
 
-//        QDir mangaDirectory(scanDirectory.path()+"/"+manga);
-//        QString nbChapters = QString::number(mangaDirectory.entryList(QDir::Dirs | QDir::NoDotAndDotDot).size());
+  QDir scanDirectory("/home/valentin/Images/Scans");
+  QStringList mangasList = scanDirectory.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 
-//        int r = (16*(row+1))%256;
-//        int g = (32*(row+1))%256;
-//        int b = (64*(row+1))%256;
+  int row = 0;
+  foreach (const QString& manga, mangasList) {
+    model->insertRow(row, QModelIndex());
 
-//        model->setData(model->index(row, 0, QModelIndex()), manga);
-//        model->setData(model->index(row, 1, QModelIndex()), nbChapters);
-//        model->setData(model->index(row, 0, QModelIndex()), QColor(r, g, b), Qt::DecorationRole);
+    QDir mangaDirectory(scanDirectory.path()+"/"+manga);
+    QString nbChapters = QString::number(mangaDirectory.entryList(QDir::Dirs | QDir::NoDotAndDotDot).size());
 
-//        row++;
-//    }
+    int r = (16*(row+1))%256;
+    int g = (32*(row+1))%256;
+    int b = (64*(row+1))%256;
 
-//    PieView* view = new PieView;
-////    QTableView* view = new QTableView;
-//    view->setModel(model);
+    model->setData(model->index(row, 0, QModelIndex()), manga);
+    model->setData(model->index(row, 1, QModelIndex()), nbChapters);
+    model->setData(model->index(row, 0, QModelIndex()), QColor(r, g, b), Qt::DecorationRole);
 
-////    QHeaderView* headerView = view->horizontalHeader();
-////    headerView->setStretchLastSection(true);
+    row++;
+  }
 
-//    view->show();
+  PieView* view = new PieView;
+  //QTableView* view = new QTableView;
+  view->setModel(model);
 
+  //QHeaderView* headerView = view->horizontalHeader();
+  //headerView->setStretchLastSection(true);
 
-/////////////////////////////////////////////////
-    MainWindow window;
-    window.show();
-/////////////////////////////////////////////////
-    return app.exec();
+  view->show();
+#endif
+
+  return app.exec();
 }

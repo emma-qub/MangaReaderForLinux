@@ -8,22 +8,25 @@
 class Utils {
 
 public:
-    Utils(void);
+  Utils(void);
 
-    static QStringList dirList(const QDir& dir, bool reverseOrder = false);
-    static QStringList filesList(QDir& dir, const QStringList &nameFilters = QStringList());
-    static void updateChapterRead(const QString &mangaName, const QString &chapterName, bool read);
-    static bool isChapterRead(const QString& mangaName, const QString& chapterName);
-    static QList<bool> areChaptersRead(const QString& mangaName);
-    static bool isMangaRead(QList<bool> chaptersRead);
-    static void initdb(const QString& mangaName);
-    static void addChapter(const QString& mangaName, const QString& chapterName);
-    static bool removeDirectory(const QString& dirName);
+  static QStringList dirList(const QDir& dir, bool reverseOrder = false);
+  static QStringList filesList(QDir& dir, const QStringList &nameFilters = QStringList());
+  static void updateChapterRead(const QString &mangaName, const QString &chapterName, bool read);
+  static bool isChapterRead(const QString& mangaName, const QString& chapterName);
+  static QList<bool> areChaptersRead(const QString& mangaName);
+  static bool isMangaRead(QList<bool> chaptersRead);
+  static void initdb(const QString& mangaName);
+  static void addChapter(const QString& mangaName, const QString& chapterName);
+  static bool removeDirectory(const QString& dirName);
+  static const QDir& getScansDirectory(void);
+  static QString getIconsPath(void);
 
 private:
-    static QDir _scansDirectory;
-    static void initdb(void);
+  static void initdb(void);
 
+public:
+  static QDir _scansDirectory;
 };
 
 #endif // UTILS_H

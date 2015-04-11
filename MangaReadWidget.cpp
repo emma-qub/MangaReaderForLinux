@@ -1,9 +1,9 @@
 #include "MangaReadWidget.h"
 #include "Utils.h"
 
-MangaReadWidget::MangaReadWidget(QWidget* parent, const QDir& scansDirectory) :
+MangaReadWidget::MangaReadWidget(QWidget* parent) :
   QWidget(parent),
-  _scansDirectory(scansDirectory),
+  _scansDirectory(Utils::getScansDirectory()),
   _currentMangaDirectory(),
   _currentChapterDirectory(),
   _chapterStringList(),
@@ -40,7 +40,7 @@ MangaReadWidget::MangaReadWidget(QWidget* parent, const QDir& scansDirectory) :
   _nbPagesLabel = new QLabel;
 
   _zoomButton = new QPushButton;
-  _zoomButton->setIcon(QIcon("../MangaReader/icons/zoom.png"));
+  _zoomButton->setIcon(QIcon(Utils::getIconsPath()+"/zoom.png"));
   _zoomButton->setCheckable(true);
   _zoomButton->setChecked(true);
   _zoomButton->setFixedWidth(37);

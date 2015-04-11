@@ -12,77 +12,83 @@
 #include <QProgressBar>
 
 /////////////////////////////////////
-/// DownloadManager
+///       DownloadManager         ///
 /////////////////////////////////////
 class DownloadManager: public QObject {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    enum MessageStatus { Information, Success, Warning, Error, Download };
+  enum MessageStatus {
+    Information,
+    Success,
+    Warning,
+    Error,
+    Download
+  };
 
-    DownloadManager(const QString& mangaName = "", const QDir& scansDirectory = QDir("/home/valentin/Images/Scans/"), QObject* parent = NULL);
+  DownloadManager(const QString& mangaName = "", QObject* parent = NULL);
 
-    void append(const QStringList& urlList);
-    QString saveFileName(void);
-    virtual void clean(void);
+  void append(const QStringList& urlList);
+  QString saveFileName(void);
+  virtual void clean(void);
 
-    void stop(void);
-    void pause(void);
-    void resume(void);
+  void stop(void);
+  void pause(void);
+  void resume(void);
 
-    inline void setMangaName(const QString& mangaName) { _mangaName = mangaName; }
+  inline void setMangaName(const QString& mangaName) { _mangaName = mangaName; }
 
 protected:
-    void append(const QUrl& url);
+  void append(const QUrl& url);
 
 protected slots:
-    virtual void startNextDownload(void);
-    virtual void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
-    virtual void downloadFinished(void);
-    virtual void downloadReadyRead(void);
+  virtual void startNextDownload(void);
+  virtual void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
+  virtual void downloadFinished(void);
+  virtual void downloadReadyRead(void);
 
 signals:
-    void done(void);
-    void message(QString, DownloadManager::MessageStatus, bool newLine = true);
-    void nbFilesDownloaded(int, int);
+  void done(void);
+  void message(QString, DownloadManager::MessageStatus, bool newLine = true);
+  void nbFilesDownloaded(int, int);
 
 protected:
-    QNetworkAccessManager manager;
-    QQueue<QUrl> downloadQueue;
-    QNetworkReply* currentDownload;
-    QFile output;
-    QTime downloadTime;
-    QString _mangaName;
-    QDir _scansDirectory;
-    QDir _mangaDirectory;
-    int downloadedCount;
-    int totalCount;
-    qint64 downloadSizeAtPause;
-    bool isOnPause;
-    QUrl currentUrl;
-    QNetworkRequest currentRequest;
+  QNetworkAccessManager manager;
+  QQueue<QUrl> downloadQueue;
+  QNetworkReply* currentDownload;
+  QFile output;
+  QTime downloadTime;
+  QString _mangaName;
+  QDir _scansDirectory;
+  QDir _mangaDirectory;
+  int downloadedCount;
+  int totalCount;
+  qint64 downloadSizeAtPause;
+  bool isOnPause;
+  QUrl currentUrl;
+  QNetworkRequest currentRequest;
 };
 
 //////////////////////////////////////
-///// DownloadHTMLManager
+///       DownloadHTMLManager      ///
 //////////////////////////////////////
-class DownloadHTMLManager : public DownloadManager {
-    Q_OBJECT
+class DownloadHTMLManager: public DownloadManager {
+  Q_OBJECT
 
 public:
-    DownloadHTMLManager(const QString& mangaName = "", QDir scansDirectory = QDir("/home/valentin/Images/Scans/"), QObject* parent = NULL);
+  DownloadHTMLManager(const QString& mangaName = "", QObject* parent = NULL);
 
-    inline QStringList getHTMLPages(void) const { return _htmlPages; }
-    inline void clearHTMLPages(void) { _htmlPages.clear(); }
+  inline QStringList getHTMLPages(void) const { return _htmlPages; }
+  inline void clearHTMLPages(void) { _htmlPages.clear(); }
 
-    virtual void clean(void);
+  virtual void clean(void);
 
 public slots:
-    virtual void startNextDownload(void);
-    virtual void downloadFinished(void);
+  virtual void startNextDownload(void);
+  virtual void downloadFinished(void);
 
 protected:
-    QStringList _htmlPages;
+  QStringList _htmlPages;
 };
 
 #endif

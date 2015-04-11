@@ -4,11 +4,11 @@
 #include <QListView>
 #include <QStringListModel>
 
-class MessageListView : public QListView {
-    Q_OBJECT
+class MessageListView: public QListView {
+  Q_OBJECT
 
 public:
-    explicit MessageListView(QWidget* parent = 0);
+  explicit MessageListView(QWidget* parent = NULL);
 
 };
 

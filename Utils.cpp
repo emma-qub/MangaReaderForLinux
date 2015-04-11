@@ -6,8 +6,9 @@
 #include <QDebug>
 #include <QProgressBar>
 #include <QtAlgorithms>
+#include <QSettings>
 
-QDir Utils::_scansDirectory("/home/valentin/Images/Scans/");
+QDir Utils::_scansDirectory(QSettings("ValentinMicheletINC", "MangaReader").value("ScansDirectory").toString());
 
 Utils::Utils() {
 }
@@ -202,4 +203,12 @@ bool Utils::removeDirectory(const QString& dirName) {
         result = dir.rmdir(dirName);
     }
     return result;
+}
+
+const QDir& Utils::getScansDirectory(void) {
+  return _scansDirectory;
+}
+
+QString Utils::getIconsPath(void) {
+  return "../MangaReader/icons";
 }

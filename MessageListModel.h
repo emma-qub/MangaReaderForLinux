@@ -4,24 +4,23 @@
 #include <QStandardItemModel>
 #include <QStandardItem>
 
-class MessageListModel : public QStandardItemModel {
-    Q_OBJECT
+class MessageListModel: public QStandardItemModel {
+  Q_OBJECT
 
 public:
-    explicit MessageListModel(QObject *parent = 0);
+  explicit MessageListModel(QObject *parent = NULL, int maxLine = 10000);
 
-    virtual void append(QStandardItem* item, bool newLine = true);
+  virtual void append(QStandardItem* item, bool newLine = true);
 
-    inline void setMaxLines(int maxLines) { _maxLines = maxLines; }
-    inline  int getMaxLines(void) const   { return _maxLines;     }
+  inline void setMaxLines(int maxLines) { _maxLines = maxLines; }
+  inline  int getMaxLines(void) const   { return _maxLines;     }
 
 signals:
 
 public slots:
 
 protected:
-    int _maxLines;
-
+  int _maxLines;
 };
 
 #endif // MESSAGELISTMODEL_H

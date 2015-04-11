@@ -4,6 +4,7 @@
 #include <QListView>
 
 class ChaptersOnWebView: public QListView {
+
 public:
   ChaptersOnWebView(QWidget* parent = NULL);
 

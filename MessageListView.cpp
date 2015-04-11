@@ -2,9 +2,9 @@
 #include <QStringListModel>
 #include <QPainter>
 
-MessageListView::MessageListView(QWidget* parent) :
-    QListView(parent) {
+MessageListView::MessageListView(QWidget* parent):
+  QListView(parent) {
 
-    setAlternatingRowColors(true);
-    setSelectionMode(QAbstractItemView::NoSelection);
+  setAlternatingRowColors(true);
+  setSelectionMode(QAbstractItemView::NoSelection);
 }
