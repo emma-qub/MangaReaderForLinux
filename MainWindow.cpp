@@ -4,6 +4,11 @@
 MainWindow::MainWindow(QMainWindow* parent):
   QMainWindow(parent) {
 
+  QString appIconPath = Utils::getIconsPath()+"/appIcon.png";
+  QIcon appIcon(appIconPath);
+
+  _notificationDialog = new NotificationDialog(appIconPath, this);
+
   _mangaListWidget = new MangaListWidget;
   _mangaReadWidget = new MangaReadWidget;
   _mangaDownloadWidget = new MangaDownloadWidget;
@@ -33,7 +38,7 @@ MainWindow::MainWindow(QMainWindow* parent):
 
   setWindowTitle("Manga Manager");
   setWindowState(Qt::WindowMaximized);
-  setWindowIcon(QIcon(Utils::getIconsPath()+"appIcon.png"));
+  setWindowIcon(appIcon);
 
   connect(_mangaListWidget, SIGNAL(chapterSelected(QString,QString)), this, SLOT(switchToRead(QString,QString)));
   connect(this, SIGNAL(toReadSwitched(QString,QString)), _mangaReadWidget, SLOT(switchManga(QString,QString)));
@@ -41,7 +46,8 @@ MainWindow::MainWindow(QMainWindow* parent):
   connect(_mangaListWidget, SIGNAL(mangaSelected(QString)), this, SLOT(switchToDownload(QString)));
   connect(this, SIGNAL(toDownloadSwitched(QString)), _mangaDownloadWidget, SLOT(searchForDownload(QString)));
 
-  connect(_mangaDownloadWidget, SIGNAL(downloadDone()), _mangaListWidget, SLOT(initModel()));
+  connect(_mangaDownloadWidget, SIGNAL(initModelRequested()), _mangaListWidget, SLOT(initModel()));
+  connect(_mangaDownloadWidget, SIGNAL(downloadDone(QString, QString)), this, SLOT(notifyDownload(QString, QString)));
   connect(_mangaDownloadWidget, SIGNAL(chapterSelected(QString, QString)), this, SLOT(switchToRead(QString,QString)));
 
   connect(_mangaReadWidget, SIGNAL(chapterSelected(QString, QString)), _mangaListWidget, SLOT(updateReadChapter(QString, QString)));
@@ -63,4 +69,8 @@ void MainWindow::switchToDownload(QString mangaName) {
   _tabWidget->setCurrentWidget(_mangaDownloadWidget);
 
   emit toDownloadSwitched(mangaName);
+}
+
+void MainWindow::notifyDownload(QString title, QString message) {
+  _notificationDialog->showPopup(title, message);
 }

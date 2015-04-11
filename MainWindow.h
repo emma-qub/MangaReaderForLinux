@@ -5,6 +5,7 @@
 #include "MangaListWidget.h"
 #include "MangaReadWidget.h"
 #include "MangaDownloadWidget.h"
+#include "NotificationDialog.h"
 
 class MainWindow: public QMainWindow {
   Q_OBJECT
@@ -18,6 +19,7 @@ private:
 public slots:
   void switchToRead(QString mangaName, QString chapterName);
   void switchToDownload(QString mangaName);
+  void notifyDownload(QString title, QString message);
 
 signals:
   void toReadSwitched(QString mangaName, QString chapterName);
@@ -28,6 +30,7 @@ private:
   MangaReadWidget* _mangaReadWidget;
   MangaDownloadWidget* _mangaDownloadWidget;
   QTabWidget* _tabWidget;
+  NotificationDialog* _notificationDialog;
 };
 
 #endif // MAINWINDOW_H

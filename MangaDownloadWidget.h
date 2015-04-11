@@ -41,7 +41,8 @@ public slots:
   void updatedb(void);
 
 signals:
-  void downloadDone(void);
+  void initModelRequested(void);
+  void downloadDone(QString, QString);
   void chapterSelected(QString, QString);
 
 private:

@@ -254,7 +254,8 @@ void MangaDownloadWidget::startNextDownload(void) {
     updateChapters();
     updateChaptersOnPCView();
 
-    emit downloadDone();
+    emit initModelRequested();
+    emit downloadDone("Download finished", downloadReport);
     return;
   }
 
@@ -415,7 +416,8 @@ void MangaDownloadWidget::stopDownload(void) {
   updateChapters();
   updateChaptersOnPCView();
 
-  emit downloadDone();
+  emit initModelRequested();
+  emit downloadDone("Download stopped", "Download has been stopped.");
 }
 
 void MangaDownloadWidget::pauseResumeDownload(bool check) {

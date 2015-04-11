@@ -13,7 +13,8 @@ SOURCES += \
     AddMangaDialog.cpp \
     ChaptersOnWebView.cpp \
     ChaptersOnPCView.cpp \
-    BrowseDirectoryDialog.cpp
+    BrowseDirectoryDialog.cpp \
+    NotificationDialog.cpp
 
 HEADERS += \
     MainWindow.h \
@@ -29,7 +30,8 @@ HEADERS += \
     AddMangaDialog.h \
     ChaptersOnWebView.h \
     ChaptersOnPCView.h \
-    BrowseDirectoryDialog.h
+    BrowseDirectoryDialog.h \
+    NotificationDialog.h
 
 QT += \
     widgets \
