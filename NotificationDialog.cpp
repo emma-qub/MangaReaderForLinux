@@ -22,7 +22,7 @@ NotificationDialog::NotificationDialog(const QString& iconPath, QWidget* parent)
   QString titleStyle(
     "color: black;"
     "font-weight: bold;"
-    "font-size: 14px;"
+    "font-size: 16px;"
   );
 
   dialogTitle->setStyleSheet(dialogTitle->styleSheet()+titleStyle);
@@ -37,8 +37,6 @@ NotificationDialog::NotificationDialog(const QString& iconPath, QWidget* parent)
     | Qt::WindowStaysOnTopHint      // Always on top
     | Qt::WindowDoesNotAcceptFocus  // No focus
   );
-
-  connect(this, SIGNAL(opacityChanged(qreal)), this, SLOT(fadeOpacity(qreal)));
 }
 
 NotificationDialog::~NotificationDialog(void) {
