@@ -113,8 +113,9 @@ void AddMangaDialog::downloadPreviewImage(void) {
 }
 
 void AddMangaDialog::finish(void) {
+  _scansDirectory.cd(Utils::getScansDirectory().path());
   _scansDirectory.rename(_scansDirectory.path()+"/Manga-Scan/"+_mangaNameLineEdit->text()+"/cover.jpg",
-                        _scansDirectory.path()+"/"+_mangaNameLineEdit->text()+"/cover.png");
+                         _scansDirectory.path()+"/"+_mangaNameLineEdit->text()+"/cover.png");
   _scansDirectory.rmdir("Manga-Scan/"+_mangaNameLineEdit->text());
   _scansDirectory.rmdir("Manga-Scan");
 
