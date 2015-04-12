@@ -83,11 +83,9 @@ void MainWindow::hideNotification(void) {
 
   _notificationAnimation->setEasingCurve(QEasingCurve::InQuad);
 
-  _notificationDialog->setGeometry(QStyle::alignedRect(Qt::RightToLeft, Qt::AlignBottom, _notificationDialog->size(), qApp->desktop()->availableGeometry()));
-
   QRect geometryStart = _notificationDialog->geometry();
   QRect geometryEnd = _notificationDialog->geometry();
-  geometryEnd.moveTop(geometryEnd.top()+100);
+  geometryEnd.moveTop(geometryEnd.top()+70);
   _notificationAnimation->setStartValue(geometryStart);
   _notificationAnimation->setEndValue(geometryEnd);
 

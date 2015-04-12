@@ -30,7 +30,7 @@ NotificationDialog::NotificationDialog(const QString& iconPath, QWidget* parent)
   mainLayout->addLayout(bodyLayout);
   setLayout(mainLayout);
 
-//  setAttribute(Qt::WA_ShowWithoutActivating);
+  setAttribute(Qt::WA_ShowWithoutActivating);
   setWindowFlags(
       Qt::Window                    // Say it's a window, REALLY IMPORTANT
     | Qt::FramelessWindowHint       // No window border
