@@ -8,6 +8,9 @@ MainWindow::MainWindow(QMainWindow* parent):
   QIcon appIcon(appIconPath);
 
   _notificationDialog = new NotificationDialog(appIconPath, this);
+  _notificationAnimation = new QPropertyAnimation(_notificationDialog, "geometry");
+  connect(_notificationDialog, SIGNAL(hideRequested(void)), this, SLOT(hideNotification(void)));
+  connect(_notificationAnimation, SIGNAL(finished(void)), _notificationDialog, SLOT(hide(void)));
 
   _mangaListWidget = new MangaListWidget;
   _mangaReadWidget = new MangaReadWidget;
@@ -73,4 +76,20 @@ void MainWindow::switchToDownload(QString mangaName) {
 
 void MainWindow::notifyDownload(QString title, QString message) {
   _notificationDialog->showPopup(title, message);
+}
+
+void MainWindow::hideNotification(void) {
+  _notificationAnimation->setDuration(3000);
+
+  _notificationAnimation->setEasingCurve(QEasingCurve::InQuad);
+
+  _notificationDialog->setGeometry(QStyle::alignedRect(Qt::RightToLeft, Qt::AlignBottom, _notificationDialog->size(), qApp->desktop()->availableGeometry()));
+
+  QRect geometryStart = _notificationDialog->geometry();
+  QRect geometryEnd = _notificationDialog->geometry();
+  geometryEnd.moveTop(geometryEnd.top()+100);
+  _notificationAnimation->setStartValue(geometryStart);
+  _notificationAnimation->setEndValue(geometryEnd);
+
+  _notificationAnimation->start();
 }

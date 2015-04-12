@@ -30,7 +30,7 @@ NotificationDialog::NotificationDialog(const QString& iconPath, QWidget* parent)
   mainLayout->addLayout(bodyLayout);
   setLayout(mainLayout);
 
-  setAttribute(Qt::WA_ShowWithoutActivating);
+//  setAttribute(Qt::WA_ShowWithoutActivating);
   setWindowFlags(
       Qt::Window                    // Say it's a window, REALLY IMPORTANT
     | Qt::FramelessWindowHint       // No window border
@@ -50,5 +50,5 @@ void NotificationDialog::showPopup(const QString& title, const QString& message)
   setGeometry(QStyle::alignedRect(Qt::RightToLeft, Qt::AlignBottom, size(), qApp->desktop()->availableGeometry()));
   show();
 
-  QTimer::singleShot(5000, this, SLOT(hide(void)));
+  QTimer::singleShot(2000, this, SIGNAL(hideRequested(void)));
 }

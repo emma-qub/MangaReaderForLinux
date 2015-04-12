@@ -20,6 +20,7 @@ public slots:
   void switchToRead(QString mangaName, QString chapterName);
   void switchToDownload(QString mangaName);
   void notifyDownload(QString title, QString message);
+  void hideNotification(void);
 
 signals:
   void toReadSwitched(QString mangaName, QString chapterName);
@@ -31,6 +32,7 @@ private:
   MangaDownloadWidget* _mangaDownloadWidget;
   QTabWidget* _tabWidget;
   NotificationDialog* _notificationDialog;
+  QPropertyAnimation* _notificationAnimation;
 };
 
 #endif // MAINWINDOW_H

@@ -12,6 +12,9 @@ public:
 
   void showPopup(const QString& title, const QString& message);
 
+signals:
+  void hideRequested(void);
+
 private:
   QLabel* _iconLabel;
   QLabel* _titleLabel;
