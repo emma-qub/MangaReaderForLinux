@@ -23,6 +23,7 @@ MainWindow::MainWindow(QMainWindow* parent):
 
   _tabWidget->setIconSize(QSize(60, 80));
   _tabWidget->setTabPosition(QTabWidget::West);
+  _tabWidget->setFocusPolicy(Qt::NoFocus);
 
   QString dockWidgetTitleStyle;
   dockWidgetTitleStyle += "QTabBar::tab {";
