@@ -138,6 +138,8 @@ void MangaListWidget::initModel(void) {
     QList<bool> areChaptersRead = Utils::areChaptersRead(mangaName);
     if (!Utils::isMangaRead(areChaptersRead))
       currItem->setFont(QFont("", -1, 99));
+    else
+      currItem->setFont(QFont());
 
     int k = 0;
     for (const QString& currChStr: currDirsList) {
@@ -161,13 +163,15 @@ void MangaListWidget::initModel(void) {
   }
 }
 
-void MangaListWidget::setTextAccordingToRead(QStandardItem* chapterItem, bool read) {
+void MangaListWidget::setTextAccordingToRead(QStandardItem* item, bool read) {
   if (read) {
-    chapterItem->setIcon(QIcon(Utils::getIconsPath()+"/check.gif"));
-    chapterItem->setFont(QFont(""));
+    if (!item->hasChildren())
+      item->setIcon(QIcon(Utils::getIconsPath()+"/check.gif"));
+    item->setFont(QFont(""));
   } else {
-    chapterItem->setIcon(QIcon(Utils::getIconsPath()+"/uncheck.gif"));
-    chapterItem->setFont(QFont("", -1, 99));
+    if (!item->hasChildren())
+      item->setIcon(QIcon(Utils::getIconsPath()+"/uncheck.gif"));
+    item->setFont(QFont("", -1, 99));
   }
 }
 
@@ -187,6 +191,7 @@ void MangaListWidget::markReadOrNot(bool read) {
         QStandardItem* currChapter = currManga->child(i, 0);
         updateChapterRead(currChapter, read);
       }
+      setTextAccordingToRead(currManga, read);
     } else {
       for (int i = 0; i < currManga->rowCount(); i++) {
         QStandardItem* currChapter = currManga->child(i, 0);
@@ -195,6 +200,20 @@ void MangaListWidget::markReadOrNot(bool read) {
         }
       }
     }
+  }
+
+  checkIfMangaAreRead();
+}
+
+void MangaListWidget::checkIfMangaAreRead(void) {
+  for (int k = 0; k < _model->rowCount(); k++) {
+    QStandardItem* currManga = _model->itemFromIndex(_model->index(k, 0));
+
+    QList<bool> areChaptersRead = Utils::areChaptersRead(currManga->text());
+    if (!Utils::isMangaRead(areChaptersRead))
+      currManga->setFont(QFont("", -1, 99));
+    else
+      currManga->setFont(QFont());
   }
 }
 
@@ -210,7 +229,8 @@ void MangaListWidget::goToRead(QModelIndex modelIndex) {
   if (currentItemParent == NULL)
     return;
 
-  //    setTextAccordingToRead(currentItem, true);
+  markRead();
+
   emit chapterSelected(currentItemParent->text(), currentItem->text());
 }
 
@@ -355,7 +375,7 @@ void MangaListWidget::updateReadChapter(QString mangaName, QString chapterName) 
         QStandardItem* currChapter = currManga->child(i, 0);
         if (currChapter->text() == chapterName) {
           setTextAccordingToRead(currChapter, true);
-          return;
+          break;
         }
       }
     }

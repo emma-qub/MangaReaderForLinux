@@ -13,8 +13,9 @@ public:
   MangaListWidget(QWidget* parent = NULL);
 
   void markReadOrNot(bool read);
-  void setTextAccordingToRead(QStandardItem* chapterItem, bool read);
+  void setTextAccordingToRead(QStandardItem* item, bool read);
   void updateChapterRead(QStandardItem* chapterItem, bool read);
+  void checkIfMangaAreRead(void);
 
 protected:
   virtual void keyReleaseEvent(QKeyEvent* event);
