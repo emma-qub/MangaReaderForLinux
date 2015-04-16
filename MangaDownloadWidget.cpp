@@ -15,8 +15,6 @@ MangaDownloadWidget::MangaDownloadWidget(QWidget* parent):
 
   QStringList mangaList = Utils::dirList(_scansDirectory);
 
-  QLabel* selectMangaLabel = new QLabel("Select your manga:");
-
   _selectLineEdit = new QLineEdit(this);
   _selectLineEdit->setFixedWidth(250);
   connect(_selectLineEdit, SIGNAL(editingFinished()), this, SLOT(updateChaptersOnPCView()));
@@ -28,11 +26,8 @@ MangaDownloadWidget::MangaDownloadWidget(QWidget* parent):
 
   _selectLineEdit->setCompleter(completer);
 
-  QHBoxLayout* chooseMangaLayout = new QHBoxLayout;
-  chooseMangaLayout->addWidget(selectMangaLabel);
-  chooseMangaLayout->addWidget(_selectLineEdit);
-  chooseMangaLayout->addSpacing(1000);
-  chooseMangaLayout->setAlignment(Qt::AlignTop);
+  QFormLayout* chooseMangaLayout = new QFormLayout;
+  chooseMangaLayout->addRow("Select your manga:", _selectLineEdit);
 
   _chaptersOnPCModel = new QStringListModel;
   _chaptersOnPCView = new ChaptersOnPCView;
@@ -123,7 +118,6 @@ MangaDownloadWidget::MangaDownloadWidget(QWidget* parent):
   _messageModel = new MessageListModel;
   _messageView->setItemDelegate(_messageItemDelegate);
   _messageView->setModel(_messageModel);
-  _messageView->setFixedHeight(300);
 
   QVBoxLayout* messageLayout = new QVBoxLayout;
   messageLayout->addLayout(messageButtonLayout);
