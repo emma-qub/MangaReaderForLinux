@@ -20,8 +20,7 @@ MangaReadWidget::MangaReadWidget(QWidget* parent) :
   _selectLineEdit->setCompleter(completer);
 
   _mangasComboBox = new QComboBox;
-  for (const QString& manga: mangaList)
-    _mangasComboBox->addItem(manga);
+  _mangasComboBox->addItems(mangaList);
   _mangasComboBox->setFixedWidth(250);
   _mangasComboBox->setLineEdit(_selectLineEdit);
 
@@ -29,6 +28,7 @@ MangaReadWidget::MangaReadWidget(QWidget* parent) :
 
   _chaptersComboBox = new QComboBox;
   _chaptersComboBox->setFixedWidth(300);
+  updateChaptersComboBox(_mangasComboBox->itemText(0));
   connect(_mangasComboBox, SIGNAL(activated(QString)), this, SLOT(updateChaptersComboBox(QString)));
   connect(_mangasComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(updateChaptersComboBox(QString)));
   connect(_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
@@ -68,8 +68,6 @@ MangaReadWidget::MangaReadWidget(QWidget* parent) :
   _scrollArea->setWidget(_currentPageLabel);
   _scrollArea->setWidgetResizable(true);
   _scrollArea->setAlignment(Qt::AlignHCenter);
-
-  //    _currentPageLabel->setMouseTracking(true);
 
   _zoomLabel = new QLabel(_scrollArea);
   _zoomLabel->hide();
