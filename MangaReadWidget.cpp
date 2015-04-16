@@ -50,6 +50,7 @@ MangaReadWidget::MangaReadWidget(QWidget* parent) :
   zoomValues << QString::number(2) << QString::number(4) << QString::number(8);
   _zoomComboBox->addItems(zoomValues);
   _zoomComboBox->setCurrentIndex(0);
+  _zoomComboBox->setFixedWidth(50);
 
   QHBoxLayout* chooseMangaLayout = new QHBoxLayout;
   chooseMangaLayout->addWidget(selectMangaLabel);
