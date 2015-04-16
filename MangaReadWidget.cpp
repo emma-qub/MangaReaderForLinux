@@ -207,20 +207,25 @@ void MangaReadWidget::keyReleaseEvent(QKeyEvent* event) {
 }
 
 void MangaReadWidget::mouseReleaseEvent(QMouseEvent *) {
+  _zoomLabel->clear();
   _zoomLabel->hide();
 }
 
 void MangaReadWidget::mouseMoveEvent(QMouseEvent* event) {
   _zoomLabel->setVisible(_zoomButton->isChecked() && event->button() == Qt::NoButton);
 
+
   if (_zoomButton->isChecked()) {
+    QPoint mousePosition = event->pos();
+    // In order not to zoom outside of the box and to prevent from zooming when no page is displayed
+    if (mousePosition.x() < 0 || mousePosition.y() < 0 || _chaptersComboBox->currentIndex() < 1)
+      return;
+
     int frameWidth = 400;
     int frameHeight = 300;
     int ratio = _zoomComboBox->currentText().toInt();
     int frameWidthRatio = qRound(static_cast<double>(frameWidth)/static_cast<double>(ratio));
     int frameHeightRatio = qRound(static_cast<double>(frameHeight)/static_cast<double>(ratio));
-
-    QPoint mousePosition = event->pos();
 
     mousePosition.rx() -= _scrollArea->geometry().x();
     mousePosition.ry() -= _scrollArea->geometry().y();
