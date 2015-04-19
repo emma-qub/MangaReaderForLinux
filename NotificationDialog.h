@@ -12,8 +12,10 @@ public:
 
   void showPopup(const QString& title, const QString& message);
 
+protected:
+  void paintEvent(QPaintEvent* event) override;
+
 signals:
-  void hideRequested(void);
 
 private:
   QLabel* _iconLabel;

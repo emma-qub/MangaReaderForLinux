@@ -2,15 +2,27 @@
 #include "Utils.h"
 
 MainWindow::MainWindow(QMainWindow* parent):
-  QMainWindow(parent) {
+  QMainWindow(parent),
+  _chaptersDownloaded(0),
+  _totalChaptersToDownload(0) {
 
   QString appIconPath = Utils::getIconsPath()+"/appIcon.png";
   QIcon appIcon(appIconPath);
 
+  _systemTrayMenu = new QMenu(this);
+  _minimizeAction = new QAction("Minimize", this);
+  connect(_minimizeAction, SIGNAL(triggered()), this, SLOT(hide()));
+  _maximizeAction = new QAction("Maximize", this);
+  connect(_maximizeAction, SIGNAL(triggered()), this, SLOT(showMaximized()));
+  _systemTrayMenu->addAction(_minimizeAction);
+  _systemTrayMenu->addAction(_maximizeAction);
+
+  _systemTrayIcon = new QSystemTrayIcon(appIcon, this);
+  _systemTrayIcon->setContextMenu(_systemTrayMenu);
+  _systemTrayIcon->show();
+  connect(_systemTrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+
   _notificationDialog = new NotificationDialog(appIconPath, this);
-  _notificationAnimation = new QPropertyAnimation(_notificationDialog, "geometry");
-  connect(_notificationDialog, SIGNAL(hideRequested(void)), this, SLOT(hideNotification(void)));
-  connect(_notificationAnimation, SIGNAL(finished(void)), _notificationDialog, SLOT(hide(void)));
 
   _mangaListWidget = new MangaListWidget;
   _mangaReadWidget = new MangaReadWidget;
@@ -53,6 +65,7 @@ MainWindow::MainWindow(QMainWindow* parent):
   connect(_mangaDownloadWidget, SIGNAL(initModelRequested()), _mangaListWidget, SLOT(initModel()));
   connect(_mangaDownloadWidget, SIGNAL(downloadDone(QString, QString)), this, SLOT(notifyDownload(QString, QString)));
   connect(_mangaDownloadWidget, SIGNAL(chapterSelected(QString, QString)), this, SLOT(switchToRead(QString,QString)));
+  connect(_mangaDownloadWidget, SIGNAL(downloadProgress(int,int)), this, SLOT(updateSystemTrayIconMessage(int, int)));
 
   connect(_mangaReadWidget, SIGNAL(chapterSelected(QString, QString)), _mangaListWidget, SLOT(updateReadChapter(QString, QString)));
 
@@ -79,16 +92,25 @@ void MainWindow::notifyDownload(QString title, QString message) {
   _notificationDialog->showPopup(title, message);
 }
 
-void MainWindow::hideNotification(void) {
-  _notificationAnimation->setDuration(3000);
+void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason) {
+  QString currentDownloadReport;
+  if (_totalChaptersToDownload == 0) {
+    currentDownloadReport = "No chapter in download queue.";
+  } else {
+    currentDownloadReport = QString("Downloading chapter %1/%2").arg(_totalChaptersToDownload - _chaptersDownloaded).arg(_totalChaptersToDownload);
+  }
 
-  _notificationAnimation->setEasingCurve(QEasingCurve::InQuad);
+  switch (reason) {
+  case QSystemTrayIcon::Trigger:
+  case QSystemTrayIcon::DoubleClick:
+    _systemTrayIcon->showMessage("Current download", currentDownloadReport);
+    break;
+  default:
+    break;
+  }
+}
 
-  QRect geometryStart = _notificationDialog->geometry();
-  QRect geometryEnd = _notificationDialog->geometry();
-  geometryEnd.moveTop(geometryEnd.top()+70);
-  _notificationAnimation->setStartValue(geometryStart);
-  _notificationAnimation->setEndValue(geometryEnd);
-
-  _notificationAnimation->start();
+void MainWindow::updateSystemTrayIconMessage(int chaptersDownloaded, int totalChaptersToDownload) {
+  _chaptersDownloaded = chaptersDownloaded;
+  _totalChaptersToDownload = totalChaptersToDownload;
 }

@@ -250,6 +250,7 @@ void MangaDownloadWidget::startNextDownload(void) {
 
     emit initModelRequested();
     emit downloadDone("Download finished", downloadReport);
+    emit downloadProgress(_downloadQueue.size(), _totalCount);
     return;
   }
 
@@ -260,6 +261,8 @@ void MangaDownloadWidget::startNextDownload(void) {
 
   _pagesWebView->load(QUrl(urlString));
   _chaptersDownloadedLabel->setText("Chapter "+QString::number(_totalCount-_downloadQueue.size())+"/"+QString::number(_totalCount));
+
+  emit downloadProgress(_downloadQueue.size(), _totalCount);
 }
 
 void MangaDownloadWidget::chapterDownloaded(bool) {
@@ -395,20 +398,20 @@ void MangaDownloadWidget::clearMessage(void) {
 }
 
 void MangaDownloadWidget::stopDownload(void) {
-  _downloadManager.stop();
+//  _downloadManager.stop();
 
-  _totalCount = 0;
-  _downloadedCount = 0;
-  _chaptersOnWebView->setEnabled(true);
-  _progressBar->setValue(0);
-  _progressBar->setVisible(false);
-  _chaptersDownloadedLabel->setText("");
-  _downloadQueue.clear();
-  _downloadManager.clean();
-  _downloadHTMLManager.clean();
+//  _totalCount = 0;
+//  _downloadedCount = 0;
+//  _chaptersOnWebView->setEnabled(true);
+//  _progressBar->setValue(0);
+//  _progressBar->setVisible(false);
+//  _chaptersDownloadedLabel->setText("");
+//  _downloadQueue.clear();
+//  _downloadManager.clean();
+//  _downloadHTMLManager.clean();
 
-  updateChapters();
-  updateChaptersOnPCView();
+//  updateChapters();
+//  updateChaptersOnPCView();
 
   emit initModelRequested();
   emit downloadDone("Download stopped", "Download has been stopped.");

@@ -44,6 +44,7 @@ signals:
   void initModelRequested(void);
   void downloadDone(QString, QString);
   void chapterSelected(QString, QString);
+  void downloadProgress(int, int);
 
 private:
   QDir _scansDirectory;
