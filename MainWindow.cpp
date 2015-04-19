@@ -1,6 +1,8 @@
 ﻿#include "MainWindow.h"
 #include "Utils.h"
 
+#include <iostream>
+
 MainWindow::MainWindow(QMainWindow* parent):
   QMainWindow(parent),
   _chaptersDownloaded(0),
@@ -21,6 +23,7 @@ MainWindow::MainWindow(QMainWindow* parent):
   _systemTrayIcon->setContextMenu(_systemTrayMenu);
   _systemTrayIcon->show();
   connect(_systemTrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+  std::cerr << _systemTrayIcon->geometry().left() << " " << _systemTrayIcon->geometry().top() << " " << _systemTrayIcon->geometry().right() << " " << _systemTrayIcon->geometry().bottom() << std::endl;
 
   _notificationDialog = new NotificationDialog(appIconPath, this);
 
