@@ -7,7 +7,7 @@ class ChapterInfoWidget: public QWidget {
   Q_OBJECT
 
 public:
-  explicit ChapterInfoWidget(QWidget* parent = NULL);
+  explicit ChapterInfoWidget(QWidget* parent = nullptr);
 
   inline void setNumberFiles(const QString& numberFiles) { _numberFilesLabel->setText(numberFiles); }
   inline void setTotalSize(const QString& totalSize) { _totalSizeLabel->setText(totalSize); }

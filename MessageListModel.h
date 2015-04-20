@@ -8,7 +8,7 @@ class MessageListModel: public QStandardItemModel {
   Q_OBJECT
 
 public:
-  explicit MessageListModel(QObject *parent = NULL, int maxLine = 10000);
+  explicit MessageListModel(QObject *parent = nullptr, int maxLine = 10000);
 
   virtual void append(QStandardItem* item, bool newLine = true);
 

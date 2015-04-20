@@ -11,7 +11,7 @@ class MainWindow: public QMainWindow {
   Q_OBJECT
 
 public:
-  MainWindow(QMainWindow* parent = NULL);
+  MainWindow(QMainWindow* parent = nullptr);
 
 private:
   void checkMangaDirectoryExists(void);

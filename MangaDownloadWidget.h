@@ -17,7 +17,7 @@ class MangaDownloadWidget: public QWidget {
   Q_OBJECT
 
 public:
-  MangaDownloadWidget(QWidget* parent = NULL);
+  MangaDownloadWidget(QWidget* parent = nullptr);
 
 protected:
   virtual void keyReleaseEvent(QKeyEvent* event);

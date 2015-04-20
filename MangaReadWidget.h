@@ -8,7 +8,7 @@ class MangaReadWidget : public QWidget {
   Q_OBJECT
 
 public:
-  MangaReadWidget(QWidget* parent = NULL);
+  MangaReadWidget(QWidget* parent = nullptr);
 
 private:
   QLineEdit* _selectLineEdit;

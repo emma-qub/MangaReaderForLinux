@@ -10,7 +10,7 @@ class MangaListWidget : public QWidget {
   Q_OBJECT
 
 public:
-  MangaListWidget(QWidget* parent = NULL);
+  MangaListWidget(QWidget* parent = nullptr);
 
   void markReadOrNot(bool read);
   void setTextAccordingToRead(QStandardItem* item, bool read);

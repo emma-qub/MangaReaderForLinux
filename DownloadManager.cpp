@@ -240,7 +240,7 @@ void DownloadManager::stop(void) {
 
   currentDownload->abort();
   output.close();
-  currentDownload = NULL;
+  currentDownload = nullptr;
   downloadQueue.clear();
   downloadedCount = 0;
   totalCount = 0;
@@ -266,7 +266,7 @@ void DownloadManager::pause(void) {
   currentDownload->abort();
   output.write(currentDownload->readAll());
   output.close();
-  currentDownload = NULL;
+  currentDownload = nullptr;
 }
 
 void DownloadManager::resume(void) {

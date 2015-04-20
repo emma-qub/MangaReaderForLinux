@@ -9,7 +9,7 @@ class ChaptersOnPCView: public QListView {
   Q_OBJECT
 
 public:
-  ChaptersOnPCView(QWidget* parent = NULL);
+  ChaptersOnPCView(QWidget* parent = nullptr);
 
   void dropEvent(QDropEvent* event);
   void dragMoveEvent(QDragEnterEvent* event);

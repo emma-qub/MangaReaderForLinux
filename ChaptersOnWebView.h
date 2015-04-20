@@ -6,7 +6,7 @@
 class ChaptersOnWebView: public QListView {
 
 public:
-  ChaptersOnWebView(QWidget* parent = NULL);
+  ChaptersOnWebView(QWidget* parent = nullptr);
 
   void mousePressEvent(QMouseEvent *event);
   void mouseMoveEvent(QMouseEvent *event);

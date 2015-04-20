@@ -13,7 +13,7 @@ class AddMangaDialog: public QDialog {
   Q_OBJECT
 
 public:
-  explicit AddMangaDialog(QWidget* parent = NULL);
+  explicit AddMangaDialog(QWidget* parent = nullptr);
 
   bool addManga(void);
   QStringList extractMangaInfo(void);

@@ -7,7 +7,7 @@ class NotificationDialog: public QWidget {
   Q_OBJECT
 
 public:
-  NotificationDialog(const QString& iconPath, QWidget* parent = NULL);
+  NotificationDialog(const QString& iconPath, QWidget* parent = nullptr);
   virtual ~NotificationDialog(void);
 
   void showPopup(const QString& title, const QString& message);

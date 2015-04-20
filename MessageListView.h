@@ -8,7 +8,7 @@ class MessageListView: public QListView {
   Q_OBJECT
 
 public:
-  explicit MessageListView(QWidget* parent = NULL);
+  explicit MessageListView(QWidget* parent = nullptr);
 
 };
 

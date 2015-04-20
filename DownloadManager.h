@@ -26,7 +26,7 @@ public:
     Download
   };
 
-  DownloadManager(const QString& mangaName = "", QObject* parent = NULL);
+  DownloadManager(const QString& mangaName = "", QObject* parent = nullptr);
 
   void append(const QStringList& urlList);
   QString saveFileName(void);
@@ -76,7 +76,7 @@ class DownloadHTMLManager: public DownloadManager {
   Q_OBJECT
 
 public:
-  DownloadHTMLManager(const QString& mangaName = "", QObject* parent = NULL);
+  DownloadHTMLManager(const QString& mangaName = "", QObject* parent = nullptr);
 
   inline QStringList getHTMLPages(void) const { return _htmlPages; }
   inline void clearHTMLPages(void) { _htmlPages.clear(); }

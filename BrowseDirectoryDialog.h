@@ -7,7 +7,7 @@ class BrowseDirectoryDialog: public QDialog {
   Q_OBJECT
 
 public:
-  BrowseDirectoryDialog(QWidget* parent = NULL, Qt::WindowFlags flags = 0);
+  BrowseDirectoryDialog(QWidget* parent = nullptr, Qt::WindowFlags flags = 0);
   virtual ~BrowseDirectoryDialog(void) final;
 
   inline QString getScansDirectory(void) const { return _scansDirectoryLineEdit->text(); }
