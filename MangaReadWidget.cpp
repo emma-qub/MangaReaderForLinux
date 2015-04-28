@@ -13,6 +13,9 @@ MangaReadWidget::MangaReadWidget(QWidget* parent) :
 
   QStringList mangaList = Utils::dirList(_scansDirectory);
 
+  _currentPageLabel = new QLabel;
+  _currentPageLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
   _selectLineEdit = new QLineEdit;
   QCompleter* completer = new QCompleter(mangaList, this);
   completer->setCaseSensitivity(Qt::CaseInsensitive);
@@ -26,18 +29,18 @@ MangaReadWidget::MangaReadWidget(QWidget* parent) :
 
   QLabel* selectMangaLabel = new QLabel("Select your manga:");
 
+  _pagesComboBox = new QComboBox;
+  _pagesComboBox->setFixedWidth(80);
+  connect(_pagesComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changePage(int)));
+
+  _nbPagesLabel = new QLabel;
+
   _chaptersComboBox = new QComboBox;
   _chaptersComboBox->setFixedWidth(300);
   updateChaptersComboBox(_mangasComboBox->itemText(0));
   connect(_mangasComboBox, SIGNAL(activated(QString)), this, SLOT(updateChaptersComboBox(QString)));
   connect(_mangasComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(updateChaptersComboBox(QString)));
   connect(_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
-
-  _pagesComboBox = new QComboBox;
-  _pagesComboBox->setFixedWidth(80);
-  connect(_pagesComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changePage(int)));
-
-  _nbPagesLabel = new QLabel;
 
   _zoomButton = new QPushButton;
   _zoomButton->setIcon(QIcon(Utils::getIconsPath()+"/zoom.png"));
@@ -62,8 +65,6 @@ MangaReadWidget::MangaReadWidget(QWidget* parent) :
   chooseMangaLayout->addWidget(_zoomComboBox);
   chooseMangaLayout->addSpacing(500);
 
-  _currentPageLabel = new QLabel;
-  _currentPageLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   _scrollArea = new QScrollArea;
   _scrollArea->setBackgroundRole(QPalette::Background);
   _scrollArea->setWidget(_currentPageLabel);
