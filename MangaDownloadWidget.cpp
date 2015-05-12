@@ -429,6 +429,11 @@ void MangaDownloadWidget::pauseResumeDownload(bool check) {
 }
 
 void MangaDownloadWidget::updateProgressBar(int donloadedCount, int totalCount) {
+  if (totalCount == 0) {
+    editMessage("Error: totalCount is equal to 0.", DownloadManager::Error);
+    return;
+  }
+
   _progressBar->setValue(donloadedCount * 100 / totalCount);
   if (_progressBar->value() < 100)
     _progressBar->setVisible(true);
