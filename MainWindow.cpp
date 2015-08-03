@@ -11,22 +11,6 @@ MainWindow::MainWindow(QMainWindow* parent):
   QString appIconPath = Utils::getIconsPath()+"/appIcon.png";
   QIcon appIcon(appIconPath);
 
-  _systemTrayMenu = new QMenu(this);
-  _minimizeAction = new QAction("Minimize", this);
-  connect(_minimizeAction, SIGNAL(triggered()), this, SLOT(hide()));
-  _maximizeAction = new QAction("Maximize", this);
-  connect(_maximizeAction, SIGNAL(triggered()), this, SLOT(showMaximized()));
-  _systemTrayMenu->addAction(_minimizeAction);
-  _systemTrayMenu->addAction(_maximizeAction);
-
-  _systemTrayIcon = new QSystemTrayIcon(appIcon, this);
-  _systemTrayIcon->setContextMenu(_systemTrayMenu);
-  _systemTrayIcon->show();
-  connect(_systemTrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
-  std::cerr << _systemTrayIcon->geometry().left() << " " << _systemTrayIcon->geometry().top() << " " << _systemTrayIcon->geometry().right() << " " << _systemTrayIcon->geometry().bottom() << std::endl;
-
-  _notificationDialog = new NotificationDialog(appIconPath, this);
-
   _mangaListWidget = new MangaListWidget;
   _mangaReadWidget = new MangaReadWidget;
   _mangaDownloadWidget = new MangaDownloadWidget;
@@ -89,31 +73,4 @@ void MainWindow::switchToDownload(QString mangaName) {
   _tabWidget->setCurrentWidget(_mangaDownloadWidget);
 
   emit toDownloadSwitched(mangaName);
-}
-
-void MainWindow::notifyDownload(QString title, QString message) {
-  _notificationDialog->showPopup(title, message);
-}
-
-void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason) {
-  QString currentDownloadReport;
-  if (_totalChaptersToDownload == 0) {
-    currentDownloadReport = "No chapter in download queue.";
-  } else {
-    currentDownloadReport = QString("Downloading chapter %1/%2").arg(_totalChaptersToDownload - _chaptersDownloaded).arg(_totalChaptersToDownload);
-  }
-
-  switch (reason) {
-  case QSystemTrayIcon::Trigger:
-  case QSystemTrayIcon::DoubleClick:
-    _systemTrayIcon->showMessage("Current download", currentDownloadReport);
-    break;
-  default:
-    break;
-  }
-}
-
-void MainWindow::updateSystemTrayIconMessage(int chaptersDownloaded, int totalChaptersToDownload) {
-  _chaptersDownloaded = chaptersDownloaded;
-  _totalChaptersToDownload = totalChaptersToDownload;
 }

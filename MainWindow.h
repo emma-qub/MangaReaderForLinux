@@ -19,9 +19,6 @@ private:
 public slots:
   void switchToRead(QString mangaName, QString chapterName);
   void switchToDownload(QString mangaName);
-  void notifyDownload(QString title, QString message);
-  void iconActivated(QSystemTrayIcon::ActivationReason reason);
-  void updateSystemTrayIconMessage(int chaptersDownloaded, int totalChaptersToDownload);
 
 signals:
   void toReadSwitched(QString mangaName, QString chapterName);
@@ -32,11 +29,6 @@ private:
   MangaReadWidget* _mangaReadWidget;
   MangaDownloadWidget* _mangaDownloadWidget;
   QTabWidget* _tabWidget;
-  NotificationDialog* _notificationDialog;
-  QSystemTrayIcon* _systemTrayIcon;
-  QMenu* _systemTrayMenu;
-  QAction* _minimizeAction;
-  QAction* _maximizeAction;
 
   int _chaptersDownloaded;
   int _totalChaptersToDownload;
