@@ -210,7 +210,7 @@ const QDir& Utils::getScansDirectory(void) {
 }
 
 QString Utils::getIconsPath(void) {
-  return "../MangaReaderForLinux/icons";
+  return getSourceAbsolutePath()+"/icons";
 }
 
 QString Utils::getSourceAbsolutePath(void) {
