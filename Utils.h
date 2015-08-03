@@ -21,6 +21,7 @@ public:
   static bool removeDirectory(const QString& dirName);
   static const QDir& getScansDirectory(void);
   static QString getIconsPath(void);
+  static QString getSourceAbsolutePath(void);
 
 private:
   static void initdb(void);
