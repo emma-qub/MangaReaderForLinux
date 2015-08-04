@@ -23,13 +23,14 @@ protected:
 public slots:
   void markRead(void);
   void markUnread(void);
-  void initModel(void);
+  void initModel(QString mangaSelected = "");
   void goToRead(QModelIndex modelIndex);
   void goToDownload(void);
   void addManga(void);
   void updateChaptersInfo(QModelIndex index);
   void updateMangaInfo(QModelIndex index);
   void updateReadChapter(QString mangaName, QString chapterName);
+  void setDownloadButtonDisabled(bool b);
 
 signals:
   void chapterSelected(QString mangaName, QString chapterName);

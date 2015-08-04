@@ -218,3 +218,7 @@ QString Utils::getSourceAbsolutePath(void) {
   dir.cd("../MangaReaderForLinux");
   return dir.absolutePath();
 }
+
+QString Utils::getScriptsAbsolutePath(void) {
+  return getSourceAbsolutePath()+"/scripts";
+}

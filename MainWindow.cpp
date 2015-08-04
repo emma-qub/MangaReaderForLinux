@@ -49,10 +49,9 @@ MainWindow::MainWindow(QMainWindow* parent):
   connect(_mangaListWidget, SIGNAL(mangaSelected(QString)), this, SLOT(switchToDownload(QString)));
   connect(this, SIGNAL(toDownloadSwitched(QString)), _mangaDownloadWidget, SLOT(searchForDownload(QString)));
 
-  connect(_mangaDownloadWidget, SIGNAL(initModelRequested()), _mangaListWidget, SLOT(initModel()));
-  connect(_mangaDownloadWidget, SIGNAL(downloadDone(QString, QString)), this, SLOT(notifyDownload(QString, QString)));
+  connect(_mangaDownloadWidget, SIGNAL(initModelRequested(QString)), _mangaListWidget, SLOT(initModel(QString)));
   connect(_mangaDownloadWidget, SIGNAL(chapterSelected(QString, QString)), this, SLOT(switchToRead(QString,QString)));
-  connect(_mangaDownloadWidget, SIGNAL(downloadProgress(int,int)), this, SLOT(updateSystemTrayIconMessage(int, int)));
+  connect(_mangaDownloadWidget, SIGNAL(downloading(bool)), _mangaListWidget, SLOT(setDownloadButtonDisabled(bool)));
 
   connect(_mangaReadWidget, SIGNAL(chapterSelected(QString, QString)), _mangaListWidget, SLOT(updateReadChapter(QString, QString)));
 

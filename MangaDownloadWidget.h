@@ -19,60 +19,79 @@ class MangaDownloadWidget: public QWidget {
 public:
   MangaDownloadWidget(QWidget* parent = nullptr);
 
+public slots:
+  void updateChaptersList(void);
+
+  void checkMangaNameExists(QString);
+
+  void searchForDownload(QString);
+
+  void updateChaptersOnPCView(void);
+
+  void chaptersListUpdated(int,QProcess::ExitStatus);
+  void chaptersListUpdateStarted(void);
+  void getChaptersListUpdated(void);
+
+  void downloadFinished(int,QProcess::ExitStatus);
+  void nextDownloadHasStarted(void);
+  void downloadChapters(void);
+  void startNextDownload(void);
+  void getDownloadInfo(void);
+
+  void goToRead(QModelIndex modelIndex);
+
+  void updatedb(void);
+
+  void stopDownload(void);
+
+signals:
+  void initModelRequested(QString);
+  void chapterSelected(QString, QString);
+  void downloading(bool);
+
 protected:
   virtual void keyReleaseEvent(QKeyEvent* event);
 
-public slots:
-  void updateChapters(void);
-  void chaptersUpdated(bool);
-  void startNextDownload(void);
-  void downloadChapters(void);
-  void chapterDownloaded(bool);
-  void pageDownloaded(void);
-  void updateChaptersOnPCView(void);
-  void searchForDownload(QString mangaName);
-  void downloadFinished(void);
-  void goToRead(QModelIndex modelIndex);
   void editMessage(QString message, DownloadManager::MessageStatus messageStatus, bool newLine = true);
-  void clearMessage(void);
-  void stopDownload(void);
-  void pauseResumeDownload(bool check);
-  void updateProgressBar(int donloadedCount, int totalCount);
-  void updatedb(void);
-
-signals:
-  void initModelRequested(void);
-  void downloadDone(QString, QString);
-  void chapterSelected(QString, QString);
-  void downloadProgress(int, int);
+  void editMessageSuccess(QString message, bool newLine = true);
+  void editMessageInformation(QString message, bool newLine = true);
+  void editMessageWarning(QString message, bool newLine = true);
+  void editMessageError(QString message, bool newLine = true);
 
 private:
   QDir _scansDirectory;
-  DownloadManager _downloadManager;
-  DownloadHTMLManager _downloadHTMLManager;
+  QStringList _mangaList;
   QDir _currentMangaDirectory;
   QString _currentChapter;
-  QQueue<QString> _downloadQueue;
+  QQueue<QPair<QString, QString>> _downloadQueue;
   int _downloadedCount;
   int _totalCount;
+
   QLineEdit* _selectLineEdit;
+
+  QStringListModel* _chaptersOnPCModel;
+  ChaptersOnPCView* _chaptersOnPCView;
+
   QPushButton* _updateButton;
   QPushButton* _downloadButton;
   QPushButton* _selectAllButton;
-  QStringListModel* _chaptersOnPCModel;
-  ChaptersOnPCView* _chaptersOnPCView;
-  QStringListModel* _chaptersOnWebModel;
+
+  QStandardItemModel* _chaptersOnWebModel;
   ChaptersOnWebView* _chaptersOnWebView;
+
+  QPushButton* _clearTextEditButton;
+  QPushButton* _stopButton;
+  QProgressBar* _chaptersProgressBar;
+  QLabel* _chaptersDownloadedLabel;
+  QProgressBar* _pagesProgressBar;
+  QLabel* _pagesDownloadedLabel;
+
   MessageListModel* _messageModel;
   MessageListView* _messageView;
   MessageItemDelegate* _messageItemDelegate;
-  QPushButton* _clearTextEditButton;
-  QPushButton* _stopButton;
-  QPushButton* _pauseResumeButton;
-  QProgressBar* _progressBar;
-  QLabel* _chaptersDownloadedLabel;
-  QWebView* _chaptersWebView;
-  QWebView* _pagesWebView;
+
+  QProcess* _getChaptersListProcess;
+  QProcess* _downloadChapterProcess;
 };
 
 #endif // MANGADOWNLOADWIDGET_H

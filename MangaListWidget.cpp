@@ -4,6 +4,7 @@
 #include "Utils.h"
 #include "AddMangaDialog.h"
 
+
 MangaListWidget::MangaListWidget(QWidget* parent):
   QWidget(parent),
   _scansDirectory(Utils::getScansDirectory()) {
@@ -118,11 +119,13 @@ MangaListWidget::MangaListWidget(QWidget* parent):
   setLayout(layout);
 }
 
-void MangaListWidget::initModel(void) {
+void MangaListWidget::initModel(QString mangaSelected) {
   _scansDirectory.setFilter(QDir::Dirs);
   QStringList dirsList = Utils::dirList(_scansDirectory);
 
   _model->removeRows(0, _model->rowCount());
+
+  QModelIndex indexMangaSelected;
 
   for (const QString& mangaName: dirsList) {
     QString currDirStr = _scansDirectory.path() + "/" + mangaName;
@@ -140,6 +143,10 @@ void MangaListWidget::initModel(void) {
       currItem->setFont(QFont("", -1, 99));
     else
       currItem->setFont(QFont());
+
+    if (mangaName == mangaSelected) {
+      indexMangaSelected = _model->indexFromItem(currItem);
+    }
 
     int k = 0;
     for (const QString& currChStr: currDirsList) {
@@ -160,6 +167,10 @@ void MangaListWidget::initModel(void) {
 
       k++;
     }
+  }
+
+  if (indexMangaSelected.isValid()) {
+    _view->selectionModel()->setCurrentIndex(indexMangaSelected, QItemSelectionModel::Current);
   }
 }
 
@@ -380,6 +391,10 @@ void MangaListWidget::updateReadChapter(QString mangaName, QString chapterName) 
       }
     }
   }
+}
+
+void MangaListWidget::setDownloadButtonDisabled(bool b) {
+  _downloadButton->setDisabled(b);
 }
 
 void MangaListWidget::keyReleaseEvent(QKeyEvent* event) {

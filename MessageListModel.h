@@ -18,6 +18,7 @@ public:
 signals:
 
 public slots:
+  virtual void clearMessages(void);
 
 protected:
   int _maxLines;

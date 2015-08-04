@@ -14,3 +14,7 @@ void MessageListModel::append(QStandardItem* item, bool newLine) {
 
   appendRow(item);
 }
+
+void MessageListModel::clearMessages(void) {
+  clear();
+}

@@ -19,9 +19,11 @@ public:
   static void initdb(const QString& mangaName);
   static void addChapter(const QString& mangaName, const QString& chapterName);
   static bool removeDirectory(const QString& dirName);
+
   static const QDir& getScansDirectory(void);
   static QString getIconsPath(void);
   static QString getSourceAbsolutePath(void);
+  static QString getScriptsAbsolutePath(void);
 
 private:
   static void initdb(void);
