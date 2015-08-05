@@ -13,13 +13,15 @@ MangaReadWidget::MangaReadWidget(QWidget* parent) :
 
   QStringList mangaList = Utils::dirList(_scansDirectory);
 
-  _currentPageLabel = new QLabel;
-  _currentPageLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+  /// Select manga
+
+  QLabel* selectMangaLabel = new QLabel("Select your manga:");
 
   _selectLineEdit = new QLineEdit;
   QCompleter* completer = new QCompleter(mangaList, this);
   completer->setCaseSensitivity(Qt::CaseInsensitive);
-  completer->setCompletionMode(QCompleter::InlineCompletion);
+  completer->setCompletionMode(QCompleter::PopupCompletion);
   _selectLineEdit->setCompleter(completer);
 
   _mangasComboBox = new QComboBox;
@@ -27,20 +29,34 @@ MangaReadWidget::MangaReadWidget(QWidget* parent) :
   _mangasComboBox->setFixedWidth(250);
   _mangasComboBox->setLineEdit(_selectLineEdit);
 
-  QLabel* selectMangaLabel = new QLabel("Select your manga:");
+  connect(_mangasComboBox, SIGNAL(activated(QString)), this, SLOT(updateChaptersComboBox(QString)));
+  connect(_mangasComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(updateChaptersComboBox(QString)));
+
+
+  /// Select chapter
+
+  _chaptersComboBox = new QComboBox;
+  _chaptersComboBox->setFixedWidth(300);
+  connect(_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
+
+
+  /// Select page
+
+  _nbPagesLabel = new QLabel;
 
   _pagesComboBox = new QComboBox;
   _pagesComboBox->setFixedWidth(80);
   connect(_pagesComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changePage(int)));
 
-  _nbPagesLabel = new QLabel;
 
-  _chaptersComboBox = new QComboBox;
-  _chaptersComboBox->setFixedWidth(300);
-  updateChaptersComboBox(_mangasComboBox->itemText(0));
-  connect(_mangasComboBox, SIGNAL(activated(QString)), this, SLOT(updateChaptersComboBox(QString)));
-  connect(_mangasComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(updateChaptersComboBox(QString)));
-  connect(_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
+  /// Select first manga in list if any
+
+  if (_mangasComboBox->count() > 0) {
+    updateChaptersComboBox(_mangasComboBox->itemText(0));
+  }
+
+
+  /// Zoom
 
   _zoomButton = new QPushButton;
   _zoomButton->setIcon(QIcon(Utils::getIconsPath()+"/zoom.png"));
@@ -55,6 +71,9 @@ MangaReadWidget::MangaReadWidget(QWidget* parent) :
   _zoomComboBox->setCurrentIndex(0);
   _zoomComboBox->setFixedWidth(50);
 
+
+  /// Manga form layout
+
   QHBoxLayout* chooseMangaLayout = new QHBoxLayout;
   chooseMangaLayout->addWidget(selectMangaLabel);
   chooseMangaLayout->addWidget(_mangasComboBox);
@@ -65,6 +84,12 @@ MangaReadWidget::MangaReadWidget(QWidget* parent) :
   chooseMangaLayout->addWidget(_zoomComboBox);
   chooseMangaLayout->addSpacing(500);
 
+
+  /// Page
+
+  _currentPageLabel = new QLabel;
+  _currentPageLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
   _scrollArea = new QScrollArea;
   _scrollArea->setBackgroundRole(QPalette::Background);
   _scrollArea->setWidget(_currentPageLabel);
@@ -73,6 +98,9 @@ MangaReadWidget::MangaReadWidget(QWidget* parent) :
 
   _zoomLabel = new QLabel(_scrollArea);
   _zoomLabel->hide();
+
+
+  /// Main layout
 
   QLabel* titleLabel = new QLabel("Manga Read");
   titleLabel->setFont(QFont("", 18, 99));
