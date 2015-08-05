@@ -39,8 +39,10 @@ MangaDownloadWidget::MangaDownloadWidget(QWidget* parent):
   /// Chapters on PC
 
   _chaptersOnPCModel = new QStringListModel;
+
   _chaptersOnPCView = new ChaptersOnPCView;
   _chaptersOnPCView->setModel(_chaptersOnPCModel);
+  _chaptersOnPCView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
   // _chaptersOnPCView->setDragDropMode(QAbstractItemView::DropOnly);
   connect(_chaptersOnPCView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(goToRead(QModelIndex)));
@@ -59,6 +61,7 @@ MangaDownloadWidget::MangaDownloadWidget(QWidget* parent):
   _chaptersOnWebView = new ChaptersOnWebView(this);
   _chaptersOnWebView->setSelectionMode(QAbstractItemView::ExtendedSelection);
   _chaptersOnWebView->setModel(_chaptersOnWebModel);
+  _chaptersOnWebView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
   QVBoxLayout* chaptersOnWebLayout = new QVBoxLayout;
   chaptersOnWebLayout->addWidget(_chaptersOnWebView);
