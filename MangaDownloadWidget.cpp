@@ -208,7 +208,7 @@ MangaDownloadWidget::MangaDownloadWidget(QWidget* parent):
   "QProgressBar::chunk {"
   "    background-color: #449D44;"
   "    width: 10px;"
-  "    margin: 0.5px;"
+//  "    margin: 0.5px;"
   "}"
   );
   setStyleSheet(styleSheet()+progressBarStyle);
@@ -468,8 +468,22 @@ void MangaDownloadWidget::startNextDownload(void) {
 void MangaDownloadWidget::getDownloadInfo(void) {
   QString downloadOutput(_downloadChapterProcess->readAllStandardOutput());
   QStringList pageRatioList = downloadOutput.split("/");
-  _pagesProgressBar->setValue(static_cast<int>(pageRatioList.at(0).toFloat()*100.f / pageRatioList.at(1).toFloat()));
+
+  float ip = pageRatioList.at(0).toFloat();
+  float np = pageRatioList.at(1).toFloat();
+
+  int chapterAdvance = static_cast<int>(ip*100.f / np);
+  _pagesProgressBar->setValue(chapterAdvance);
   _pagesDownloadedLabel->setText("Page "+downloadOutput);
+
+  float nc = static_cast<float>(_totalCount);
+  int mangaStep = static_cast<int>(ip*100.f / (nc*np));
+
+  float ic = static_cast<float>(_totalCount-_downloadQueue.size()-1);
+  int chaptersAdvance = static_cast<int>(ic*100.f / nc);
+
+  _chaptersProgressBar->setValue(chaptersAdvance + mangaStep);
+
 }
 
 
