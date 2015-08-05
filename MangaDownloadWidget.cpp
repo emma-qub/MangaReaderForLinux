@@ -347,6 +347,14 @@ void MangaDownloadWidget::getChaptersListUpdated(void) {
       _chaptersOnWebModel->appendRow(chapterItem);
     }
   }
+
+  if (_chaptersOnPCModel->stringList().isEmpty()) {
+    QStandardItem* upToDateItem = new QStandardItem;
+    upToDateItem->setData("Already up-to-date.", Qt::DisplayRole);
+    upToDateItem->setEditable(false);
+    upToDateItem->setSelectable(false);
+    _chaptersOnWebModel->appendRow(upToDateItem);
+  }
 }
 
 
