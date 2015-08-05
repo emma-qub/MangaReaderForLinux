@@ -2,7 +2,7 @@
 
 if [ $# -ne 3 ];
 then
-  echo "Usage:\ndownloadChapter.sh url pathtomanga chaptername"
+  echo "Usage: downloadChapter.sh url pathtomanga chaptername"
   exit 1
 fi
 
