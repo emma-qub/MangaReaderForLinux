@@ -64,6 +64,7 @@ private:
   QDir _currentMangaDirectory;
   QString _currentChapter;
   QQueue<QPair<QString, QString>> _downloadQueue;
+  QQueue<QModelIndex> _chaptersQueue;
   int _downloadedCount;
   int _totalCount;
 

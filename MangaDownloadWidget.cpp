@@ -14,6 +14,7 @@ MangaDownloadWidget::MangaDownloadWidget(QWidget* parent):
   _currentMangaDirectory(),
   _currentChapter(),
   _downloadQueue(),
+  _chaptersQueue(),
   _downloadedCount(0),
   _totalCount(0) {
 
@@ -356,6 +357,7 @@ void MangaDownloadWidget::downloadFinished(int status, QProcess::ExitStatus exit
   }
   case QProcess::NormalExit: {
     ++_downloadedCount;
+    _chaptersOnWebModel->removeRow(_chaptersQueue.takeFirst().row());
     updatedb();
     updateChaptersOnPCView();
     editMessageSuccess("Downlaod succeeded. Status code: "+QString::number(status));
@@ -400,6 +402,7 @@ void MangaDownloadWidget::downloadChapters(void) {
   editMessageInformation("Gathering information on chapters to downlaod...");
   QModelIndexList chaptersSelectedIndexes = _chaptersOnWebView->selectionModel()->selectedIndexes();
   for (const QModelIndex& chapterIndex: chaptersSelectedIndexes) {
+    _chaptersQueue.enqueue(chapterIndex);
     QString currChapterUrl = _chaptersOnWebModel->data(chapterIndex, Qt::UserRole).toString();
     QString currChapterTitle = _chaptersOnWebModel->data(chapterIndex, Qt::UserRole+1).toString();
     _downloadQueue.enqueue(QPair<QString, QString>(currChapterTitle, currChapterUrl));
