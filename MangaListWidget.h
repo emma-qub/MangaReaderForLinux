@@ -16,6 +16,7 @@ public:
   void setTextAccordingToRead(QStandardItem* item, bool read);
   void updateChapterRead(QStandardItem* chapterItem, bool read);
   void checkIfMangaAreRead(void);
+  void decorateMangaNames(void);
 
 protected:
   virtual void keyReleaseEvent(QKeyEvent* event);
@@ -31,6 +32,9 @@ public slots:
   void updateMangaInfo(QModelIndex index);
   void updateReadChapter(QString mangaName, QString chapterName);
   void setDownloadButtonDisabled(bool b);
+  void checkAvailableChapterIsDone(int,QProcess::ExitStatus);
+  void startNextCheck(void);
+  void readStandardOutput(void);
 
 signals:
   void chapterSelected(QString mangaName, QString chapterName);
@@ -53,6 +57,10 @@ private:
   QColumnView* _view;
   ChapterInfoWidget* _chapterInfoWidget;
 
+  QProcess* _checkAvailableChaptersProcess;
+  QString _currentChaptersListOnWeb;
+  QQueue<QModelIndex> _chaptersToCheck;
+  QModelIndex _currentIndex;
 };
 
 #endif // MANGALISTWIDGET_H

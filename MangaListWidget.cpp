@@ -4,10 +4,20 @@
 #include "Utils.h"
 #include "AddMangaDialog.h"
 
+#include <iostream>
+#define cerro(x) std::cerr << x << std::endl;
+
 
 MangaListWidget::MangaListWidget(QWidget* parent):
   QWidget(parent),
-  _scansDirectory(Utils::getScansDirectory()) {
+  _scansDirectory(Utils::getScansDirectory()),
+  _currentChaptersListOnWeb(),
+  _chaptersToCheck(),
+  _currentIndex() {
+
+  _checkAvailableChaptersProcess = new QProcess(this);
+  connect(_checkAvailableChaptersProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(checkAvailableChapterIsDone(int,QProcess::ExitStatus)));
+  connect(_checkAvailableChaptersProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(readStandardOutput()));
 
   _mangaPreviewLabel = new QLabel("Manga Preview");
   _mangaPreviewLabel->setFixedHeight(400);
@@ -168,6 +178,8 @@ void MangaListWidget::initModel(QString mangaSelected) {
   if (indexMangaSelected.isValid()) {
     _view->selectionModel()->setCurrentIndex(indexMangaSelected, QItemSelectionModel::Current);
   }
+
+  decorateMangaNames();
 }
 
 void MangaListWidget::setTextAccordingToRead(QStandardItem* item, bool read) {
@@ -178,8 +190,6 @@ void MangaListWidget::setTextAccordingToRead(QStandardItem* item, bool read) {
     item->setFont(QFont("", -1, 99));
     item->setData(QColor("#fff"), Qt::BackgroundRole);
   }
-
-
 }
 
 void MangaListWidget::markRead(void) {
@@ -222,6 +232,34 @@ void MangaListWidget::checkIfMangaAreRead(void) {
     else
       currManga->setFont(QFont());
   }
+}
+
+void MangaListWidget::decorateMangaNames(void) {
+  _chaptersToCheck.clear();
+
+  for (int k = 0; k < _model->rowCount(); ++k) {
+    _chaptersToCheck.enqueue(_model->item(k)->index());
+  }
+
+  startNextCheck();
+}
+
+void MangaListWidget::startNextCheck(void) {
+  _currentChaptersListOnWeb.clear();
+  _currentIndex = QModelIndex();
+
+  if (_chaptersToCheck.isEmpty()) {
+    return;
+  }
+
+  _currentIndex = _chaptersToCheck.dequeue();
+  QStringList arguments;
+  arguments << _model->itemFromIndex(_currentIndex)->text();
+  _checkAvailableChaptersProcess->start(Utils::getScriptsAbsolutePath()+"/updateChaptersList.sh", arguments);
+}
+
+void MangaListWidget::readStandardOutput(void) {
+  _currentChaptersListOnWeb += _checkAvailableChaptersProcess->readAllStandardOutput();
 }
 
 void MangaListWidget::updateChapterRead(QStandardItem* chapterItem, bool read) {
@@ -391,6 +429,46 @@ void MangaListWidget::updateReadChapter(QString mangaName, QString chapterName) 
 
 void MangaListWidget::setDownloadButtonDisabled(bool b) {
   _downloadButton->setDisabled(b);
+}
+
+void MangaListWidget::checkAvailableChapterIsDone(int, QProcess::ExitStatus exitStatus) {
+  switch (exitStatus) {
+  case QProcess::CrashExit: {
+    break;
+  }
+  case QProcess::NormalExit: {
+    bool isNotUpToDate = false;
+    int newChaptersAvailableCount = 0;
+
+    QString currChapterDirStr = _scansDirectory.path() + "/" + _model->itemFromIndex(_currentIndex)->text();
+    QDir currentChaptersDir = QDir(currChapterDirStr);
+    QStringList chaptersListOnPC = Utils::dirList(currentChaptersDir);
+
+    QStringList chaptersUrlAndTitleOnWebList = _currentChaptersListOnWeb.split("\n", QString::SkipEmptyParts);
+    for (const QString& titleAndUrl: chaptersUrlAndTitleOnWebList) {
+      QString tempUrl = titleAndUrl.split(";").first();
+      tempUrl.trimmed();
+      if (tempUrl.endsWith('/')) {
+        tempUrl.truncate(tempUrl.length()-1);
+      }
+      QString currentTitle = tempUrl.split('/').last();
+      if (!chaptersListOnPC.contains(currentTitle)) {
+        isNotUpToDate = true;
+        ++newChaptersAvailableCount;
+      }
+    }
+
+    if (isNotUpToDate) {
+      _model->itemFromIndex(_currentIndex)->setToolTip(QString("New chapters available (%1)").arg(newChaptersAvailableCount));
+      _model->itemFromIndex(_currentIndex)->setData(QColor("#C9302C"), Qt::ForegroundRole);
+    } else {
+      _model->itemFromIndex(_currentIndex)->setData(QColor("#000000"), Qt::ForegroundRole);
+    }
+    break;
+  }
+  }
+
+  startNextCheck();
 }
 
 void MangaListWidget::keyReleaseEvent(QKeyEvent* event) {
