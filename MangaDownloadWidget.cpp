@@ -298,6 +298,14 @@ void MangaDownloadWidget::chaptersListUpdated(int status, QProcess::ExitStatus e
   }
   }
 
+  if (_chaptersOnWebModel->rowCount() == 0) {
+    QStandardItem* upToDateItem = new QStandardItem;
+    upToDateItem->setData("Already up-to-date.", Qt::DisplayRole);
+    upToDateItem->setEditable(false);
+    upToDateItem->setSelectable(false);
+    _chaptersOnWebModel->appendRow(upToDateItem);
+  }
+
   _selectLineEdit->setEnabled(true);
   _updateButton->setEnabled(true);
   _downloadButton->setEnabled(true);
@@ -346,14 +354,6 @@ void MangaDownloadWidget::getChaptersListUpdated(void) {
       chapterItem->setData(chapterTitleInUrl, Qt::UserRole+1);
       _chaptersOnWebModel->appendRow(chapterItem);
     }
-  }
-
-  if (_chaptersOnPCModel->stringList().isEmpty()) {
-    QStandardItem* upToDateItem = new QStandardItem;
-    upToDateItem->setData("Already up-to-date.", Qt::DisplayRole);
-    upToDateItem->setEditable(false);
-    upToDateItem->setSelectable(false);
-    _chaptersOnWebModel->appendRow(upToDateItem);
   }
 }
 
