@@ -29,3 +29,6 @@
 
 # Qt project files
 *.pro.user*
+
+# Old scripts directory
+/oldScripts
