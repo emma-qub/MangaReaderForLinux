@@ -131,7 +131,6 @@ void MangaListWidget::initModel(QString mangaSelected) {
     QString currDirStr = _scansDirectory.path() + "/" + mangaName;
 
     QStandardItem* currItem = new QStandardItem(mangaName);
-    currItem->setData(QIcon(Utils::getIconsPath()+"/uncomplete.png"), Qt::DecorationRole);
     currItem->setEditable(false);
     _model->appendRow(currItem);
 
@@ -156,9 +155,6 @@ void MangaListWidget::initModel(QString mangaSelected) {
       }
       bool isChapterRead = areChaptersRead.at(k);
 
-      if (currChStr.endsWith("-END"))
-        currItem->setData(QIcon(Utils::getIconsPath()+"/complete.png"), Qt::DecorationRole);
-
       QStandardItem* currChItem = new QStandardItem(currChStr);
       currChItem->setEditable(false);
       setTextAccordingToRead(currChItem, isChapterRead);
@@ -176,14 +172,14 @@ void MangaListWidget::initModel(QString mangaSelected) {
 
 void MangaListWidget::setTextAccordingToRead(QStandardItem* item, bool read) {
   if (read) {
-    if (!item->hasChildren())
-      item->setIcon(QIcon(Utils::getIconsPath()+"/check.gif"));
     item->setFont(QFont(""));
+    item->setData(QColor("#eee"), Qt::BackgroundRole);
   } else {
-    if (!item->hasChildren())
-      item->setIcon(QIcon(Utils::getIconsPath()+"/uncheck.gif"));
     item->setFont(QFont("", -1, 99));
+    item->setData(QColor("#fff"), Qt::BackgroundRole);
   }
+
+
 }
 
 void MangaListWidget::markRead(void) {
