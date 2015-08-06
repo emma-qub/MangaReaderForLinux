@@ -54,14 +54,14 @@ AddMangaDialog::AddMangaDialog(QWidget* parent):
 
   setLayout(mainLayout);
 
-  connect(&_downloadMangaListManager, SIGNAL(message(QString, DownloadManager::MessageStatus, bool)), this, SLOT(updateMessage(QString, DownloadManager::MessageStatus, bool)));
-  connect(&_downloadMangaListManager, SIGNAL(done(void)), this, SLOT(checkMangaName(void)));
+//  connect(&_downloadMangaListManager, SIGNAL(message(QString, DownloadManager::MessageStatus, bool)), this, SLOT(updateMessage(QString, DownloadManager::MessageStatus, bool)));
+//  connect(&_downloadMangaListManager, SIGNAL(done(void)), this, SLOT(checkMangaName(void)));
 
-  connect(&_downloadMangaInfoManager, SIGNAL(message(QString, DownloadManager::MessageStatus, bool)), this, SLOT(updateMessage(QString, DownloadManager::MessageStatus, bool)));
-  connect(&_downloadMangaInfoManager, SIGNAL(done(void)), this, SLOT(downloadPreviewImage(void)));
+//  connect(&_downloadMangaInfoManager, SIGNAL(message(QString, DownloadManager::MessageStatus, bool)), this, SLOT(updateMessage(QString, DownloadManager::MessageStatus, bool)));
+//  connect(&_downloadMangaInfoManager, SIGNAL(done(void)), this, SLOT(downloadPreviewImage(void)));
 
-  connect(&_downloadManager, SIGNAL(message(QString, DownloadManager::MessageStatus, bool)), this, SLOT(updateMessage(QString, DownloadManager::MessageStatus, bool)));
-  connect(&_downloadManager, SIGNAL(done()), this, SLOT(finish()));
+//  connect(&_downloadManager, SIGNAL(message(QString, DownloadManager::MessageStatus, bool)), this, SLOT(updateMessage(QString, DownloadManager::MessageStatus, bool)));
+//  connect(&_downloadManager, SIGNAL(done()), this, SLOT(finish()));
 
   resize(800, 500);
 }
@@ -75,13 +75,13 @@ void AddMangaDialog::searchForManga(void) {
 void AddMangaDialog::checkMangaName(void) {
   QStringList htmlPages = _downloadMangaListManager.getHTMLPages();
   if (htmlPages.size() == 0) {
-    updateMessage("Warning: can't get source code, please retry. Maybe you are not connected to the Internet.", DownloadManager::Warning);
+    _messageListModel->editMessageWarning("Warning: can't get source code, please retry. Maybe you are not connected to the Internet.");
     return;
   } else {
-    updateMessage("Manga name has been found.", DownloadManager::Success);
+    _messageListModel->editMessageSuccess("Manga name has been found.");
     QString htmlPage = htmlPages.at(0);
     if (!htmlPage.contains("href=\"/Manga-Scan/"+_mangaNameLineEdit->text())) {
-      updateMessage("Warning: specified manga name is not on web site. Please check out your spelling and retry.", DownloadManager::Warning);
+      _messageListModel->editMessageWarning("Warning: specified manga name is not on web site. Please check out your spelling and retry.");
       return;
     } else {
       // Create new manga directory
@@ -92,7 +92,7 @@ void AddMangaDialog::checkMangaName(void) {
         mb->show();
         reject();
       }
-      updateMessage("New manga directory has been successfuly created.", DownloadManager::Success);
+      _messageListModel->editMessageSuccess("New manga directory has been successfuly created.");
 
       QStringList urls("http://eatmanga.com/Manga-Scan/"+_mangaNameLineEdit->text());
       _downloadMangaInfoManager.clean();
@@ -120,7 +120,7 @@ void AddMangaDialog::finish(void) {
   _scansDirectory.rmdir("Manga-Scan");
 
   if (addManga()) {
-    updateMessage(_mangaNameLineEdit->text()+" has been successfuly added to manga list.", DownloadManager::Success);
+    _messageListModel->editMessageSuccess(_mangaNameLineEdit->text()+" has been successfuly added to manga list.");
   } else {
     _scansDirectory.rmdir(_mangaNameLineEdit->text());
   }
@@ -130,28 +130,28 @@ bool AddMangaDialog::addManga() {
   // Create database text file
   QFile dbTxtFile(_scansDirectory.path()+"/"+_mangaNameLineEdit->text()+"/db.txt");
   if (!dbTxtFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
-    updateMessage("Error: cannot create db.txt. Please retry.", DownloadManager::Error);
+    _messageListModel->editMessageError("Error: cannot create db.txt. Please retry.");
     return false;
   } else {
-    updateMessage("Database text has been successfuly created.", DownloadManager::Success);
+    _messageListModel->editMessageSuccess("Database text has been successfuly created.");
     dbTxtFile.close();
   }
 
   // Create manga info text file
   QFile mangaInfoTxtFile(_scansDirectory.path()+"/"+_mangaNameLineEdit->text()+"/mangaInfo.txt");
   if (!mangaInfoTxtFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
-    updateMessage("Error: cannot create mangaInfo.txt. Please retry.", DownloadManager::Error);
+    _messageListModel->editMessageError("Error: cannot create mangaInfo.txt. Please retry.");
     return false;
   } else {
     // Extract manga information
     QStringList mangaInfoList = extractMangaInfo();
 
     if (mangaInfoList.size() == 0) {
-      updateMessage("Warning: no manga information found.\nYou will have to complete corresponding mangaInfo.txt manually.", DownloadManager::Warning);
+      _messageListModel->editMessageWarning("Warning: no manga information found.\nYou will have to complete corresponding mangaInfo.txt manually.");
     } else {
       QTextStream inFile(&mangaInfoTxtFile);
       inFile << mangaInfoList.join("\n");
-      updateMessage("Manga information text has been successfuly created.", DownloadManager::Success);
+      _messageListModel->editMessageSuccess("Manga information text has been successfuly created.");
     }
 
     mangaInfoTxtFile.close();
@@ -165,7 +165,7 @@ QStringList AddMangaDialog::extractMangaInfo(void) {
 
   QStringList mangaInfoPages = _downloadMangaInfoManager.getHTMLPages();
   if (mangaInfoPages.size() == 0) {
-    updateMessage("Warning: can't get source code, please retry. Maybe you are not connected to the Internet.", DownloadManager::Warning);
+    _messageListModel->editMessageWarning("Warning: can't get source code, please retry. Maybe you are not connected to the Internet.");
   } else if (mangaInfoPages.at(0).contains("Genre:")) {
     QString mangaInfoPage = mangaInfoPages.at(0);
 
@@ -185,32 +185,4 @@ QStringList AddMangaDialog::extractMangaInfo(void) {
   }
 
   return mangaInfoList;
-}
-
-void AddMangaDialog::updateMessage(QString message, DownloadManager::MessageStatus messageStatus, bool newLine) {
-  QStandardItem* item = new QStandardItem;
-
-  switch(messageStatus) {
-  case DownloadManager::Information:
-    item->setData(message, MessageItemDelegate::InformationRole);
-    break;
-  case DownloadManager::Success:
-    item->setData(message, MessageItemDelegate::SuccessRole);
-    break;
-  case DownloadManager::Warning:
-    item->setData(message, MessageItemDelegate::WarningRole);
-    break;
-  case DownloadManager::Error:
-    item->setData(message, MessageItemDelegate::ErrorRole);
-    break;
-  case DownloadManager::Download:
-    item->setData(message, MessageItemDelegate::DownloadRole);
-    break;
-  default:
-    item->setData(message, MessageItemDelegate::DownloadRole);
-    break;
-  }
-
-  _messageListModel->append(item, newLine);
-  _messageListView->scrollToBottom();
 }

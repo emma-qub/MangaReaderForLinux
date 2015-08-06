@@ -2,7 +2,8 @@
 #define MESSAGELISTVIEW_H
 
 #include <QListView>
-#include <QStringListModel>
+
+#include "MessageListModel.h"
 
 class MessageListView: public QListView {
   Q_OBJECT
@@ -10,6 +11,7 @@ class MessageListView: public QListView {
 public:
   explicit MessageListView(QWidget* parent = nullptr);
 
+  virtual void setModel(MessageListModel* model);
 };
 
 #endif // MESSAGELISTVIEW_H

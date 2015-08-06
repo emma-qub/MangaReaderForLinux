@@ -25,7 +25,6 @@ public slots:
   void checkMangaName(void);
   void finish(void);
   void downloadPreviewImage(void);
-  void updateMessage(QString message, DownloadManager::MessageStatus messageStatus, bool newLine = true);
 
 private:
   QLineEdit* _mangaNameLineEdit;

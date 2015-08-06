@@ -224,8 +224,8 @@ MangaDownloadWidget::MangaDownloadWidget(QWidget* parent):
 
 void MangaDownloadWidget::updateChaptersList(void) {
   if (_selectLineEdit->text().isEmpty()) {
-    editMessageWarning("Warning: no manga name specified.");
-    editMessageError("Abort.");
+    _messageModel->editMessageWarning("Warning: no manga name specified.");
+    _messageModel->editMessageError("Abort.");
     return;
   }
 
@@ -284,15 +284,15 @@ void MangaDownloadWidget::updateChaptersOnPCView(void) {
 void MangaDownloadWidget::chaptersListUpdated(int status, QProcess::ExitStatus exitStatus) {
   switch (exitStatus) {
   case QProcess::CrashExit: {
-    editMessageWarning("Warning: Chapters list update failed. Status code: "+QString::number(status));
+    _messageModel->editMessageWarning("Warning: Chapters list update failed. Status code: "+QString::number(status));
     break;
   }
   case QProcess::NormalExit: {
     if (status == 1) {
-      editMessageWarning("Warning: "+_getChaptersListProcess->readAllStandardError());
-      editMessageError("Abort.");
+      _messageModel->editMessageWarning("Warning: "+_getChaptersListProcess->readAllStandardError());
+      _messageModel->editMessageError("Abort.");
     } else if (status == 0) {
-      editMessageSuccess("Chapters list updated.");
+      _messageModel->editMessageSuccess("Chapters list updated.");
     }
     break;
   }
@@ -317,7 +317,7 @@ void MangaDownloadWidget::chaptersListUpdateStarted(void) {
   _updateButton->setEnabled(false);
   _downloadButton->setEnabled(false);
   _selectAllButton->setEnabled(false);
-  editMessageInformation("Updating chapters list...");
+  _messageModel->editMessageInformation("Updating chapters list...");
 }
 
 void MangaDownloadWidget::getChaptersListUpdated(void) {
@@ -333,8 +333,8 @@ void MangaDownloadWidget::getChaptersListUpdated(void) {
         cerro(s.toStdString())
       }
 
-      editMessageError("Error: enable to build chapters list.");
-      editMessageError("Abort.");
+      _messageModel->editMessageError("Error: enable to build chapters list.");
+      _messageModel->editMessageError("Abort.");
       _chaptersOnWebModel->clear();
       return;
     }
@@ -363,7 +363,7 @@ void MangaDownloadWidget::getChaptersListUpdated(void) {
 void MangaDownloadWidget::downloadFinished(int status, QProcess::ExitStatus exitStatus) {
   switch (exitStatus) {
   case QProcess::CrashExit: {
-    editMessageWarning("Warning: Downlaod failed. Status code: "+QString::number(status));
+    _messageModel->editMessageWarning("Warning: Downlaod failed. Status code: "+QString::number(status));
     break;
   }
   case QProcess::NormalExit: {
@@ -371,7 +371,7 @@ void MangaDownloadWidget::downloadFinished(int status, QProcess::ExitStatus exit
     _chaptersOnWebModel->removeRow(_chaptersQueue.takeFirst().row());
     updatedb();
     updateChaptersOnPCView();
-    editMessageSuccess("Downlaod succeeded. Status code: "+QString::number(status));
+    _messageModel->editMessageSuccess("Downlaod succeeded. Status code: "+QString::number(status));
     break;
   }
   }
@@ -380,7 +380,7 @@ void MangaDownloadWidget::downloadFinished(int status, QProcess::ExitStatus exit
 }
 
 void MangaDownloadWidget::nextDownloadHasStarted(void) {
-  editMessageInformation("Downloading "+_currentChapter+"...");
+  _messageModel->editMessageInformation("Downloading "+_currentChapter+"...");
   _chaptersProgressBar->show();
   _chaptersProgressBar->setValue(static_cast<int>(static_cast<float>(_downloadedCount)/static_cast<float>(_totalCount)*100));
 
@@ -390,8 +390,8 @@ void MangaDownloadWidget::nextDownloadHasStarted(void) {
 
 void MangaDownloadWidget::downloadChapters(void) {
   if (_selectLineEdit->text().isEmpty()) {
-    editMessageWarning("Warning: no manga name specified.");
-    editMessageError("Abort.");
+    _messageModel->editMessageWarning("Warning: no manga name specified.");
+    _messageModel->editMessageError("Abort.");
     return;
   }
 
@@ -410,7 +410,7 @@ void MangaDownloadWidget::downloadChapters(void) {
   _pagesDownloadedLabel->show();
   _pagesDownloadedLabel->setText("Page");
 
-  editMessageInformation("Gathering information on chapters to downlaod...");
+  _messageModel->editMessageInformation("Gathering information on chapters to downlaod...");
   QModelIndexList chaptersSelectedIndexes = _chaptersOnWebView->selectionModel()->selectedIndexes();
   for (const QModelIndex& chapterIndex: chaptersSelectedIndexes) {
     _chaptersQueue.enqueue(chapterIndex);
@@ -431,10 +431,10 @@ void MangaDownloadWidget::startNextDownload(void) {
   if (_downloadQueue.isEmpty()) {
     QString downloadReport = QString::number(_downloadedCount)+"/"+QString::number(_totalCount)+" chapter(s) downloaded successfully.";
     if (_downloadedCount == _totalCount) {
-      editMessageSuccess(downloadReport);
+      _messageModel->editMessageSuccess(downloadReport);
     } else {
-      editMessageWarning("Only "+downloadReport);
-      editMessageWarning("Please check out each issue and retry if necessary.");
+      _messageModel->editMessageWarning("Only "+downloadReport);
+      _messageModel->editMessageWarning("Please check out each issue and retry if necessary.");
     }
 
     updateChaptersList();
@@ -466,7 +466,7 @@ void MangaDownloadWidget::startNextDownload(void) {
   _currentChapter = titleAndUrl.first;
   QString urlString = titleAndUrl.second;
 
-  editMessageInformation("Next download will begin shortly...");
+  _messageModel->editMessageInformation("Next download will begin shortly...");
   _chaptersDownloadedLabel->setText("Chapter "+QString::number(_totalCount-_downloadQueue.size())+"/"+QString::number(_totalCount));
 
   QStringList arguments;
@@ -546,51 +546,4 @@ void MangaDownloadWidget::keyReleaseEvent(QKeyEvent* event) {
     if (index.isValid())
       goToRead(index);
   }
-}
-
-
-/// Edit message
-
-void MangaDownloadWidget::editMessage(QString message, DownloadManager::MessageStatus messageStatus, bool newLine) {
-  QStandardItem* item = new QStandardItem;
-
-  switch(messageStatus) {
-  case DownloadManager::Information:
-    item->setData(message, MessageItemDelegate::InformationRole);
-    break;
-  case DownloadManager::Success:
-    item->setData(message, MessageItemDelegate::SuccessRole);
-    break;
-  case DownloadManager::Warning:
-    item->setData(message, MessageItemDelegate::WarningRole);
-    break;
-  case DownloadManager::Error:
-    item->setData(message, MessageItemDelegate::ErrorRole);
-    break;
-  case DownloadManager::Download:
-    item->setData(message, MessageItemDelegate::DownloadRole);
-    break;
-  default:
-    item->setData(message, MessageItemDelegate::DownloadRole);
-    break;
-  }
-
-  _messageModel->append(item, newLine);
-  _messageView->scrollToBottom();
-}
-
-void MangaDownloadWidget::editMessageSuccess(QString message, bool newLine) {
-  editMessage(message, DownloadManager::Success, newLine);
-}
-
-void MangaDownloadWidget::editMessageInformation(QString message, bool newLine) {
-  editMessage(message, DownloadManager::Information, newLine);
-}
-
-void MangaDownloadWidget::editMessageWarning(QString message, bool newLine) {
-  editMessage(message, DownloadManager::Warning, newLine);
-}
-
-void MangaDownloadWidget::editMessageError(QString message, bool newLine) {
-  editMessage(message, DownloadManager::Error, newLine);
 }

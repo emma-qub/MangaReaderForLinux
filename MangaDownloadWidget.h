@@ -52,12 +52,6 @@ signals:
 protected:
   virtual void keyReleaseEvent(QKeyEvent* event);
 
-  void editMessage(QString message, DownloadManager::MessageStatus messageStatus, bool newLine = true);
-  void editMessageSuccess(QString message, bool newLine = true);
-  void editMessageInformation(QString message, bool newLine = true);
-  void editMessageWarning(QString message, bool newLine = true);
-  void editMessageError(QString message, bool newLine = true);
-
 private:
   QDir _scansDirectory;
   QStringList _mangaList;
