@@ -280,7 +280,9 @@ void MangaListWidget::startNextCheck(void) {
 
   _currentIndex = _chaptersToCheck.dequeue();
   QStringList arguments;
-  arguments << _model->itemFromIndex(_currentIndex)->text();
+  QStandardItem* currentMangaItem = _model->itemFromIndex(_currentIndex);
+  currentMangaItem->setData(QColor("#286090"), Qt::ForegroundRole);
+  arguments << currentMangaItem->text();
   _checkAvailableChaptersProcess->start(Utils::getScriptsAbsolutePath()+"/updateChaptersList.sh", arguments);
 }
 
