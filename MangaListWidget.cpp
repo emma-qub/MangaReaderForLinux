@@ -151,6 +151,13 @@ MangaListWidget::MangaListWidget(QWidget* parent):
   mainLayout->addLayout(listLayout);
 
   setLayout(mainLayout);
+
+
+  /// Schedule a new available manga check every thirty minutes
+
+  QTimer* timer = new QTimer(this);
+  connect(timer, SIGNAL(timeout()), this, SLOT(decorateMangaNames()));
+  timer->start(1000*60*30);
 }
 
 void MangaListWidget::initModel(QString mangaSelected) {
