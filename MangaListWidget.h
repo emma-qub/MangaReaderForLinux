@@ -16,7 +16,6 @@ public:
   void setTextAccordingToRead(QStandardItem* item, bool read);
   void updateChapterRead(QStandardItem* chapterItem, bool read);
   void checkIfMangaAreRead(void);
-  void decorateMangaNames(void);
 
 protected:
   virtual void keyReleaseEvent(QKeyEvent* event);
@@ -35,6 +34,7 @@ public slots:
   void checkAvailableChapterIsDone(int,QProcess::ExitStatus);
   void startNextCheck(void);
   void readStandardOutput(void);
+  void decorateMangaNames(void);
 
 signals:
   void chapterSelected(QString mangaName, QString chapterName);
@@ -46,6 +46,7 @@ private:
   QPushButton* _markUnreadButton;
   QPushButton* _downloadButton;
   QPushButton* _addMangaButton;
+  QPushButton* _checkNewChaptersButton;
   QLabel* _mangaPreviewLabel;
   QLabel* _genreLabel;
   QLabel* _authorLabel;

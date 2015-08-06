@@ -15,9 +15,51 @@ MangaListWidget::MangaListWidget(QWidget* parent):
   _chaptersToCheck(),
   _currentIndex() {
 
+
+  /// Available chapters process
+
   _checkAvailableChaptersProcess = new QProcess(this);
   connect(_checkAvailableChaptersProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(checkAvailableChapterIsDone(int,QProcess::ExitStatus)));
   connect(_checkAvailableChaptersProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(readStandardOutput()));
+
+
+  /// Top buttons
+
+  _markReadButton = new QPushButton;
+  _markReadButton->setIcon(QIcon(Utils::getIconsPath()+"/check.gif"));
+  _markReadButton->setFixedWidth(37);
+  connect(_markReadButton, SIGNAL(clicked()), this, SLOT(markRead()));
+
+  _markUnreadButton = new QPushButton;
+  _markUnreadButton->setIcon(QIcon(Utils::getIconsPath()+"/uncheck.gif"));
+  _markUnreadButton->setFixedWidth(37);
+  connect(_markUnreadButton, SIGNAL(clicked()), this, SLOT(markUnread()));
+
+  _downloadButton = new QPushButton;
+  _downloadButton->setIcon(QIcon(Utils::getIconsPath()+"/download.gif"));
+  _downloadButton->setFixedWidth(37);
+  connect(_downloadButton, SIGNAL(clicked()), this, SLOT(goToDownload()));
+
+  _addMangaButton = new QPushButton;
+  _addMangaButton->setIcon(QIcon(Utils::getIconsPath()+"/plus.png"));
+  _addMangaButton->setFixedWidth(37);
+  connect(_addMangaButton, SIGNAL(clicked()), this, SLOT(addManga()));
+
+  _checkNewChaptersButton = new QPushButton;
+  _checkNewChaptersButton->setIcon(QIcon(Utils::getIconsPath()+"/checkChapters.png"));
+  _checkNewChaptersButton->setFixedWidth(37);
+  connect(_checkNewChaptersButton, SIGNAL(clicked()), this, SLOT(decorateMangaNames()));
+
+  QHBoxLayout* buttonsLayout = new QHBoxLayout;
+  buttonsLayout->addWidget(_markReadButton);
+  buttonsLayout->addWidget(_markUnreadButton);
+  buttonsLayout->addWidget(_downloadButton);
+  buttonsLayout->addWidget(_addMangaButton);
+  buttonsLayout->addWidget(_checkNewChaptersButton);
+  buttonsLayout->setAlignment(Qt::AlignHCenter);
+
+
+  /// Manga information
 
   _mangaPreviewLabel = new QLabel("Manga Preview");
   _mangaPreviewLabel->setFixedHeight(400);
@@ -65,8 +107,14 @@ MangaListWidget::MangaListWidget(QWidget* parent):
   mangaInfoGroupBox->setFixedWidth(350);
   mangaInfoGroupBox->setAlignment(Qt::AlignLeft);
 
+
+  /// Chapters model
+
   _model = new QStandardItemModel;
   initModel();
+
+
+  /// Chapters view
 
   _chapterInfoWidget = new ChapterInfoWidget;
 
@@ -91,42 +139,18 @@ MangaListWidget::MangaListWidget(QWidget* parent):
   headerLabels << "Manga";
   _model->setHorizontalHeaderLabels(headerLabels);
 
-  _markReadButton = new QPushButton;
-  _markReadButton->setIcon(QIcon(Utils::getIconsPath()+"/check.gif"));
-  _markReadButton->setFixedWidth(37);
-  connect(_markReadButton, SIGNAL(clicked()), this, SLOT(markRead()));
 
-  _markUnreadButton = new QPushButton;
-  _markUnreadButton->setIcon(QIcon(Utils::getIconsPath()+"/uncheck.gif"));
-  _markUnreadButton->setFixedWidth(37);
-  connect(_markUnreadButton, SIGNAL(clicked()), this, SLOT(markUnread()));
-
-  _downloadButton = new QPushButton;
-  _downloadButton->setIcon(QIcon(Utils::getIconsPath()+"/download.gif"));
-  _downloadButton->setFixedWidth(37);
-  connect(_downloadButton, SIGNAL(clicked()), this, SLOT(goToDownload()));
-
-  _addMangaButton = new QPushButton;
-  _addMangaButton->setIcon(QIcon(Utils::getIconsPath()+"/plus.png"));
-  _addMangaButton->setFixedWidth(37);
-  connect(_addMangaButton, SIGNAL(clicked()), this, SLOT(addManga()));
-
-  QHBoxLayout* buttonsLayout = new QHBoxLayout;
-  buttonsLayout->addWidget(_markReadButton);
-  buttonsLayout->addWidget(_markUnreadButton);
-  buttonsLayout->addWidget(_downloadButton);
-  buttonsLayout->addWidget(_addMangaButton);
-  buttonsLayout->setAlignment(Qt::AlignHCenter);
+  /// Main layout
 
   QLabel* titleLabel = new QLabel("Manga List");
   titleLabel->setFont(QFont("", 18, 99));
 
-  QVBoxLayout* layout = new QVBoxLayout;
-  layout->addWidget(titleLabel);
-  layout->addLayout(buttonsLayout);
-  layout->addLayout(listLayout);
+  QVBoxLayout* mainLayout = new QVBoxLayout;
+  mainLayout->addWidget(titleLabel);
+  mainLayout->addLayout(buttonsLayout);
+  mainLayout->addLayout(listLayout);
 
-  setLayout(layout);
+  setLayout(mainLayout);
 }
 
 void MangaListWidget::initModel(QString mangaSelected) {
@@ -236,6 +260,7 @@ void MangaListWidget::checkIfMangaAreRead(void) {
 
 void MangaListWidget::decorateMangaNames(void) {
   _chaptersToCheck.clear();
+  _checkNewChaptersButton->setEnabled(false);
 
   for (int k = 0; k < _model->rowCount(); ++k) {
     _chaptersToCheck.enqueue(_model->item(k)->index());
@@ -249,6 +274,7 @@ void MangaListWidget::startNextCheck(void) {
   _currentIndex = QModelIndex();
 
   if (_chaptersToCheck.isEmpty()) {
+    _checkNewChaptersButton->setEnabled(true);
     return;
   }
 
