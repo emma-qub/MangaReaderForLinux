@@ -44,13 +44,10 @@ MainWindow::MainWindow(QMainWindow* parent):
   setWindowIcon(appIcon);
 
   connect(_mangaListWidget, SIGNAL(chapterSelected(QString,QString)), this, SLOT(switchToRead(QString,QString)));
-  connect(this, SIGNAL(toReadSwitched(QString,QString)), _mangaReadWidget, SLOT(switchManga(QString,QString)));
-
   connect(_mangaListWidget, SIGNAL(mangaSelected(QString)), this, SLOT(switchToDownload(QString)));
-  connect(this, SIGNAL(toDownloadSwitched(QString)), _mangaDownloadWidget, SLOT(searchForDownload(QString)));
 
-  connect(_mangaDownloadWidget, SIGNAL(initModelRequested(QString)), _mangaListWidget, SLOT(initModel(QString)));
   connect(_mangaDownloadWidget, SIGNAL(chapterSelected(QString, QString)), this, SLOT(switchToRead(QString,QString)));
+  connect(_mangaDownloadWidget, SIGNAL(initModelRequested(QString)), _mangaListWidget, SLOT(initModel(QString)));
   connect(_mangaDownloadWidget, SIGNAL(downloading(bool)), _mangaListWidget, SLOT(setDownloadButtonDisabled(bool)));
 
   connect(_mangaReadWidget, SIGNAL(chapterSelected(QString, QString)), _mangaListWidget, SLOT(updateReadChapter(QString, QString)));
@@ -65,11 +62,11 @@ void MainWindow::checkMangaDirectoryExists(void) {
 void MainWindow::switchToRead(QString mangaName, QString chapterName) {
   _tabWidget->setCurrentWidget(_mangaReadWidget);
 
-  emit toReadSwitched(mangaName, chapterName);
+  _mangaReadWidget->switchManga(mangaName, chapterName);
 }
 
 void MainWindow::switchToDownload(QString mangaName) {
   _tabWidget->setCurrentWidget(_mangaDownloadWidget);
 
-  emit toDownloadSwitched(mangaName);
+  _mangaDownloadWidget->searchForDownload(mangaName);
 }

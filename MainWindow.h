@@ -21,8 +21,6 @@ public slots:
   void switchToDownload(QString mangaName);
 
 signals:
-  void toReadSwitched(QString mangaName, QString chapterName);
-  void toDownloadSwitched(QString mangaName);
 
 private:
   MangaListWidget* _mangaListWidget;
