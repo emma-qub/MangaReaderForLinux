@@ -131,13 +131,12 @@ void MangaReadWidget::updateChaptersComboBox(QString mangaName) {
   }
 
   disconnect(_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
-  _chaptersComboBox->addItem("Chapter");
   _chaptersComboBox->addItems(chaptersList);
   connect(_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
 }
 
 void MangaReadWidget::changeChapter(QString chapterName) {
-  if (chapterName == "Chapter" || chapterName.isEmpty()) {
+  if (chapterName.isEmpty()) {
     _currentPageLabel->setPixmap(QPixmap());
     updatePagesComboBox();
     return;
@@ -158,7 +157,7 @@ void MangaReadWidget::updatePagesComboBox(void) {
 
   _nbPagesLabel->setText("/");
 
-  if (_mangasComboBox->currentText().isEmpty() || _chaptersComboBox->currentText() == "Chapter" || _chaptersComboBox->currentText().isEmpty())
+  if (_mangasComboBox->currentText().isEmpty() || _chaptersComboBox->currentText().isEmpty())
     return;
 
   QStringList nameFilters;
@@ -197,6 +196,9 @@ void MangaReadWidget::switchManga(QString mangaName, QString chapterName) {
   _chaptersComboBox->setCurrentText(chapterName);
 
   _currentPageLabel->setFocus();
+  if (_chaptersComboBox->currentText() != chapterName) {
+    _chaptersComboBox->setCurrentText(chapterName);
+  }
 }
 
 void MangaReadWidget::keyReleaseEvent(QKeyEvent* event) {
