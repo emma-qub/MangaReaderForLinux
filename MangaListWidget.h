@@ -6,7 +6,7 @@
 
 #include "ChapterInfoWidget.h"
 
-class MangaListWidget : public QWidget {
+class MangaListWidget: public QWidget {
   Q_OBJECT
 
 public:

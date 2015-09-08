@@ -3,10 +3,6 @@
 #include "Utils.h"
 
 
-#include <iostream>
-#define cerro(x) std::cerr << x << std::endl;
-
-
 MangaDownloadWidget::MangaDownloadWidget(QWidget* parent):
   QWidget(parent),
   _scansDirectory(Utils::getScansDirectory()),
@@ -329,10 +325,6 @@ void MangaDownloadWidget::getChaptersListUpdated(void) {
     QStringList chapterUrlAndTitleList = chapterUrlAndTitle.split(";");
 
     if (chapterUrlAndTitleList.size() != 2) {
-      for (const QString& s: chapterUrlAndTitleList) {
-        cerro(s.toStdString())
-      }
-
       _messageModel->editMessageError("Error: enable to build chapters list.");
       _messageModel->editMessageError("Abort.");
       _chaptersOnWebModel->clear();

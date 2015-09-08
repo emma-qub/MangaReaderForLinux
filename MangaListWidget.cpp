@@ -1,11 +1,6 @@
-#include <QDebug>
-
 #include "MangaListWidget.h"
 #include "Utils.h"
 #include "AddMangaDialog.h"
-
-#include <iostream>
-#define cerro(x) std::cerr << x << std::endl;
 
 
 MangaListWidget::MangaListWidget(QWidget* parent):
@@ -388,7 +383,7 @@ void MangaListWidget::updateMangaInfo(QModelIndex index) {
 
     QFile file(mangaDirectory.filePath("mangaInfo.txt"));
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-      qDebug() << "Can't open" << file.fileName() << "in read only whithin MangaListWidget::updateMangaInfo.";
+      QMessageBox::critical(this, "Manga info error", "Can't open "+file.fileName()+" in 'read only' whithin MangaListWidget::updateMangaInfo.");
       _genreLabel->setText("");
       _authorLabel->setText("");
       _artistLabel->setText("");
