@@ -301,7 +301,7 @@ void MangaListWidget::goToRead(QModelIndex modelIndex) {
   QStandardItem* currentItem = _model->itemFromIndex(modelIndex);
   QStandardItem* currentItemParent = currentItem->parent();
 
-  if (currentItemParent == NULL)
+  if (currentItemParent == nullptr)
     return;
 
   markRead();
@@ -318,7 +318,7 @@ void MangaListWidget::goToDownload(void) {
   }
 
   QString mangaName;
-  currentItem->parent() == NULL ? mangaName = currentItem->text() : mangaName = currentItem->parent()->text();
+  currentItem->parent() == nullptr ? mangaName = currentItem->text() : mangaName = currentItem->parent()->text();
 
   emit mangaSelected(mangaName);
 }
