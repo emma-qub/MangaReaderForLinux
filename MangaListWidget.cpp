@@ -563,7 +563,7 @@ bool MangaListWidget::eventFilter(QObject* object, QEvent* event)
   if(_editOn || (object == _mangaPreviewLabel && _coverHasToBeSet)) {
     switch (event->type()) {
     case QEvent::MouseButtonRelease: {
-      QString coverFileName = QFileDialog::getOpenFileName(this, "Set a cover", QDir::homePath(), "Images (*.png)");
+      QString coverFileName = QFileDialog::getOpenFileName(this, "Set cover", QDir::homePath(), "Images (*.png)");
       QApplication::restoreOverrideCursor();
       if (!coverFileName.isEmpty()) {
         QModelIndex mangaIndex = _view->currentIndex();
