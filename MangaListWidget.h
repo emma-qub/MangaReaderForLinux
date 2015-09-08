@@ -18,7 +18,8 @@ public:
   void checkIfMangaAreRead(void);
 
 protected:
-  virtual void keyReleaseEvent(QKeyEvent* event);
+  void keyReleaseEvent(QKeyEvent* event) override;
+  bool eventFilter(QObject* object, QEvent* event) override;
 
 public slots:
   void markRead(void);
@@ -35,6 +36,7 @@ public slots:
   void startNextCheck(void);
   void readStandardOutput(void);
   void decorateMangaNames(void);
+  void toggleEditMangaInfo(bool);
 
 signals:
   void chapterSelected(QString mangaName, QString chapterName);
@@ -47,6 +49,7 @@ private:
   QPushButton* _downloadButton;
   QPushButton* _addMangaButton;
   QPushButton* _checkNewChaptersButton;
+  QPushButton* _editMangaInfoButton;
   QLabel* _mangaPreviewLabel;
   QLabel* _genreLabel;
   QLabel* _authorLabel;
@@ -62,6 +65,8 @@ private:
   QString _currentChaptersListOnWeb;
   QQueue<QModelIndex> _chaptersToCheck;
   QModelIndex _currentIndex;
+  bool _editOn;
+  bool _coverHasToBeSet;
 };
 
 #endif // MANGALISTWIDGET_H

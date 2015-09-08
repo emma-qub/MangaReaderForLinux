@@ -8,7 +8,9 @@ MangaListWidget::MangaListWidget(QWidget* parent):
   _scansDirectory(Utils::getScansDirectory()),
   _currentChaptersListOnWeb(),
   _chaptersToCheck(),
-  _currentIndex() {
+  _currentIndex(),
+  _editOn(false),
+  _coverHasToBeSet(false) {
 
 
   /// Available chapters process
@@ -56,10 +58,15 @@ MangaListWidget::MangaListWidget(QWidget* parent):
 
   /// Manga information
 
-  _mangaPreviewLabel = new QLabel("Manga Preview");
+  QPixmap pixmap(Utils::getIconsPath()+"/setCover.png");
+
+  _mangaPreviewLabel = new QLabel;
   _mangaPreviewLabel->setFixedHeight(400);
   _mangaPreviewLabel->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
   _mangaPreviewLabel->setStyleSheet("margin: 20px;");
+  _mangaPreviewLabel->setAttribute(Qt::WA_Hover);
+  _mangaPreviewLabel->installEventFilter(this);
+  _mangaPreviewLabel->setPixmap(pixmap);
 
   _genreLabel = new QLabel;
   _genreLabel->setFont(QFont("Monospace", 8));
@@ -73,6 +80,11 @@ MangaListWidget::MangaListWidget(QWidget* parent):
   _magazineLabel->setFont(QFont("Monospace", 8));
   _startDateLabel = new QLabel;
   _startDateLabel->setFont(QFont("Monospace", 8));
+
+  _editMangaInfoButton = new QPushButton("Edit");
+  _editMangaInfoButton->setCheckable(true);
+  _editMangaInfoButton->setFixedWidth(100);
+  connect(_editMangaInfoButton, SIGNAL(toggled(bool)), this, SLOT(toggleEditMangaInfo(bool)));
 
   QFormLayout* genreLayout = new QFormLayout;
   genreLayout->addRow("Genre:", _genreLabel);
@@ -95,6 +107,7 @@ MangaListWidget::MangaListWidget(QWidget* parent):
   mangaInfoLayout->addLayout(publisherLayout);
   mangaInfoLayout->addLayout(magazineLayout);
   mangaInfoLayout->addLayout(startDateLayout);
+  mangaInfoLayout->addWidget(_editMangaInfoButton);
   mangaInfoLayout->setAlignment(Qt::AlignTop);
 
   QGroupBox* mangaInfoGroupBox = new QGroupBox("Information");
@@ -133,6 +146,12 @@ MangaListWidget::MangaListWidget(QWidget* parent):
   QStringList headerLabels;
   headerLabels << "Manga";
   _model->setHorizontalHeaderLabels(headerLabels);
+
+
+  /// Set current index to first manga if any
+
+  _view->setCurrentIndex(_model->index(0, 0));
+  updateMangaInfo(_model->index(0, 0));
 
 
   /// Main layout
@@ -271,6 +290,15 @@ void MangaListWidget::decorateMangaNames(void) {
   startNextCheck();
 }
 
+void MangaListWidget::toggleEditMangaInfo(bool b)
+{
+  _editOn = b;
+  if (_editOn)
+    _mangaPreviewLabel->setToolTip("Click here to edit cover");
+  else
+    _mangaPreviewLabel->setToolTip("");
+}
+
 void MangaListWidget::startNextCheck(void) {
   _currentChaptersListOnWeb.clear();
   _currentIndex = QModelIndex();
@@ -370,6 +398,8 @@ void MangaListWidget::updateChaptersInfo(QModelIndex index) {
 }
 
 void MangaListWidget::updateMangaInfo(QModelIndex index) {
+  _editMangaInfoButton->setChecked(false);
+
   QStandardItem* currentItem = _model->itemFromIndex(index);
 
   if (!currentItem->parent()) {
@@ -377,8 +407,14 @@ void MangaListWidget::updateMangaInfo(QModelIndex index) {
 
     if (mangaDirectory.exists("cover.png")) {
       QPixmap pixmap(mangaDirectory.path()+"/cover.png");
-      pixmap.scaled(_mangaPreviewLabel->width(), _mangaPreviewLabel->height(), Qt::KeepAspectRatio);
+      pixmap = pixmap.scaled(_mangaPreviewLabel->width(), _mangaPreviewLabel->height(), Qt::KeepAspectRatio);
       _mangaPreviewLabel->setPixmap(pixmap);
+      _coverHasToBeSet = false;
+    } else {
+      QPixmap pixmap(Utils::getIconsPath()+"/setCover.png");
+      pixmap = pixmap.scaled(_mangaPreviewLabel->width(), _mangaPreviewLabel->height(), Qt::KeepAspectRatio);
+      _mangaPreviewLabel->setPixmap(pixmap);
+      _coverHasToBeSet = true;
     }
 
     QFile file(mangaDirectory.filePath("mangaInfo.txt"));
@@ -520,4 +556,44 @@ void MangaListWidget::keyReleaseEvent(QKeyEvent* event) {
       updateMangaInfo(index);
     }
   }
+}
+
+bool MangaListWidget::eventFilter(QObject* object, QEvent* event)
+{
+  if(_editOn || (object == _mangaPreviewLabel && _coverHasToBeSet)) {
+    switch (event->type()) {
+    case QEvent::MouseButtonRelease: {
+      QString coverFileName = QFileDialog::getOpenFileName(this, "Set a cover", QDir::homePath(), "Images (*.png)");
+      QApplication::restoreOverrideCursor();
+      if (!coverFileName.isEmpty()) {
+        QModelIndex mangaIndex = _view->currentIndex();
+        if (_currentIndex.parent().isValid())
+          mangaIndex = _currentIndex.parent();
+
+        QString newCoverFileName = _scansDirectory.path()+"/"+_model->itemFromIndex(mangaIndex)->text()+"/cover.png";
+        if (QFile::exists(newCoverFileName))
+          QFile::remove(newCoverFileName);
+        QFile::copy(coverFileName, newCoverFileName);
+
+        QPixmap pixmap(newCoverFileName);
+        pixmap = pixmap.scaled(_mangaPreviewLabel->width(), _mangaPreviewLabel->height(), Qt::KeepAspectRatio);
+
+        _mangaPreviewLabel->setPixmap(pixmap);
+      }
+      break;
+    } case QEvent::HoverEnter: {
+      QApplication::setOverrideCursor(QCursor(Qt::PointingHandCursor));
+      break;
+    } case QEvent::HoverLeave: {
+      QApplication::restoreOverrideCursor();
+      break;
+    }
+    default:
+      break;
+    }
+
+    return false;
+  }
+
+  return QWidget::eventFilter(object, event);
 }
