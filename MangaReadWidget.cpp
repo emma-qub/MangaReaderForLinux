@@ -204,6 +204,11 @@ void MangaReadWidget::switchManga(QString mangaName, QString chapterName) {
   /// Otherwise, the mangas combo box has the focus and using the arrows
   /// would end up updating the current manga.
   _currentPageLabel->setFocus();
+
+  /// For some reason, the previous setFocus mess up with the combo box.
+  if (_chaptersComboBox->currentText() != chapterName) {
+    _chaptersComboBox->setCurrentText(chapterName);
+  }
 }
 
 void MangaReadWidget::keyReleaseEvent(QKeyEvent* event) {
