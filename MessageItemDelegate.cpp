@@ -1,6 +1,5 @@
 #include "MessageItemDelegate.h"
 
-#include <QDebug>
 
 MessageItemDelegate::MessageItemDelegate(QObject* parent):
   QStyledItemDelegate(parent) {

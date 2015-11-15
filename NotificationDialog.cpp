@@ -1,6 +1,5 @@
 #include "NotificationDialog.h"
 
-#include <iostream>
 
 NotificationDialog::NotificationDialog(const QString& iconPath, QWidget* parent):
   QWidget(parent) {

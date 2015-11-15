@@ -1,7 +1,6 @@
 ﻿#include "MainWindow.h"
 #include "Utils.h"
 
-#include <iostream>
 
 MainWindow::MainWindow(QMainWindow* parent):
   QMainWindow(parent),

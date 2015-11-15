@@ -8,10 +8,7 @@
 #include <QString>
 #include <QStringList>
 #include <QTimer>
-#include <QDebug>
 #include <QSettings>
-
-#include <iostream>
 
 
 /////////////////////////////////////

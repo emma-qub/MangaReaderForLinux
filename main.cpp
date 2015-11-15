@@ -1,5 +1,4 @@
 #include <QApplication>
-#include <QDebug>
 
 #include "MainWindow.h"
 #include "BrowseDirectoryDialog.h"

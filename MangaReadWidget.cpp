@@ -193,16 +193,19 @@ void MangaReadWidget::updateCurrentPage(void) {
 
 void MangaReadWidget::switchManga(QString mangaName, QString chapterName) {
   _mangasComboBox->setCurrentText(mangaName);
+  disconnect(_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
   _chaptersComboBox->setCurrentText(chapterName);
+  connect(_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
+
+  /// Force to change chapter since there are messed up signals when switching from read/download tabs
+  changeChapter(chapterName);
 
   /// Set focus to the page in order to let the user immediately read the chapter.
   /// Otherwise, the mangas combo box has the focus and using the arrows
   /// would end up updating the current manga.
   _currentPageLabel->setFocus();
 
-  /// If it's the first time that a chapter is selected (either from the list
-  /// or the download widget) then the previous set focus method just screwed up
-  /// the current index in chapters combo box. Idk why so I just insure that it's the right one.
+  /// For some reason, the previous setFocus mess up with the combo box.
   if (_chaptersComboBox->currentText() != chapterName) {
     _chaptersComboBox->setCurrentText(chapterName);
   }
