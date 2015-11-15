@@ -22,29 +22,37 @@ signals:
 
 public slots:
   void searchForManga(void);
-  void checkMangaName(void);
-  void finish(void);
-  void downloadPreviewImage(void);
+  void getMangaListFinished(int,QProcess::ExitStatus);
+  void getMangaListStarted(void);
+//  void checkMangaName(void);
+//  void finish(void);
+//  void downloadPreviewImage(void);
 
 private:
+  QProcess* _listMangaProcess;
+
+  QDir _scansDirectory;
+
+  QStringList _mangaList;
+
   QLineEdit* _mangaNameLineEdit;
   QPushButton* _addMangaButton;
-  QPushButton* _cancelButton;
-  QPushButton* _finishButton;
 
   MessageItemDelegate* _messageItemDelegate;
   MessageListModel* _messageListModel;
   MessageListView* _messageListView;
 
-  DownloadHTMLManager _downloadMangaListManager;
-  DownloadHTMLManager _downloadMangaInfoManager;
-  DownloadManager _downloadManager;
+  QPushButton* _finishButton;
+  //  QPushButton* _cancelButton;
 
-  QTime _downloadTime;
-  QFile _output;
-  QNetworkReply* _networkReply;
+//  DownloadHTMLManager _downloadMangaListManager;
+//  DownloadHTMLManager _downloadMangaInfoManager;
+//  DownloadManager _downloadManager;
 
-  QDir _scansDirectory;
+//  QTime _downloadTime;
+//  QFile _output;
+//  QNetworkReply* _networkReply;
+
 };
 
 #endif // ADDMANGADIALOG_H
