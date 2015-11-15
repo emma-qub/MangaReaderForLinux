@@ -2,7 +2,7 @@
 
 if [ $# -ne 1 ];
 then
-  echo "No manga name specified." 1>&2
+  echo "Usage: $0 manganame" 1>&2
   exit 1
 fi
 
