@@ -247,7 +247,7 @@ void MangaReadWidget::keyReleaseEvent(QKeyEvent* event) {
   }
 }
 
-void MangaReadWidget::mouseReleaseEvent(QMouseEvent *) {
+void MangaReadWidget::mouseReleaseEvent(QMouseEvent* ) {
   _zoomLabel->clear();
   _zoomLabel->hide();
 }

@@ -16,7 +16,7 @@ public:
     Download
   };
 
-  explicit MessageListModel(QObject *parent = nullptr, int maxLine = 10000);
+  explicit MessageListModel(QObject* parent = nullptr, int maxLine = 10000);
 
   inline void editMessageSuccess(QString message, bool newLine = true) {
     append(message, MessageStatus::Success, newLine);

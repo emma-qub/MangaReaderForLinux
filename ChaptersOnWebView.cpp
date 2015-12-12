@@ -12,14 +12,14 @@ ChaptersOnWebView::ChaptersOnWebView(QWidget* parent):
   setDragDropMode(QAbstractItemView::DragOnly);
 }
 
-void ChaptersOnWebView::mousePressEvent(QMouseEvent *event) {
+void ChaptersOnWebView::mousePressEvent(QMouseEvent* event) {
   QListView::mousePressEvent(event);
 
   if (event->button() == Qt::LeftButton)
     _dragStartPosition = event->pos();
 }
 
-void ChaptersOnWebView::mouseMoveEvent(QMouseEvent *event) {
+void ChaptersOnWebView::mouseMoveEvent(QMouseEvent* event) {
   if (!(event->buttons() == Qt::LeftButton))
       return;
 
@@ -27,8 +27,8 @@ void ChaptersOnWebView::mouseMoveEvent(QMouseEvent *event) {
      < QApplication::startDragDistance())
     return;
 
-  QDrag *drag = new QDrag(this);
-  QMimeData *mimeData = new QMimeData;
+  QDrag* drag = new QDrag(this);
+  QMimeData* mimeData = new QMimeData;
 
   mimeData->setData("application/x-downloadchapter", QByteArray());
   drag->setMimeData(mimeData);

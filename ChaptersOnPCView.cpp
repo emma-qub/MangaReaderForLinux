@@ -10,7 +10,7 @@ ChaptersOnPCView::ChaptersOnPCView(QWidget* parent):
   setAcceptDrops(true);
 }
 
-void ChaptersOnPCView::dropEvent(QDropEvent *event) {
+void ChaptersOnPCView::dropEvent(QDropEvent* event) {
   qDebug() << "#" << event->mimeData()->formats();
   if (event->mimeData()->hasFormat("application/x-downloadchapter")) {
     qDebug() << "OK";

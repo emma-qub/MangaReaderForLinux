@@ -39,7 +39,7 @@ public slots:
 
 protected:
   void keyReleaseEvent(QKeyEvent* event);
-  void mouseReleaseEvent(QMouseEvent *);
+  void mouseReleaseEvent(QMouseEvent* );
   void mouseMoveEvent(QMouseEvent* event);
 
 signals:
