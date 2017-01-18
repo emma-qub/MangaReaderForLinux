@@ -19,31 +19,25 @@ void MessageItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& o
   QString errorString       = qvariant_cast<QString>(index.data(ErrorRole      ));
   QString downloadString    = qvariant_cast<QString>(index.data(DownloadRole   ));
 
-  QRect informationRect = option.rect;
-  QRect successRect     = option.rect;
-  QRect warningRect     = option.rect;
-  QRect errorRect       = option.rect;
-  QRect downloadRect    = option.rect;
-
   // Paint information
   painter->setPen(QPen(QColor("#4169e1")));
-  painter->drawText(informationRect, informationString);
+  painter->drawText(option.rect, informationString);
 
   // Paint success
   painter->setPen(QPen(QColor("#228b22")));
-  painter->drawText(successRect, successString);
+  painter->drawText(option.rect, successString);
 
   // Paint warning
   painter->setPen(QPen(QColor("#ff8c00")));
-  painter->drawText(warningRect, warningString);
+  painter->drawText(option.rect, warningString);
 
   // Paint error
   painter->setPen(QPen(QColor("#ff0000")));
-  painter->drawText(errorRect, errorString);
+  painter->drawText(option.rect, errorString);
 
   // Paint download
   painter->setPen(QPen(QColor("#333333")));
-  painter->drawText(downloadRect, Qt::AlignRight, downloadString);
+  painter->drawText(option.rect, Qt::AlignRight, downloadString);
 
   painter->restore();
 }
