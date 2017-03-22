@@ -3,8 +3,7 @@
 
 #include <QtWidgets>
 #include <QDir>
-#include <QtWebKitWidgets/QWebView>
-#include <QtWebKitWidgets/QWebFrame>
+#include <QtWebView>
 
 #include "DownloadManager.h"
 #include "MessageListView.h"

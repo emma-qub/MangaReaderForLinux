@@ -36,6 +36,6 @@ HEADERS += \
 QT += \
     widgets \
     network \
-    webkitwidgets
+    webview
 
 CONFIG += c++11
