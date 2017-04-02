@@ -1,0 +1,30 @@
+QSplitter {
+  width: 0px;
+  height: 1px;
+  /*border-left: 1px solid #333333;*/
+}
+
+QListView, QWidget#mangaListSubWidget {
+  background-color: #252838;
+  border: none;
+}
+
+QTreeView, QListView {
+  font-size: 17px;
+}
+
+#m_checkNewChaptersButton {
+  color: #fff;
+}
+
+#m_checkNewChaptersButton:hover {
+  color: #5cb85c;
+}
+
+#m_checkNewChaptersButton:disabled {
+  color: #252838;
+}
+
+#m_checkNewChaptersButton::flat {
+    border: none; /* no border for a flat push button */
+}

@@ -17,15 +17,15 @@
 
 DownloadManager::DownloadManager(const QString& mangaName, QObject* parent) :
   QObject(parent),
-  _mangaName(mangaName),
-  _scansDirectory(Utils::getScansDirectory()),
+  m_mangaName(mangaName),
+  m_scansDirectory(Utils::getScansDirectory()),
   downloadedCount(0),
   totalCount(0),
   downloadSizeAtPause(0),
   isOnPause(false),
   currentUrl() {
 
-  _mangaDirectory = QDir(_scansDirectory.path()+"/"+_mangaName+"/");
+  m_mangaDirectory = QDir(m_scansDirectory.path()+"/"+m_mangaName+"/");
 }
 
 void DownloadManager::append(const QStringList& urlList) {
@@ -46,7 +46,7 @@ void DownloadManager::append(const QUrl& url) {
   ++totalCount;
 }
 
-QString DownloadManager::saveFileName(void) {
+QString DownloadManager::saveFileName() {
   QString basename = QFileInfo(currentUrl.path()).fileName();
 
   if (basename.isEmpty()) {
@@ -56,7 +56,7 @@ QString DownloadManager::saveFileName(void) {
 
   QString mangaName;
   QString chapterName;
-  QString pathName = _mangaDirectory.path() + "/";
+  QString pathName = m_mangaDirectory.path() + "/";
 
   QStringList directories = currentUrl.path().split("/");
 
@@ -72,12 +72,12 @@ QString DownloadManager::saveFileName(void) {
   return pathName;
 }
 
-void DownloadManager::clean(void) {
+void DownloadManager::clean() {
   totalCount = 0;
   downloadedCount = 0;
 }
 
-void DownloadManager::startNextDownload(void) {
+void DownloadManager::startNextDownload() {
   downloadSizeAtPause = 0;
 
   emit nbFilesDownloaded(downloadedCount, totalCount);
@@ -203,7 +203,7 @@ void DownloadManager::downloadProgress(qint64 bytesReceived, qint64 bytesTotal) 
   }
 }
 
-void DownloadManager::downloadFinished(void) {
+void DownloadManager::downloadFinished() {
   output.close();
 
   if (currentDownload->error()) {
@@ -216,11 +216,11 @@ void DownloadManager::downloadFinished(void) {
   startNextDownload();
 }
 
-void DownloadManager::downloadReadyRead(void) {
+void DownloadManager::downloadReadyRead() {
   output.write(currentDownload->readAll());
 }
 
-void DownloadManager::stop(void) {
+void DownloadManager::stop() {
   if (!currentDownload)
     return;
 
@@ -248,7 +248,7 @@ void DownloadManager::stop(void) {
   emit message("You will have to redownload chapter "+chapterName+".", DownloadManager::Warning);
 }
 
-void DownloadManager::pause(void) {
+void DownloadManager::pause() {
   if (!currentDownload)
     return;
 
@@ -266,7 +266,7 @@ void DownloadManager::pause(void) {
   currentDownload = nullptr;
 }
 
-void DownloadManager::resume(void) {
+void DownloadManager::resume() {
   emit message("Resume download.", DownloadManager::Warning);
 
   downloadSizeAtPause = output.size();
@@ -284,10 +284,10 @@ void DownloadManager::resume(void) {
 //////////////////////////////////////
 DownloadHTMLManager::DownloadHTMLManager(const QString& mangaName, QObject* parent) :
   DownloadManager(mangaName, parent),
-  _htmlPages() {
+  m_htmlPages() {
 }
 
-void DownloadHTMLManager::startNextDownload(void) {
+void DownloadHTMLManager::startNextDownload() {
   emit nbFilesDownloaded(downloadedCount, totalCount);
 
   if (downloadQueue.isEmpty()) {
@@ -307,18 +307,18 @@ void DownloadHTMLManager::startNextDownload(void) {
   downloadTime.start();
 }
 
-void DownloadHTMLManager::clean(void) {
+void DownloadHTMLManager::clean() {
   DownloadManager::clean();
-  _htmlPages.clear();
+  m_htmlPages.clear();
 }
 
-void DownloadHTMLManager::downloadFinished(void) {
+void DownloadHTMLManager::downloadFinished() {
   if (currentDownload->error()) {
     emit message("Failed: "+currentDownload->errorString(), Error);
   } else {
     ++downloadedCount;
 
-    _htmlPages << currentDownload->readAll();
+    m_htmlPages << currentDownload->readAll();
   }
 
   currentDownload->deleteLater();

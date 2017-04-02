@@ -19,29 +19,29 @@ public:
   MangaDownloadWidget(QWidget* parent = nullptr);
 
 public slots:
-  void updateChaptersList(void);
+  void updateChaptersList();
 
   void checkMangaNameExists(QString);
 
   void searchForDownload(QString);
 
-  void updateChaptersOnPCView(void);
+  void updateChaptersOnPCView();
 
   void chaptersListUpdated(int,QProcess::ExitStatus);
-  void chaptersListUpdateStarted(void);
-  void getChaptersListUpdated(void);
+  void chaptersListUpdateStarted();
+  void getChaptersListUpdated();
 
   void downloadFinished(int,QProcess::ExitStatus);
-  void nextDownloadHasStarted(void);
-  void downloadChapters(void);
-  void startNextDownload(void);
-  void getDownloadInfo(void);
+  void nextDownloadHasStarted();
+  void downloadChapters();
+  void startNextDownload();
+  void getDownloadInfo();
 
   void goToRead(QModelIndex modelIndex);
 
-  void updatedb(void);
+  void updatedb();
 
-  void stopDownload(void);
+  void stopDownload();
 
 signals:
   void initModelRequested(QString);
@@ -52,40 +52,40 @@ protected:
   virtual void keyReleaseEvent(QKeyEvent* event);
 
 private:
-  QDir _scansDirectory;
-  QStringList _mangaList;
-  QDir _currentMangaDirectory;
-  QString _currentChapter;
-  QQueue<QPair<QString, QString>> _downloadQueue;
-  QQueue<QModelIndex> _chaptersQueue;
-  int _downloadedCount;
-  int _totalCount;
+  QDir m_scansDirectory;
+  QStringList m_mangaList;
+  QDir m_currentMangaDirectory;
+  QString m_currentChapter;
+  QQueue<QPair<QString, QString>> m_downloadQueue;
+  QQueue<QModelIndex> m_chaptersQueue;
+  int m_downloadedCount;
+  int m_totalCount;
 
-  QLineEdit* _selectLineEdit;
+  QLineEdit* m_selectLineEdit;
 
-  QStringListModel* _chaptersOnPCModel;
-  ChaptersOnPCView* _chaptersOnPCView;
+  QStringListModel* m_chaptersOnPCModel;
+  ChaptersOnPCView* m_chaptersOnPCView;
 
-  QPushButton* _updateButton;
-  QPushButton* _downloadButton;
-  QPushButton* _selectAllButton;
+  QPushButton* m_updateButton;
+  QPushButton* m_downloadButton;
+  QPushButton* m_selectAllButton;
 
-  QStandardItemModel* _chaptersOnWebModel;
-  ChaptersOnWebView* _chaptersOnWebView;
+  QStandardItemModel* m_chaptersOnWebModel;
+  ChaptersOnWebView* m_chaptersOnWebView;
 
-  QPushButton* _clearTextEditButton;
-  QPushButton* _stopButton;
-  QProgressBar* _chaptersProgressBar;
-  QLabel* _chaptersDownloadedLabel;
-  QProgressBar* _pagesProgressBar;
-  QLabel* _pagesDownloadedLabel;
+  QPushButton* m_clearTextEditButton;
+  QPushButton* m_stopButton;
+  QProgressBar* m_chaptersProgressBar;
+  QLabel* m_chaptersDownloadedLabel;
+  QProgressBar* m_pagesProgressBar;
+  QLabel* m_pagesDownloadedLabel;
 
-  MessageListModel* _messageModel;
-  MessageListView* _messageView;
-  MessageItemDelegate* _messageItemDelegate;
+  MessageListModel* m_messageModel;
+  MessageListView* m_messageView;
+  MessageItemDelegate* m_messageItemDelegate;
 
-  QProcess* _getChaptersListProcess;
-  QProcess* _downloadChapterProcess;
+  QProcess* m_getChaptersListProcess;
+  QProcess* m_downloadChapterProcess;
 };
 
 #endif // MANGADOWNLOADWIDGET_H

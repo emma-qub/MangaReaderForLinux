@@ -15,43 +15,43 @@ class AddMangaDialog: public QDialog {
 public:
   explicit AddMangaDialog(QWidget* parent = nullptr);
 
-  bool addManga(void);
-  QStringList extractMangaInfo(void);
+  bool addManga();
+  QStringList extractMangaInfo();
 
 signals:
 
 public slots:
-  void searchForManga(void);
+  void searchForManga();
   void getMangaListFinished(int,QProcess::ExitStatus);
-  void getMangaListStarted(void);
-//  void checkMangaName(void);
-//  void finish(void);
-//  void downloadPreviewImage(void);
+  void getMangaListStarted();
+//  void checkMangaName();
+//  void finish();
+//  void downloadPreviewImage();
 
 private:
-  QProcess* _listMangaProcess;
+  QProcess* m_listMangaProcess;
 
-  QDir _scansDirectory;
+  QDir m_scansDirectory;
 
-  QStringList _mangaList;
+  QStringList m_mangaList;
 
-  QLineEdit* _mangaNameLineEdit;
-  QPushButton* _addMangaButton;
+  QLineEdit* m_mangaNameLineEdit;
+  QPushButton* m_addMangaButton;
 
-  MessageItemDelegate* _messageItemDelegate;
-  MessageListModel* _messageListModel;
-  MessageListView* _messageListView;
+  MessageItemDelegate* m_messageItemDelegate;
+  MessageListModel* m_messageListModel;
+  MessageListView* m_messageListView;
 
-  QPushButton* _finishButton;
-  //  QPushButton* _cancelButton;
+  QPushButton* m_finishButton;
+  //  QPushButton* m_cancelButton;
 
-//  DownloadHTMLManager _downloadMangaListManager;
-//  DownloadHTMLManager _downloadMangaInfoManager;
-//  DownloadManager _downloadManager;
+//  DownloadHTMLManager m_downloadMangaListManager;
+//  DownloadHTMLManager m_downloadMangaInfoManager;
+//  DownloadManager m_downloadManager;
 
-//  QTime _downloadTime;
-//  QFile _output;
-//  QNetworkReply* _networkReply;
+//  QTime m_downloadTime;
+//  QFile m_output;
+//  QNetworkReply* m_networkReply;
 
 };
 

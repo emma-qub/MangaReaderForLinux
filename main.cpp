@@ -13,7 +13,7 @@
 #endif
 
 
-void checkScansDirectoryExists(void){
+void checkScansDirectoryExists(){
   QSettings settings("ValentinMicheletINC", "MangaReader");
 
   if (settings.value("ScansDirectory").toString().isEmpty()) {
@@ -25,7 +25,7 @@ void checkScansDirectoryExists(void){
       mangaDirectory = browseDialog->getScansDirectory();
     } while (!ok || mangaDirectory.isEmpty());
     settings.setValue("ScansDirectory", mangaDirectory);
-    Utils::_scansDirectory = QDir(mangaDirectory);
+    Utils::m_scansDirectory = QDir(mangaDirectory);
     delete browseDialog;
   }
 }

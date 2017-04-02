@@ -3,101 +3,101 @@
 
 MangaReadWidget::MangaReadWidget(QWidget* parent) :
   QWidget(parent),
-  _scansDirectory(Utils::getScansDirectory()),
-  _currentMangaDirectory(),
-  _currentChapterDirectory(),
-  _chapterStringList(),
-  _currentPageNumber(-1),
-  _nbPagesCurrCh(-1),
-  _mousePosition() {
+  m_scansDirectory(Utils::getScansDirectory()),
+  m_currentMangaDirectory(),
+  m_currentChapterDirectory(),
+  m_chapterStringList(),
+  m_currentPageNumber(-1),
+  m_nbPagesCurrCh(-1),
+  m_mousePosition() {
 
-  QStringList mangaList = Utils::dirList(_scansDirectory);
+  QStringList mangaList = Utils::dirList(m_scansDirectory);
 
 
   /// Select manga
 
   QLabel* selectMangaLabel = new QLabel("Select your manga:");
 
-  _selectLineEdit = new QLineEdit;
+  m_selectLineEdit = new QLineEdit;
   QCompleter* completer = new QCompleter(mangaList, this);
   completer->setCaseSensitivity(Qt::CaseInsensitive);
   completer->setCompletionMode(QCompleter::PopupCompletion);
-  _selectLineEdit->setCompleter(completer);
+  m_selectLineEdit->setCompleter(completer);
 
-  _mangasComboBox = new QComboBox;
-  _mangasComboBox->addItems(mangaList);
-  _mangasComboBox->setFixedWidth(250);
-  _mangasComboBox->setLineEdit(_selectLineEdit);
+  m_mangasComboBox = new QComboBox;
+  m_mangasComboBox->addItems(mangaList);
+  m_mangasComboBox->setFixedWidth(250);
+  m_mangasComboBox->setLineEdit(m_selectLineEdit);
 
-  connect(_mangasComboBox, SIGNAL(activated(QString)), this, SLOT(updateChaptersComboBox(QString)));
-  connect(_mangasComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(updateChaptersComboBox(QString)));
+  connect(m_mangasComboBox, SIGNAL(activated(QString)), this, SLOT(updateChaptersComboBox(QString)));
+  connect(m_mangasComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(updateChaptersComboBox(QString)));
 
 
   /// Select chapter
 
-  _chaptersComboBox = new QComboBox;
-  _chaptersComboBox->setFixedWidth(300);
-  connect(_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
+  m_chaptersComboBox = new QComboBox;
+  m_chaptersComboBox->setFixedWidth(300);
+  connect(m_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
 
 
   /// Select page
 
-  _nbPagesLabel = new QLabel;
+  m_nbPagesLabel = new QLabel;
 
-  _pagesComboBox = new QComboBox;
-  _pagesComboBox->setFixedWidth(80);
-  connect(_pagesComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changePage(int)));
+  m_pagesComboBox = new QComboBox;
+  m_pagesComboBox->setFixedWidth(80);
+  connect(m_pagesComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changePage(int)));
 
 
   /// Select first manga in list if any
 
-  if (_mangasComboBox->count() > 0) {
-    updateChaptersComboBox(_mangasComboBox->itemText(0));
+  if (m_mangasComboBox->count() > 0) {
+    updateChaptersComboBox(m_mangasComboBox->itemText(0));
   }
 
 
   /// Zoom
 
-  _zoomButton = new QPushButton;
-  _zoomButton->setIcon(QIcon(Utils::getIconsPath()+"/zoom.png"));
-  _zoomButton->setCheckable(true);
-  _zoomButton->setChecked(true);
-  _zoomButton->setFixedWidth(37);
+  m_zoomButton = new QPushButton;
+  m_zoomButton->setIcon(QIcon(Utils::getIconsPath()+"/zoom.png"));
+  m_zoomButton->setCheckable(true);
+  m_zoomButton->setChecked(true);
+  m_zoomButton->setFixedWidth(37);
 
-  _zoomComboBox = new QComboBox;
+  m_zoomComboBox = new QComboBox;
   QStringList zoomValues;
   zoomValues << QString::number(2) << QString::number(4) << QString::number(8);
-  _zoomComboBox->addItems(zoomValues);
-  _zoomComboBox->setCurrentIndex(0);
-  _zoomComboBox->setFixedWidth(50);
+  m_zoomComboBox->addItems(zoomValues);
+  m_zoomComboBox->setCurrentIndex(0);
+  m_zoomComboBox->setFixedWidth(50);
 
 
   /// Manga form layout
 
   QHBoxLayout* chooseMangaLayout = new QHBoxLayout;
   chooseMangaLayout->addWidget(selectMangaLabel);
-  chooseMangaLayout->addWidget(_mangasComboBox);
-  chooseMangaLayout->addWidget(_chaptersComboBox);
-  chooseMangaLayout->addWidget(_pagesComboBox);
-  chooseMangaLayout->addWidget(_nbPagesLabel);
-  chooseMangaLayout->addWidget(_zoomButton);
-  chooseMangaLayout->addWidget(_zoomComboBox);
+  chooseMangaLayout->addWidget(m_mangasComboBox);
+  chooseMangaLayout->addWidget(m_chaptersComboBox);
+  chooseMangaLayout->addWidget(m_pagesComboBox);
+  chooseMangaLayout->addWidget(m_nbPagesLabel);
+  chooseMangaLayout->addWidget(m_zoomButton);
+  chooseMangaLayout->addWidget(m_zoomComboBox);
   chooseMangaLayout->addSpacing(500);
 
 
   /// Page
 
-  _currentPageLabel = new QLabel;
-  _currentPageLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+  m_currentPageLabel = new QLabel;
+  m_currentPageLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-  _scrollArea = new QScrollArea;
-  _scrollArea->setBackgroundRole(QPalette::Background);
-  _scrollArea->setWidget(_currentPageLabel);
-  _scrollArea->setWidgetResizable(true);
-  _scrollArea->setAlignment(Qt::AlignHCenter);
+  m_scrollArea = new QScrollArea;
+  m_scrollArea->setBackgroundRole(QPalette::Background);
+  m_scrollArea->setWidget(m_currentPageLabel);
+  m_scrollArea->setWidgetResizable(true);
+  m_scrollArea->setAlignment(Qt::AlignHCenter);
 
-  _zoomLabel = new QLabel(_scrollArea);
-  _zoomLabel->hide();
+  m_zoomLabel = new QLabel(m_scrollArea);
+  m_zoomLabel->hide();
 
 
   /// Main layout
@@ -108,94 +108,94 @@ MangaReadWidget::MangaReadWidget(QWidget* parent) :
   QVBoxLayout* mainLayout = new QVBoxLayout;
   mainLayout->addWidget(titleLabel);
   mainLayout->addLayout(chooseMangaLayout);
-  mainLayout->addWidget(_scrollArea);
+  mainLayout->addWidget(m_scrollArea);
 
   setLayout(mainLayout);
 }
 
 void MangaReadWidget::updateChaptersComboBox(QString mangaName) {
-  disconnect(_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
-  _chaptersComboBox->clear();
-  connect(_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
+  disconnect(m_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
+  m_chaptersComboBox->clear();
+  connect(m_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
 
   if (mangaName.isEmpty())
     return;
 
-  _currentMangaDirectory = QDir(_scansDirectory.path()+"/"+mangaName);
+  m_currentMangaDirectory = QDir(m_scansDirectory.path()+"/"+mangaName);
 
-  QStringList chaptersList = Utils::dirList(_currentMangaDirectory, true);
+  QStringList chaptersList = Utils::dirList(m_currentMangaDirectory, true);
 
   if (chaptersList.size() == 0) {
     changeChapter("");
     return;
   }
 
-  disconnect(_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
-  _chaptersComboBox->addItems(chaptersList);
-  connect(_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
+  disconnect(m_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
+  m_chaptersComboBox->addItems(chaptersList);
+  connect(m_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
 }
 
 void MangaReadWidget::changeChapter(QString chapterName) {
   if (chapterName.isEmpty()) {
-    _currentPageLabel->setPixmap(QPixmap());
+    m_currentPageLabel->setPixmap(QPixmap());
     updatePagesComboBox();
     return;
   }
 
-  _currentChapterDirectory = QDir(_currentMangaDirectory.path() + "/" + chapterName);
-  _currentPageNumber = 0;
+  m_currentChapterDirectory = QDir(m_currentMangaDirectory.path() + "/" + chapterName);
+  m_currentPageNumber = 0;
   updatePagesComboBox();
-  Utils::updateChapterRead(_mangasComboBox->currentText(), _chaptersComboBox->currentText(), true);
+  Utils::updateChapterRead(m_mangasComboBox->currentText(), m_chaptersComboBox->currentText(), true);
 
-  emit chapterSelected(_mangasComboBox->currentText(), _chaptersComboBox->currentText());
+  emit chapterSelected(m_mangasComboBox->currentText(), m_chaptersComboBox->currentText());
 }
 
-void MangaReadWidget::updatePagesComboBox(void) {
-  disconnect(_pagesComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changePage(int)));
-  _pagesComboBox->clear();
-  connect(_pagesComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changePage(int)));
+void MangaReadWidget::updatePagesComboBox() {
+  disconnect(m_pagesComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changePage(int)));
+  m_pagesComboBox->clear();
+  connect(m_pagesComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changePage(int)));
 
-  _nbPagesLabel->setText("/");
+  m_nbPagesLabel->setText("/");
 
-  if (_mangasComboBox->currentText().isEmpty() || _chaptersComboBox->currentText().isEmpty())
+  if (m_mangasComboBox->currentText().isEmpty() || m_chaptersComboBox->currentText().isEmpty())
     return;
 
   QStringList nameFilters;
   nameFilters << "*.png" << "*.jpg" << "*.gif" << "*.jpeg" << "*.bmp";
-  _chapterStringList = Utils::filesList(_currentChapterDirectory);
-  _nbPagesCurrCh = _chapterStringList.size();
+  m_chapterStringList = Utils::filesList(m_currentChapterDirectory);
+  m_nbPagesCurrCh = m_chapterStringList.size();
 
-  disconnect(_pagesComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changePage(int)));
-  for (int k = 1; k <= _nbPagesCurrCh; k++) {
-    _pagesComboBox->addItem(QString::number(k));
+  disconnect(m_pagesComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changePage(int)));
+  for (int k = 1; k <= m_nbPagesCurrCh; k++) {
+    m_pagesComboBox->addItem(QString::number(k));
   }
-  connect(_pagesComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changePage(int)));
+  connect(m_pagesComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changePage(int)));
 
-  _nbPagesLabel->setText("/"+QString::number(_nbPagesCurrCh));
+  m_nbPagesLabel->setText("/"+QString::number(m_nbPagesCurrCh));
   updateCurrentPage();
 }
 
 void MangaReadWidget::changePage(int pageNumber) {
-  if (pageNumber > -1 && pageNumber < _nbPagesCurrCh) {
-    _currentPageNumber = pageNumber;
+  if (pageNumber > -1 && pageNumber < m_nbPagesCurrCh) {
+    m_currentPageNumber = pageNumber;
     updateCurrentPage();
   }
 }
 
-void MangaReadWidget::updateCurrentPage(void) {
-  if (_currentPageNumber >= _nbPagesCurrCh) {
-    QMessageBox::critical(this, "Page number error", "Error: cannot load page number " + QString::number(_currentPageNumber+1) + " because chapter counts only " + _chapterStringList.size() + " pages.");
+void MangaReadWidget::updateCurrentPage() {
+  if (m_currentPageNumber >= m_nbPagesCurrCh) {
+    QMessageBox::critical(this, "Page number error", "Error: cannot load page number " + QString::number(m_currentPageNumber+1) + " because chapter counts only " + m_chapterStringList.size() + " pages.");
     return;
   }
-  _currentPageLabel->setPixmap(QPixmap(_currentChapterDirectory.path()+"/"+_chapterStringList.at(_currentPageNumber)));
-  _scrollArea->verticalScrollBar()->setValue(0);
+  m_currentPageLabel->setPixmap(QPixmap(m_currentChapterDirectory.path()+"/"+m_chapterStringList.at(m_currentPageNumber)));
+  m_scrollArea->verticalScrollBar()->setValue(0);
 }
 
 void MangaReadWidget::switchManga(QString mangaName, QString chapterName) {
-  _mangasComboBox->setCurrentText(mangaName);
-  disconnect(_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
-  _chaptersComboBox->setCurrentText(chapterName);
-  connect(_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
+  m_mangasComboBox->setCurrentText(mangaName);
+  disconnect(m_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
+  m_chaptersComboBox->setCurrentText(chapterName);
+  connect(m_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
 
   /// Force to change chapter since there are messed up signals when switching from read/download tabs
   changeChapter(chapterName);
@@ -203,43 +203,43 @@ void MangaReadWidget::switchManga(QString mangaName, QString chapterName) {
   /// Set focus to the page in order to let the user immediately read the chapter.
   /// Otherwise, the mangas combo box has the focus and using the arrows
   /// would end up updating the current manga.
-  _currentPageLabel->setFocus();
+  m_currentPageLabel->setFocus();
 
   /// For some reason, the previous setFocus mess up with the combo box.
-  if (_chaptersComboBox->currentText() != chapterName) {
-    _chaptersComboBox->setCurrentText(chapterName);
+  if (m_chaptersComboBox->currentText() != chapterName) {
+    m_chaptersComboBox->setCurrentText(chapterName);
   }
 }
 
 void MangaReadWidget::keyReleaseEvent(QKeyEvent* event) {
-  if (_chaptersComboBox->currentText().isEmpty())
+  if (m_chaptersComboBox->currentText().isEmpty())
     return;
 
   switch (event->key()) {
   case Qt::Key_Right:
     if (event->modifiers() & Qt::ControlModifier) {
-      if (_chaptersComboBox->currentIndex() == 0)
+      if (m_chaptersComboBox->currentIndex() == 0)
         return;
-      _chaptersComboBox->setCurrentIndex(_chaptersComboBox->currentIndex()-1);
+      m_chaptersComboBox->setCurrentIndex(m_chaptersComboBox->currentIndex()-1);
     } else if (event->modifiers() & Qt::ShiftModifier) {
       return;
     } else {
-      if (_pagesComboBox->currentIndex() == _nbPagesCurrCh-1)
+      if (m_pagesComboBox->currentIndex() == m_nbPagesCurrCh-1)
         return;
-      _pagesComboBox->setCurrentIndex(_currentPageNumber+1);
+      m_pagesComboBox->setCurrentIndex(m_currentPageNumber+1);
     }
     break;
   case Qt::Key_Left:
     if (event->modifiers() & Qt::ControlModifier) {
-      if (_chaptersComboBox->currentIndex() == _chaptersComboBox->count()-1)
+      if (m_chaptersComboBox->currentIndex() == m_chaptersComboBox->count()-1)
         return;
-      _chaptersComboBox->setCurrentIndex(_chaptersComboBox->currentIndex()+1);
+      m_chaptersComboBox->setCurrentIndex(m_chaptersComboBox->currentIndex()+1);
     } else if (event->modifiers() & Qt::ShiftModifier) {
       return;
     } else {
-      if (_pagesComboBox->currentIndex() == 0)
+      if (m_pagesComboBox->currentIndex() == 0)
         return;
-      _pagesComboBox->setCurrentIndex(_currentPageNumber-1);
+      m_pagesComboBox->setCurrentIndex(m_currentPageNumber-1);
     }
     break;
   default:
@@ -248,49 +248,49 @@ void MangaReadWidget::keyReleaseEvent(QKeyEvent* event) {
 }
 
 void MangaReadWidget::mouseReleaseEvent(QMouseEvent* ) {
-  _zoomLabel->clear();
-  _zoomLabel->hide();
+  m_zoomLabel->clear();
+  m_zoomLabel->hide();
 }
 
 void MangaReadWidget::mouseMoveEvent(QMouseEvent* event) {
-  _zoomLabel->setVisible(_zoomButton->isChecked() && event->button() == Qt::NoButton);
+  m_zoomLabel->setVisible(m_zoomButton->isChecked() && event->button() == Qt::NoButton);
 
 
-  if (_zoomButton->isChecked()) {
+  if (m_zoomButton->isChecked()) {
     QPoint mousePosition = event->pos();
     // In order not to zoom outside of the box and to prevent from zooming when no page is displayed
-    if (mousePosition.x() < 0 || mousePosition.y() < 0 || _chaptersComboBox->currentIndex() < 1)
+    if (mousePosition.x() < 0 || mousePosition.y() < 0 || m_chaptersComboBox->currentIndex() < 1)
       return;
 
     int frameWidth = 400;
     int frameHeight = 300;
-    int ratio = _zoomComboBox->currentText().toInt();
+    int ratio = m_zoomComboBox->currentText().toInt();
     int frameWidthRatio = qRound(static_cast<double>(frameWidth)/static_cast<double>(ratio));
     int frameHeightRatio = qRound(static_cast<double>(frameHeight)/static_cast<double>(ratio));
 
-    mousePosition.rx() -= _scrollArea->geometry().x();
-    mousePosition.ry() -= _scrollArea->geometry().y();
+    mousePosition.rx() -= m_scrollArea->geometry().x();
+    mousePosition.ry() -= m_scrollArea->geometry().y();
 
     int topShift = 0;
-    if (_currentPageLabel->visibleRegion().boundingRect().top()+mousePosition.y() > _currentPageLabel->visibleRegion().boundingRect().bottom() - frameHeight)
+    if (m_currentPageLabel->visibleRegion().boundingRect().top()+mousePosition.y() > m_currentPageLabel->visibleRegion().boundingRect().bottom() - frameHeight)
       topShift = frameHeight;
 
-    QPoint rawTopLeft = mousePosition - _currentPageLabel->geometry().topLeft();
-    QPoint topLeft(qMin(_currentPageLabel->width()-frameWidthRatio, rawTopLeft.x()), rawTopLeft.y()-topShift/ratio);
+    QPoint rawTopLeft = mousePosition - m_currentPageLabel->geometry().topLeft();
+    QPoint topLeft(qMin(m_currentPageLabel->width()-frameWidthRatio, rawTopLeft.x()), rawTopLeft.y()-topShift/ratio);
     QPoint bottomRight = topLeft+QPoint(frameWidthRatio, frameHeightRatio);
 
-    if (mousePosition.x() < _currentPageLabel->geometry().left()
-        || mousePosition.x() > _currentPageLabel->geometry().right()
-        || mousePosition.y() < _currentPageLabel->geometry().top()
-        || mousePosition.y() > _currentPageLabel->geometry().bottom())
-      _zoomLabel->hide();
+    if (mousePosition.x() < m_currentPageLabel->geometry().left()
+        || mousePosition.x() > m_currentPageLabel->geometry().right()
+        || mousePosition.y() < m_currentPageLabel->geometry().top()
+        || mousePosition.y() > m_currentPageLabel->geometry().bottom())
+      m_zoomLabel->hide();
 
     QRect frame(topLeft, bottomRight);
 
-    QPixmap zoomedPixmap = _currentPageLabel->pixmap()->copy(frame).scaled(frameWidth, frameHeight);
-    _zoomLabel->setPixmap(zoomedPixmap);
+    QPixmap zoomedPixmap = m_currentPageLabel->pixmap()->copy(frame).scaled(frameWidth, frameHeight);
+    m_zoomLabel->setPixmap(zoomedPixmap);
 
-    _zoomLabel->move(mousePosition+QPoint(0, -topShift));
-    _zoomLabel->resize(frameWidth, frameHeight);
+    m_zoomLabel->move(mousePosition+QPoint(0, -topShift));
+    m_zoomLabel->resize(frameWidth, frameHeight);
   }
 }

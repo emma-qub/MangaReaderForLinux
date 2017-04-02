@@ -1,72 +1,65 @@
 #ifndef MANGALISTWIDGET_H
 #define MANGALISTWIDGET_H
 
-#include <QtWidgets>
+#include <QWidget>
+#include <QStandardItemModel>
+#include <QSortFilterProxyModel>
 #include <QDir>
+#include <QSplitter>
+#include <QListView>
+#include <QProcess>
+#include <QQueue>
+#include <QModelIndex>
+#include <QPushButton>
 
-#include "ChapterInfoWidget.h"
+#include "ChapterListWidget.hxx"
+
 
 class MangaListWidget: public QWidget {
   Q_OBJECT
 
 public:
-  MangaListWidget(QWidget* parent = nullptr);
-
-  void markReadOrNot(bool read);
-  void setTextAccordingToRead(QStandardItem* item, bool read);
-  void updateChapterRead(QStandardItem* chapterItem, bool read);
-  void checkIfMangaAreRead(void);
-
-protected:
-  void keyReleaseEvent(QKeyEvent* event) override;
-  bool eventFilter(QObject* object, QEvent* event) override;
+  MangaListWidget(QWidget* p_parent = nullptr);
 
 public slots:
-  void markRead(void);
-  void markUnread(void);
   void initModel(QString mangaSelected = "");
-  void goToRead(QModelIndex modelIndex);
-  void goToDownload(void);
-  void addManga(void);
-  void updateChaptersInfo(QModelIndex index);
-  void updateMangaInfo(QModelIndex index);
-  void updateReadChapter(QString mangaName, QString chapterName);
+  void addManga();
+
+protected:
+  void setRemainingChaptersToRead(QStandardItem* p_mangaItem, int p_remainingChaptersCount, int p_chaptersCount);
+  void setTextAccordingToRead(QStandardItem* p_mangaItem, bool p_read);
+  void updateMangaData(QStandardItem* p_mangaItem);
+  void updateReadProgression(QModelIndex const& p_index);
+  void startNextCheck();
   void setDownloadButtonDisabled(bool b);
+
+protected slots:
+  void checkAvailableDownloads();
+  void goToRead(QModelIndex const& p_modelIndex);
+  void goToDownload();
   void checkAvailableChapterIsDone(int,QProcess::ExitStatus);
-  void startNextCheck(void);
-  void readStandardOutput(void);
-  void decorateMangaNames(void);
-  void toggleEditMangaInfo(bool);
+  void readStandardOutput();
 
 signals:
   void chapterSelected(QString mangaName, QString chapterName);
   void mangaSelected(QString mangaName);
 
 private:
-  QDir _scansDirectory;
-  QPushButton* _markReadButton;
-  QPushButton* _markUnreadButton;
-  QPushButton* _downloadButton;
-  QPushButton* _addMangaButton;
-  QPushButton* _checkNewChaptersButton;
-  QPushButton* _editMangaInfoButton;
-  QLabel* _mangaPreviewLabel;
-  QLabel* _genreLabel;
-  QLabel* _authorLabel;
-  QLabel* _artistLabel;
-  QLabel* _publisherLabel;
-  QLabel* _magazineLabel;
-  QLabel* _startDateLabel;
-  QStandardItemModel* _model;
-  QColumnView* _view;
-  ChapterInfoWidget* _chapterInfoWidget;
+  QDir m_scansDirectory;
+  QStandardItemModel* m_mangaModel;
+  QSortFilterProxyModel* m_mangaProxyModel;
+  QListView* m_mangaListView;
+  ChapterListWidget* m_chapterListWidget;
 
-  QProcess* _checkAvailableChaptersProcess;
-  QString _currentChaptersListOnWeb;
-  QQueue<QModelIndex> _chaptersToCheck;
-  QModelIndex _currentIndex;
-  bool _editOn;
-  bool _coverHasToBeSet;
+  QSplitter* m_mainSplitter;
+
+  QProcess* m_checkAvailableChaptersProcess;
+  QString m_currentChaptersListOnWeb;
+  QQueue<QModelIndex> m_chaptersToCheck;
+  QModelIndex m_currentIndex;
+
+  QPushButton* m_checkNewChaptersButton;
+  QLineEdit* m_searchLineEdit;
 };
 
 #endif // MANGALISTWIDGET_H

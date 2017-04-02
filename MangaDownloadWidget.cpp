@@ -5,46 +5,46 @@
 
 MangaDownloadWidget::MangaDownloadWidget(QWidget* parent):
   QWidget(parent),
-  _scansDirectory(Utils::getScansDirectory()),
-  _mangaList(Utils::dirList(_scansDirectory)),
-  _currentMangaDirectory(),
-  _currentChapter(),
-  _downloadQueue(),
-  _chaptersQueue(),
-  _downloadedCount(0),
-  _totalCount(0) {
+  m_scansDirectory(Utils::getScansDirectory()),
+  m_mangaList(Utils::dirList(m_scansDirectory)),
+  m_currentMangaDirectory(),
+  m_currentChapter(),
+  m_downloadQueue(),
+  m_chaptersQueue(),
+  m_downloadedCount(0),
+  m_totalCount(0) {
 
 
   /// Select manga line edit
-  _selectLineEdit = new QLineEdit;
-  _selectLineEdit->setFixedWidth(250);
-  connect(_selectLineEdit, SIGNAL(textChanged(QString)), this, SLOT(checkMangaNameExists(QString)));
-//  connect(_selectLineEdit, SIGNAL(editingFinished(void)), this, SLOT(updateChaptersOnPCView(void)));
-//  connect(_selectLineEdit, SIGNAL(returnPressed(void)), this, SLOT(updateChaptersOnPCView(void)));
+  m_selectLineEdit = new QLineEdit;
+  m_selectLineEdit->setFixedWidth(250);
+  connect(m_selectLineEdit, SIGNAL(textChanged(QString)), this, SLOT(checkMangaNameExists(QString)));
+//  connect(m_selectLineEdit, SIGNAL(editingFinished()), this, SLOT(updateChaptersOnPCView()));
+//  connect(m_selectLineEdit, SIGNAL(returnPressed()), this, SLOT(updateChaptersOnPCView()));
 
-  QCompleter* completer = new QCompleter(_mangaList, this);
+  QCompleter* completer = new QCompleter(m_mangaList, this);
   completer->setCaseSensitivity(Qt::CaseInsensitive);
   completer->setCompletionMode(QCompleter::PopupCompletion);
 
-  _selectLineEdit->setCompleter(completer);
+  m_selectLineEdit->setCompleter(completer);
 
   QFormLayout* chooseMangaLayout = new QFormLayout;
-  chooseMangaLayout->addRow("Select your manga:", _selectLineEdit);
+  chooseMangaLayout->addRow("Select your manga:", m_selectLineEdit);
 
 
   /// Chapters on PC
 
-  _chaptersOnPCModel = new QStringListModel;
+  m_chaptersOnPCModel = new QStringListModel;
 
-  _chaptersOnPCView = new ChaptersOnPCView;
-  _chaptersOnPCView->setModel(_chaptersOnPCModel);
-  _chaptersOnPCView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  m_chaptersOnPCView = new ChaptersOnPCView;
+  m_chaptersOnPCView->setModel(m_chaptersOnPCModel);
+  m_chaptersOnPCView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-  // _chaptersOnPCView->setDragDropMode(QAbstractItemView::DropOnly);
-  connect(_chaptersOnPCView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(goToRead(QModelIndex)));
+  // m_chaptersOnPCView->setDragDropMode(QAbstractItemView::DropOnly);
+  connect(m_chaptersOnPCView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(goToRead(QModelIndex)));
 
   QVBoxLayout* chaptersOnPCLayout = new QVBoxLayout;
-  chaptersOnPCLayout->addWidget(_chaptersOnPCView);
+  chaptersOnPCLayout->addWidget(m_chaptersOnPCView);
 
   QGroupBox* chaptersOnPCGroupBox = new QGroupBox("Chapters on your computer");
   chaptersOnPCGroupBox->setLayout(chaptersOnPCLayout);
@@ -52,15 +52,15 @@ MangaDownloadWidget::MangaDownloadWidget(QWidget* parent):
 
   /// Chapters on web
 
-  _chaptersOnWebModel = new QStandardItemModel;
+  m_chaptersOnWebModel = new QStandardItemModel;
 
-  _chaptersOnWebView = new ChaptersOnWebView(this);
-  _chaptersOnWebView->setSelectionMode(QAbstractItemView::ExtendedSelection);
-  _chaptersOnWebView->setModel(_chaptersOnWebModel);
-  _chaptersOnWebView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  m_chaptersOnWebView = new ChaptersOnWebView(this);
+  m_chaptersOnWebView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+  m_chaptersOnWebView->setModel(m_chaptersOnWebModel);
+  m_chaptersOnWebView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
   QVBoxLayout* chaptersOnWebLayout = new QVBoxLayout;
-  chaptersOnWebLayout->addWidget(_chaptersOnWebView);
+  chaptersOnWebLayout->addWidget(m_chaptersOnWebView);
 
   QGroupBox* chaptersOnWebGroupBox = new QGroupBox("New chapters online");
   chaptersOnWebGroupBox->setLayout(chaptersOnWebLayout);
@@ -68,25 +68,25 @@ MangaDownloadWidget::MangaDownloadWidget(QWidget* parent):
 
   /// Central buttons
 
-  _updateButton = new QPushButton;
-  _updateButton->setIcon(QIcon(Utils::getIconsPath()+"/reload.png"));
-  _updateButton->setFixedWidth(37);
-  connect(_updateButton, SIGNAL(clicked(void)), this, SLOT(updateChaptersList(void)));
+  m_updateButton = new QPushButton;
+  m_updateButton->setIcon(QIcon(Utils::getIconsPath()+"/reload.png"));
+  m_updateButton->setFixedWidth(37);
+  connect(m_updateButton, SIGNAL(clicked()), this, SLOT(updateChaptersList()));
 
-  _downloadButton = new QPushButton;
-  _downloadButton->setIcon(QIcon(Utils::getIconsPath()+"/leftArrow.gif"));
-  _downloadButton->setFixedWidth(37);
-  connect(_downloadButton, SIGNAL(clicked(void)), this, SLOT(downloadChapters(void)));
+  m_downloadButton = new QPushButton;
+  m_downloadButton->setIcon(QIcon(Utils::getIconsPath()+"/leftArrow.gif"));
+  m_downloadButton->setFixedWidth(37);
+  connect(m_downloadButton, SIGNAL(clicked()), this, SLOT(downloadChapters()));
 
-  _selectAllButton = new QPushButton;
-  _selectAllButton->setIcon(QIcon(Utils::getIconsPath()+"/selectAll.gif"));
-  _selectAllButton->setFixedWidth(37);
-  connect(_selectAllButton, SIGNAL(clicked(void)), _chaptersOnWebView, SLOT(selectAll(void)));
+  m_selectAllButton = new QPushButton;
+  m_selectAllButton->setIcon(QIcon(Utils::getIconsPath()+"/selectAll.gif"));
+  m_selectAllButton->setFixedWidth(37);
+  connect(m_selectAllButton, SIGNAL(clicked()), m_chaptersOnWebView, SLOT(selectAll()));
 
   QVBoxLayout* buttonsWebLayout = new QVBoxLayout;
-  buttonsWebLayout->addWidget(_updateButton);
-  buttonsWebLayout->addWidget(_downloadButton);
-  buttonsWebLayout->addWidget(_selectAllButton);
+  buttonsWebLayout->addWidget(m_updateButton);
+  buttonsWebLayout->addWidget(m_downloadButton);
+  buttonsWebLayout->addWidget(m_selectAllButton);
   buttonsWebLayout->setAlignment(Qt::AlignVCenter);
 
 
@@ -100,50 +100,50 @@ MangaDownloadWidget::MangaDownloadWidget(QWidget* parent):
 
   /// Message output
 
-  _messageView = new MessageListView;
-  _messageItemDelegate = new MessageItemDelegate;
-  _messageModel = new MessageListModel;
-  _messageView->setItemDelegate(_messageItemDelegate);
-  _messageView->setModel(_messageModel);
+  m_messageView = new MessageListView;
+  m_messageItemDelegate = new MessageItemDelegate;
+  m_messageModel = new MessageListModel;
+  m_messageView->setItemDelegate(m_messageItemDelegate);
+  m_messageView->setModel(m_messageModel);
 
 
   /// Bottom buttons
 
-  _clearTextEditButton = new QPushButton;
-  _clearTextEditButton->setIcon(QIcon(Utils::getIconsPath()+"/clean.png"));
-  _clearTextEditButton->setFixedWidth(37);
-  connect(_clearTextEditButton, SIGNAL(clicked(void)), _messageModel, SLOT(clearMessages(void)));
+  m_clearTextEditButton = new QPushButton;
+  m_clearTextEditButton->setIcon(QIcon(Utils::getIconsPath()+"/clean.png"));
+  m_clearTextEditButton->setFixedWidth(37);
+  connect(m_clearTextEditButton, SIGNAL(clicked()), m_messageModel, SLOT(clearMessages()));
 
-  _stopButton = new QPushButton;
-  _stopButton->setIcon(QIcon(Utils::getIconsPath()+"/stop.png"));
-  _stopButton->setFixedWidth(37);
-  _stopButton->setEnabled(false);
-  connect(_stopButton, SIGNAL(clicked(void)), this, SLOT(stopDownload(void)));
+  m_stopButton = new QPushButton;
+  m_stopButton->setIcon(QIcon(Utils::getIconsPath()+"/stop.png"));
+  m_stopButton->setFixedWidth(37);
+  m_stopButton->setEnabled(false);
+  connect(m_stopButton, SIGNAL(clicked()), this, SLOT(stopDownload()));
 
 
   /// Progress bars
 
-  _chaptersProgressBar = new QProgressBar;
-  _chaptersProgressBar->setVisible(false);
-  _chaptersProgressBar->setFixedSize(300, 20);
+  m_chaptersProgressBar = new QProgressBar;
+  m_chaptersProgressBar->setVisible(false);
+  m_chaptersProgressBar->setFixedSize(300, 20);
 
-  _chaptersDownloadedLabel = new QLabel;
+  m_chaptersDownloadedLabel = new QLabel;
 
-  _pagesProgressBar = new QProgressBar;
-  _pagesProgressBar->setVisible(false);
-  _pagesProgressBar->setFixedSize(300, 20);
+  m_pagesProgressBar = new QProgressBar;
+  m_pagesProgressBar->setVisible(false);
+  m_pagesProgressBar->setFixedSize(300, 20);
 
-  _pagesDownloadedLabel = new QLabel;
+  m_pagesDownloadedLabel = new QLabel;
 
 
   /// Bottom buttons and progress bar layout
 
   QFormLayout* chaptersProgressLayout = new QFormLayout;
-  chaptersProgressLayout->addRow(_chaptersProgressBar, _chaptersDownloadedLabel);
+  chaptersProgressLayout->addRow(m_chaptersProgressBar, m_chaptersDownloadedLabel);
   chaptersProgressLayout->setAlignment(Qt::AlignLeft);
 
   QFormLayout* pagesProgressLayout = new QFormLayout;
-  pagesProgressLayout->addRow(_pagesProgressBar, _pagesDownloadedLabel);
+  pagesProgressLayout->addRow(m_pagesProgressBar, m_pagesDownloadedLabel);
   pagesProgressLayout->setAlignment(Qt::AlignLeft);
 
   QVBoxLayout* progressLayout = new QVBoxLayout;
@@ -151,14 +151,14 @@ MangaDownloadWidget::MangaDownloadWidget(QWidget* parent):
   progressLayout->addLayout(pagesProgressLayout);
 
   QHBoxLayout* messageButtonLayout = new QHBoxLayout;
-  messageButtonLayout->addWidget(_clearTextEditButton);
-  messageButtonLayout->addWidget(_stopButton);
+  messageButtonLayout->addWidget(m_clearTextEditButton);
+  messageButtonLayout->addWidget(m_stopButton);
   messageButtonLayout->addLayout(progressLayout);
   messageButtonLayout->setAlignment(Qt::AlignLeft);
 
   QVBoxLayout* messageLayout = new QVBoxLayout;
   messageLayout->addLayout(messageButtonLayout);
-  messageLayout->addWidget(_messageView);
+  messageLayout->addWidget(m_messageView);
   messageLayout->setAlignment(Qt::AlignLeft);
 
   QGroupBox* messageGroupBox = new QGroupBox("Output");
@@ -181,18 +181,18 @@ MangaDownloadWidget::MangaDownloadWidget(QWidget* parent):
 
   /// Get chapters on web list process
 
-  _getChaptersListProcess = new QProcess(this);
-  connect(_getChaptersListProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(chaptersListUpdated(int,QProcess::ExitStatus)));
-  connect(_getChaptersListProcess, SIGNAL(started(void)), this, SLOT(chaptersListUpdateStarted(void)));
-  connect(_getChaptersListProcess, SIGNAL(readyReadStandardOutput(void)), this, SLOT(getChaptersListUpdated(void)));
+  m_getChaptersListProcess = new QProcess(this);
+  connect(m_getChaptersListProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(chaptersListUpdated(int,QProcess::ExitStatus)));
+  connect(m_getChaptersListProcess, SIGNAL(started()), this, SLOT(chaptersListUpdateStarted()));
+  connect(m_getChaptersListProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(getChaptersListUpdated()));
 
 
   /// Download chapters process
 
-  _downloadChapterProcess = new QProcess(this);
-  connect(_downloadChapterProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(downloadFinished(int,QProcess::ExitStatus)));
-  connect(_downloadChapterProcess, SIGNAL(started(void)), this, SLOT(nextDownloadHasStarted(void)));
-  connect(_downloadChapterProcess, SIGNAL(readyReadStandardOutput(void)), this, SLOT(getDownloadInfo(void)));
+  m_downloadChapterProcess = new QProcess(this);
+  connect(m_downloadChapterProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(downloadFinished(int,QProcess::ExitStatus)));
+  connect(m_downloadChapterProcess, SIGNAL(started()), this, SLOT(nextDownloadHasStarted()));
+  connect(m_downloadChapterProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(getDownloadInfo()));
 
 
   /// Style
@@ -218,28 +218,28 @@ MangaDownloadWidget::MangaDownloadWidget(QWidget* parent):
 
 /// Update chapters list
 
-void MangaDownloadWidget::updateChaptersList(void) {
-  if (_selectLineEdit->text().isEmpty()) {
-    _messageModel->editMessageWarning("Warning: no manga name specified.");
-    _messageModel->editMessageError("Abort.");
+void MangaDownloadWidget::updateChaptersList() {
+  if (m_selectLineEdit->text().isEmpty()) {
+    m_messageModel->editMessageWarning("Warning: no manga name specified.");
+    m_messageModel->editMessageError("Abort.");
     return;
   }
 
-  _chaptersOnWebModel->clear();
+  m_chaptersOnWebModel->clear();
 
   updateChaptersOnPCView();
-  _chaptersOnPCView->setFocus();
+  m_chaptersOnPCView->setFocus();
 
   QStringList arguments;
-  arguments << _selectLineEdit->text();
-  _getChaptersListProcess->start(Utils::getScriptsAbsolutePath()+"/updateChaptersList.sh", arguments);
+  arguments << m_selectLineEdit->text();
+  m_getChaptersListProcess->start(Utils::getScriptsAbsolutePath()+"/updateChaptersList.sh", arguments);
 }
 
 
 /// Check if manga name exists
 
 void MangaDownloadWidget::checkMangaNameExists(QString mangaName) {
-  bool mangaNameExists = _mangaList.contains(mangaName);
+  bool mangaNameExists = m_mangaList.contains(mangaName);
   QString color;
   if (!mangaNameExists) {
     color = "#C9302C";
@@ -247,31 +247,31 @@ void MangaDownloadWidget::checkMangaNameExists(QString mangaName) {
     color = "#000000";
   }
 
-  _selectLineEdit->setStyleSheet(_selectLineEdit->styleSheet()+"color: "+color+";");
+  m_selectLineEdit->setStyleSheet(m_selectLineEdit->styleSheet()+"color: "+color+";");
 
-  _downloadButton->setEnabled(mangaNameExists);
-  _updateButton->setEnabled(mangaNameExists);
+  m_downloadButton->setEnabled(mangaNameExists);
+  m_updateButton->setEnabled(mangaNameExists);
 }
 
 
 /// Search for download
 
 void MangaDownloadWidget::searchForDownload(QString mangaName) {
-  _selectLineEdit->setText(mangaName);
+  m_selectLineEdit->setText(mangaName);
   updateChaptersList();
 }
 
 
 /// Update chapters on PC
 
-void MangaDownloadWidget::updateChaptersOnPCView(void) {
-  if (_selectLineEdit->text().isEmpty())
+void MangaDownloadWidget::updateChaptersOnPCView() {
+  if (m_selectLineEdit->text().isEmpty())
     return;
 
-  _currentMangaDirectory = QDir(_scansDirectory.path()+"/"+_selectLineEdit->text());
-  _chaptersOnPCModel->setStringList(Utils::dirList(_currentMangaDirectory, true));
+  m_currentMangaDirectory = QDir(m_scansDirectory.path()+"/"+m_selectLineEdit->text());
+  m_chaptersOnPCModel->setStringList(Utils::dirList(m_currentMangaDirectory, true));
 
-  _chaptersOnPCView->setFocus();
+  m_chaptersOnPCView->setFocus();
 }
 
 
@@ -280,44 +280,44 @@ void MangaDownloadWidget::updateChaptersOnPCView(void) {
 void MangaDownloadWidget::chaptersListUpdated(int status, QProcess::ExitStatus exitStatus) {
   switch (exitStatus) {
   case QProcess::CrashExit: {
-    _messageModel->editMessageWarning("Warning: Chapters list update failed. Status code: "+QString::number(status));
+    m_messageModel->editMessageWarning("Warning: Chapters list update failed. Status code: "+QString::number(status));
     break;
   }
   case QProcess::NormalExit: {
     if (status == 1) {
-      _messageModel->editMessageWarning("Warning: "+_getChaptersListProcess->readAllStandardError());
-      _messageModel->editMessageError("Abort.");
+      m_messageModel->editMessageWarning("Warning: "+m_getChaptersListProcess->readAllStandardError());
+      m_messageModel->editMessageError("Abort.");
     } else if (status == 0) {
-      _messageModel->editMessageSuccess("Chapters list updated.");
+      m_messageModel->editMessageSuccess("Chapters list updated.");
     }
     break;
   }
   }
 
-  if (_chaptersOnWebModel->rowCount() == 0) {
+  if (m_chaptersOnWebModel->rowCount() == 0) {
     QStandardItem* upToDateItem = new QStandardItem;
     upToDateItem->setData("Already up-to-date.", Qt::DisplayRole);
     upToDateItem->setEditable(false);
     upToDateItem->setSelectable(false);
-    _chaptersOnWebModel->appendRow(upToDateItem);
+    m_chaptersOnWebModel->appendRow(upToDateItem);
   }
 
-  _selectLineEdit->setEnabled(true);
-  _updateButton->setEnabled(true);
-  _downloadButton->setEnabled(true);
-  _selectAllButton->setEnabled(true);
+  m_selectLineEdit->setEnabled(true);
+  m_updateButton->setEnabled(true);
+  m_downloadButton->setEnabled(true);
+  m_selectAllButton->setEnabled(true);
 }
 
-void MangaDownloadWidget::chaptersListUpdateStarted(void) {
-  _selectLineEdit->setEnabled(false);
-  _updateButton->setEnabled(false);
-  _downloadButton->setEnabled(false);
-  _selectAllButton->setEnabled(false);
-  _messageModel->editMessageInformation("Updating chapters list...");
+void MangaDownloadWidget::chaptersListUpdateStarted() {
+  m_selectLineEdit->setEnabled(false);
+  m_updateButton->setEnabled(false);
+  m_downloadButton->setEnabled(false);
+  m_selectAllButton->setEnabled(false);
+  m_messageModel->editMessageInformation("Updating chapters list...");
 }
 
-void MangaDownloadWidget::getChaptersListUpdated(void) {
-  QString chaptersList(_getChaptersListProcess->readAllStandardOutput());
+void MangaDownloadWidget::getChaptersListUpdated() {
+  QString chaptersList(m_getChaptersListProcess->readAllStandardOutput());
 
   QStringList chaptersUrlAndTitleList = chaptersList.split("\n", QString::SkipEmptyParts);
 
@@ -325,9 +325,9 @@ void MangaDownloadWidget::getChaptersListUpdated(void) {
     QStringList chapterUrlAndTitleList = chapterUrlAndTitle.split(";");
 
     if (chapterUrlAndTitleList.size() != 2) {
-      _messageModel->editMessageError("Error: enable to build chapters list.");
-      _messageModel->editMessageError("Abort.");
-      _chaptersOnWebModel->clear();
+      m_messageModel->editMessageError("Error: enable to build chapters list.");
+      m_messageModel->editMessageError("Abort.");
+      m_chaptersOnWebModel->clear();
       return;
     }
 
@@ -339,12 +339,12 @@ void MangaDownloadWidget::getChaptersListUpdated(void) {
     }
     chapterTitleInUrl = chapterUrl.split('/').last();
 
-    if (!_chaptersOnPCModel->stringList().contains(chapterTitleInUrl)) {
+    if (!m_chaptersOnPCModel->stringList().contains(chapterTitleInUrl)) {
       QStandardItem* chapterItem = new QStandardItem;
       chapterItem->setData(chapterTitle, Qt::DisplayRole);
       chapterItem->setData(chapterUrl, Qt::UserRole);
       chapterItem->setData(chapterTitleInUrl, Qt::UserRole+1);
-      _chaptersOnWebModel->appendRow(chapterItem);
+      m_chaptersOnWebModel->appendRow(chapterItem);
     }
   }
 }
@@ -355,15 +355,15 @@ void MangaDownloadWidget::getChaptersListUpdated(void) {
 void MangaDownloadWidget::downloadFinished(int status, QProcess::ExitStatus exitStatus) {
   switch (exitStatus) {
   case QProcess::CrashExit: {
-    _messageModel->editMessageWarning("Warning: Downlaod failed. Status code: "+QString::number(status));
+    m_messageModel->editMessageWarning("Warning: Downlaod failed. Status code: "+QString::number(status));
     break;
   }
   case QProcess::NormalExit: {
-    ++_downloadedCount;
-    _chaptersOnWebModel->removeRow(_chaptersQueue.takeFirst().row());
+    ++m_downloadedCount;
+    m_chaptersOnWebModel->removeRow(m_chaptersQueue.takeFirst().row());
     updatedb();
     updateChaptersOnPCView();
-    _messageModel->editMessageSuccess("Downlaod succeeded. Status code: "+QString::number(status));
+    m_messageModel->editMessageSuccess("Downlaod succeeded. Status code: "+QString::number(status));
     break;
   }
   }
@@ -371,121 +371,121 @@ void MangaDownloadWidget::downloadFinished(int status, QProcess::ExitStatus exit
   startNextDownload();
 }
 
-void MangaDownloadWidget::nextDownloadHasStarted(void) {
-  _messageModel->editMessageInformation("Downloading "+_currentChapter+"...");
-  _chaptersProgressBar->show();
-  _chaptersProgressBar->setValue(static_cast<int>(static_cast<float>(_downloadedCount)/static_cast<float>(_totalCount)*100));
+void MangaDownloadWidget::nextDownloadHasStarted() {
+  m_messageModel->editMessageInformation("Downloading "+m_currentChapter+"...");
+  m_chaptersProgressBar->show();
+  m_chaptersProgressBar->setValue(static_cast<int>(static_cast<float>(m_downloadedCount)/static_cast<float>(m_totalCount)*100));
 
-  _pagesProgressBar->show();
-  _pagesProgressBar->setValue(0);
+  m_pagesProgressBar->show();
+  m_pagesProgressBar->setValue(0);
 }
 
-void MangaDownloadWidget::downloadChapters(void) {
-  if (_selectLineEdit->text().isEmpty()) {
-    _messageModel->editMessageWarning("Warning: no manga name specified.");
-    _messageModel->editMessageError("Abort.");
+void MangaDownloadWidget::downloadChapters() {
+  if (m_selectLineEdit->text().isEmpty()) {
+    m_messageModel->editMessageWarning("Warning: no manga name specified.");
+    m_messageModel->editMessageError("Abort.");
     return;
   }
 
-  _selectLineEdit->setEnabled(false);
-  _chaptersOnWebView->setEnabled(false);
-  _selectAllButton->setEnabled(false);
-  _downloadButton->setEnabled(false);
-  _updateButton->setEnabled(false);
-  _stopButton->setEnabled(true);
-  _chaptersProgressBar->show();
-  _chaptersProgressBar->setValue(0);
-  _chaptersDownloadedLabel->show();
-  _chaptersDownloadedLabel->setText("Chapter");
-  _pagesProgressBar->show();
-  _pagesProgressBar->setValue(0);
-  _pagesDownloadedLabel->show();
-  _pagesDownloadedLabel->setText("Page");
+  m_selectLineEdit->setEnabled(false);
+  m_chaptersOnWebView->setEnabled(false);
+  m_selectAllButton->setEnabled(false);
+  m_downloadButton->setEnabled(false);
+  m_updateButton->setEnabled(false);
+  m_stopButton->setEnabled(true);
+  m_chaptersProgressBar->show();
+  m_chaptersProgressBar->setValue(0);
+  m_chaptersDownloadedLabel->show();
+  m_chaptersDownloadedLabel->setText("Chapter");
+  m_pagesProgressBar->show();
+  m_pagesProgressBar->setValue(0);
+  m_pagesDownloadedLabel->show();
+  m_pagesDownloadedLabel->setText("Page");
 
-  _messageModel->editMessageInformation("Gathering information on chapters to downlaod...");
-  QModelIndexList chaptersSelectedIndexes = _chaptersOnWebView->selectionModel()->selectedIndexes();
+  m_messageModel->editMessageInformation("Gathering information on chapters to downlaod...");
+  QModelIndexList chaptersSelectedIndexes = m_chaptersOnWebView->selectionModel()->selectedIndexes();
   for (const QModelIndex& chapterIndex: chaptersSelectedIndexes) {
-    _chaptersQueue.enqueue(chapterIndex);
-    QString currChapterUrl = _chaptersOnWebModel->data(chapterIndex, Qt::UserRole).toString();
-    QString currChapterTitle = _chaptersOnWebModel->data(chapterIndex, Qt::UserRole+1).toString();
-    _downloadQueue.enqueue(QPair<QString, QString>(currChapterTitle, currChapterUrl));
+    m_chaptersQueue.enqueue(chapterIndex);
+    QString currChapterUrl = m_chaptersOnWebModel->data(chapterIndex, Qt::UserRole).toString();
+    QString currChapterTitle = m_chaptersOnWebModel->data(chapterIndex, Qt::UserRole+1).toString();
+    m_downloadQueue.enqueue(QPair<QString, QString>(currChapterTitle, currChapterUrl));
   }
 
-  _totalCount = _downloadQueue.size();
-  _downloadedCount = 0;
+  m_totalCount = m_downloadQueue.size();
+  m_downloadedCount = 0;
 
   emit downloading(true);
 
   startNextDownload();
 }
 
-void MangaDownloadWidget::startNextDownload(void) {
-  if (_downloadQueue.isEmpty()) {
-    QString downloadReport = QString::number(_downloadedCount)+"/"+QString::number(_totalCount)+" chapter(s) downloaded successfully.";
-    if (_downloadedCount == _totalCount) {
-      _messageModel->editMessageSuccess(downloadReport);
+void MangaDownloadWidget::startNextDownload() {
+  if (m_downloadQueue.isEmpty()) {
+    QString downloadReport = QString::number(m_downloadedCount)+"/"+QString::number(m_totalCount)+" chapter(s) downloaded successfully.";
+    if (m_downloadedCount == m_totalCount) {
+      m_messageModel->editMessageSuccess(downloadReport);
     } else {
-      _messageModel->editMessageWarning("Only "+downloadReport);
-      _messageModel->editMessageWarning("Please check out each issue and retry if necessary.");
+      m_messageModel->editMessageWarning("Only "+downloadReport);
+      m_messageModel->editMessageWarning("Please check out each issue and retry if necessary.");
     }
 
     updateChaptersList();
 
-    _totalCount = 0;
-    _downloadedCount = 0;
+    m_totalCount = 0;
+    m_downloadedCount = 0;
 
-    _selectLineEdit->setEnabled(true);
-    _chaptersOnWebView->setEnabled(true);
-    _selectAllButton->setEnabled(true);
-    _downloadButton->setEnabled(true);
-    _updateButton->setEnabled(true);
-    _stopButton->setEnabled(false);
+    m_selectLineEdit->setEnabled(true);
+    m_chaptersOnWebView->setEnabled(true);
+    m_selectAllButton->setEnabled(true);
+    m_downloadButton->setEnabled(true);
+    m_updateButton->setEnabled(true);
+    m_stopButton->setEnabled(false);
 
-    _chaptersProgressBar->setValue(100);
-    QTimer::singleShot(1000, _chaptersProgressBar, SLOT(close(void)));
-    QTimer::singleShot(1000, _chaptersDownloadedLabel, SLOT(hide(void)));
+    m_chaptersProgressBar->setValue(100);
+    QTimer::singleShot(1000, m_chaptersProgressBar, SLOT(close()));
+    QTimer::singleShot(1000, m_chaptersDownloadedLabel, SLOT(hide()));
 
-    _pagesProgressBar->setValue(100);
-    QTimer::singleShot(1000, _pagesProgressBar, SLOT(close(void)));
-    QTimer::singleShot(1000, _pagesDownloadedLabel, SLOT(hide(void)));
+    m_pagesProgressBar->setValue(100);
+    QTimer::singleShot(1000, m_pagesProgressBar, SLOT(close()));
+    QTimer::singleShot(1000, m_pagesDownloadedLabel, SLOT(hide()));
 
-    emit initModelRequested(_selectLineEdit->text());
+    emit initModelRequested(m_selectLineEdit->text());
     emit downloading(false);
     return;
   }
 
-  QPair<QString, QString> titleAndUrl = _downloadQueue.dequeue();
-  _currentChapter = titleAndUrl.first;
+  QPair<QString, QString> titleAndUrl = m_downloadQueue.dequeue();
+  m_currentChapter = titleAndUrl.first;
   QString urlString = titleAndUrl.second;
 
-  _messageModel->editMessageInformation("Next download will begin shortly...");
-  _chaptersDownloadedLabel->setText("Chapter "+QString::number(_totalCount-_downloadQueue.size())+"/"+QString::number(_totalCount));
+  m_messageModel->editMessageInformation("Next download will begin shortly...");
+  m_chaptersDownloadedLabel->setText("Chapter "+QString::number(m_totalCount-m_downloadQueue.size())+"/"+QString::number(m_totalCount));
 
   QStringList arguments;
-  QString pathToChapterScan = Utils::getScansDirectory().absolutePath()+"/"+_selectLineEdit->text();
-  arguments << urlString << pathToChapterScan << _currentChapter;
+  QString pathToChapterScan = Utils::getScansDirectory().absolutePath()+"/"+m_selectLineEdit->text();
+  arguments << urlString << pathToChapterScan << m_currentChapter;
 
-  _downloadChapterProcess->start(Utils::getScriptsAbsolutePath()+"/downloadChapter.sh", arguments);
+  m_downloadChapterProcess->start(Utils::getScriptsAbsolutePath()+"/downloadChapter.sh", arguments);
 }
 
-void MangaDownloadWidget::getDownloadInfo(void) {
-  QString downloadOutput(_downloadChapterProcess->readAllStandardOutput());
+void MangaDownloadWidget::getDownloadInfo() {
+  QString downloadOutput(m_downloadChapterProcess->readAllStandardOutput());
   QStringList pageRatioList = downloadOutput.split("/");
 
   float ip = pageRatioList.at(0).toFloat();
   float np = pageRatioList.at(1).toFloat();
 
   int chapterAdvance = static_cast<int>(ip*100.f / np);
-  _pagesProgressBar->setValue(chapterAdvance);
-  _pagesDownloadedLabel->setText("Page "+downloadOutput);
+  m_pagesProgressBar->setValue(chapterAdvance);
+  m_pagesDownloadedLabel->setText("Page "+downloadOutput);
 
-  float nc = static_cast<float>(_totalCount);
+  float nc = static_cast<float>(m_totalCount);
   int mangaStep = static_cast<int>(ip*100.f / (nc*np));
 
-  float ic = static_cast<float>(_totalCount-_downloadQueue.size()-1);
+  float ic = static_cast<float>(m_totalCount-m_downloadQueue.size()-1);
   int chaptersAdvance = static_cast<int>(ic*100.f / nc);
 
-  _chaptersProgressBar->setValue(chaptersAdvance + mangaStep);
+  m_chaptersProgressBar->setValue(chaptersAdvance + mangaStep);
 
 }
 
@@ -493,8 +493,8 @@ void MangaDownloadWidget::getDownloadInfo(void) {
 /// Go to read
 
 void MangaDownloadWidget::goToRead(QModelIndex modelIndex) {
-  QString mangaName = _selectLineEdit->text();
-  QString chapterName = _chaptersOnPCModel->data(modelIndex, Qt::DisplayRole).toString();
+  QString mangaName = m_selectLineEdit->text();
+  QString chapterName = m_chaptersOnPCModel->data(modelIndex, Qt::DisplayRole).toString();
 
   emit chapterSelected(mangaName, chapterName);
 }
@@ -502,24 +502,24 @@ void MangaDownloadWidget::goToRead(QModelIndex modelIndex) {
 
 /// Update database
 
-void MangaDownloadWidget::updatedb(void) {
-  Utils::addChapter(_selectLineEdit->text(), _currentChapter);
+void MangaDownloadWidget::updatedb() {
+  Utils::addChapter(m_selectLineEdit->text(), m_currentChapter);
 }
 
 
 /// Stop download
 
-void MangaDownloadWidget::stopDownload(void) {
+void MangaDownloadWidget::stopDownload() {
 
-//  _downloadChapterProcess->close();
+//  m_downloadChapterProcess->close();
 
-//  _totalCount = 0;
-//  _downloadedCount = 0;
-//  _chaptersOnWebView->setEnabled(true);
-//  _progressBar->setValue(0);
-//  _progressBar->setVisible(false);
-//  _chaptersDownloadedLabel->setText("");
-//  _downloadQueue.clear();
+//  m_totalCount = 0;
+//  m_downloadedCount = 0;
+//  m_chaptersOnWebView->setEnabled(true);
+//  m_progressBar->setValue(0);
+//  m_progressBar->setVisible(false);
+//  m_chaptersDownloadedLabel->setText("");
+//  m_downloadQueue.clear();
 
 //  updatedb();
 //  updateChapters();
@@ -534,7 +534,7 @@ void MangaDownloadWidget::stopDownload(void) {
 void MangaDownloadWidget::keyReleaseEvent(QKeyEvent* event) {
   // Enter released
   if ((event->key() == Qt::Key_Enter) || (event->key() == Qt::Key_Return)) {
-    QModelIndex index = _chaptersOnPCView->currentIndex();
+    QModelIndex index = m_chaptersOnPCView->currentIndex();
     if (index.isValid())
       goToRead(index);
   }

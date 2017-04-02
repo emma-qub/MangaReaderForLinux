@@ -4,16 +4,16 @@
 NotificationDialog::NotificationDialog(const QString& iconPath, QWidget* parent):
   QWidget(parent) {
 
-  _iconLabel = new QLabel;
-  _iconLabel->setPixmap(QPixmap(iconPath).scaled(50, 50));
-  _messageLabel = new QLabel(parent);
-  _titleLabel = new QLabel(parent);
+  m_iconLabel = new QLabel;
+  m_iconLabel->setPixmap(QPixmap(iconPath).scaled(50, 50));
+  m_messageLabel = new QLabel(parent);
+  m_titleLabel = new QLabel(parent);
   QVBoxLayout* messageLayout = new QVBoxLayout;
-  messageLayout->addWidget(_titleLabel);
-  messageLayout->addWidget(_messageLabel);
+  messageLayout->addWidget(m_titleLabel);
+  messageLayout->addWidget(m_messageLabel);
 
   QHBoxLayout* mainLayout = new QHBoxLayout;
-  mainLayout->addWidget(_iconLabel);
+  mainLayout->addWidget(m_iconLabel);
   mainLayout->addLayout(messageLayout);
   setLayout(mainLayout);
 
@@ -53,12 +53,12 @@ NotificationDialog::NotificationDialog(const QString& iconPath, QWidget* parent)
   setFixedSize(250, 100);
 }
 
-NotificationDialog::~NotificationDialog(void) {
+NotificationDialog::~NotificationDialog() {
 }
 
 void NotificationDialog::showPopup(const QString& title, const QString& message) {
-  _titleLabel->setText(title);
-  _messageLabel->setText(message);
+  m_titleLabel->setText(title);
+  m_messageLabel->setText(message);
 
   // resize the widget, as text label may be larger than the previous size
   setGeometry(
@@ -70,7 +70,7 @@ void NotificationDialog::showPopup(const QString& title, const QString& message)
 
   show();
 
-  QTimer::singleShot(5000, this, SLOT(hide(void)));
+  QTimer::singleShot(5000, this, SLOT(hide()));
 }
 
 void NotificationDialog::paintEvent(QPaintEvent* event) {

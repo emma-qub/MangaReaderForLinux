@@ -34,20 +34,20 @@ public:
     append(message, MessageStatus::Error, newLine);
   }
 
-  inline void setMaxLines(int maxLines) { _maxLines = maxLines; }
-  inline  int getMaxLines(void) const   { return _maxLines;     }
+  inline void setMaxLines(int maxLines) { m_maxLines = maxLines; }
+  inline  int getMaxLines() const   { return m_maxLines;     }
 
 protected:
   virtual void append(QString message, MessageStatus messageStatus, bool newLine = true);
 
 signals:
-  void scrollToBottomRequested(void);
+  void scrollToBottomRequested();
 
 public slots:
-  virtual void clearMessages(void);
+  virtual void clearMessages();
 
 protected:
-  int _maxLines;
+  int m_maxLines;
 };
 
 #endif // MESSAGELISTMODEL_H

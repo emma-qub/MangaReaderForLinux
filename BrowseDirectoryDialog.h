@@ -8,18 +8,18 @@ class BrowseDirectoryDialog: public QDialog {
 
 public:
   BrowseDirectoryDialog(QWidget* parent = nullptr, Qt::WindowFlags flags = 0);
-  virtual ~BrowseDirectoryDialog(void) final;
+  virtual ~BrowseDirectoryDialog() final;
 
-  inline QString getScansDirectory(void) const { return _scansDirectoryLineEdit->text(); }
+  inline QString getScansDirectory() const { return m_scansDirectoryLineEdit->text(); }
 
 public slots:
   void checkDirectoryValid(const QString&);
-  void browse(void);
+  void browse();
 
 private:
-  QLineEdit* _scansDirectoryLineEdit;
-  QPushButton* _browseDirectoryButton;
-  QPushButton* _okButton;
+  QLineEdit* m_scansDirectoryLineEdit;
+  QPushButton* m_browseDirectoryButton;
+  QPushButton* m_okButton;
 };
 
 #endif // BROWSEDIRECTORYDIALOG_H

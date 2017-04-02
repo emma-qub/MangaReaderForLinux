@@ -1,0 +1,7 @@
+QTreeView::indicator:unchecked {
+  image: url(../MangaReaderForLinux/icons/eye_grey.png);
+}
+
+QTreeView::indicator:checked {
+  image: url(../MangaReaderForLinux/icons/eye.png);
+}

@@ -4,7 +4,7 @@
 
 MessageListModel::MessageListModel(QObject* parent, int maxLine):
   QStandardItemModel(parent),
-  _maxLines(maxLine) {
+  m_maxLines(maxLine) {
 }
 
 void MessageListModel::append(QString message, MessageStatus messageStatus, bool newLine) {
@@ -31,7 +31,7 @@ void MessageListModel::append(QString message, MessageStatus messageStatus, bool
     break;
   }
 
-  while (rowCount() > _maxLines)
+  while (rowCount() > m_maxLines)
     removeRow(0);
 
   if (!newLine)
@@ -42,6 +42,6 @@ void MessageListModel::append(QString message, MessageStatus messageStatus, bool
   emit scrollToBottomRequested();
 }
 
-void MessageListModel::clearMessages(void) {
+void MessageListModel::clearMessages() {
   clear();
 }

@@ -8,7 +8,7 @@ class NotificationDialog: public QWidget {
 
 public:
   NotificationDialog(const QString& iconPath, QWidget* parent = nullptr);
-  virtual ~NotificationDialog(void);
+  virtual ~NotificationDialog();
 
   void showPopup(const QString& title, const QString& message);
 
@@ -18,11 +18,11 @@ protected:
 signals:
 
 private:
-  QLabel* _iconLabel;
-  QLabel* _titleLabel;
-  QLabel* _messageLabel;
+  QLabel* m_iconLabel;
+  QLabel* m_titleLabel;
+  QLabel* m_messageLabel;
 
-  qreal _opacity;
+  qreal m_opacity;
 };
 
 #endif // NOTIFICATIONDIALOG_H

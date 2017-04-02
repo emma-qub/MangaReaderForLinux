@@ -8,7 +8,7 @@
 #include <QtAlgorithms>
 #include <QSettings>
 
-QDir Utils::_scansDirectory(QSettings("ValentinMicheletINC", "MangaReader").value("ScansDirectory").toString());
+QDir Utils::m_scansDirectory(QSettings("ValentinMicheletINC", "MangaReader").value("ScansDirectory").toString());
 
 Utils::Utils() {
 }
@@ -33,8 +33,8 @@ QStringList Utils::filesList(QDir& dir, const QStringList& nameFilters) {
 }
 
 // Initialize every db.txt
-void Utils::initdb(void) {
-  QStringList mangasList = dirList(_scansDirectory);
+void Utils::initdb() {
+  QStringList mangasList = dirList(m_scansDirectory);
 
   for (const QString& mangaName: mangasList) {
     initdb(mangaName);
@@ -43,11 +43,11 @@ void Utils::initdb(void) {
 
 // Update chapter read flag
 void Utils::updateChapterRead(const QString& mangaName, const QString& chapterName, bool read) {
-  QDir mangaDir(_scansDirectory.path()+"/"+mangaName);
+  QDir mangaDir(m_scansDirectory.path()+"/"+mangaName);
 
   QFile file(mangaDir.path()+"/db.txt");
   if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-    qDebug() << "Error while opening db in read only within Utils::initdb";
+    qDebug() << "Error while opening db in read only within Utils::updateChapterRead";
   }
 
   QTextStream inFile(&file);
@@ -70,7 +70,7 @@ void Utils::updateChapterRead(const QString& mangaName, const QString& chapterNa
 
   QFile newFile(mangaDir.path()+"/db.txt");
   if (!newFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
-    qDebug() << "Error while opening db in write only within Utils::initdb";
+    qDebug() << "Error while opening db in write only within Utils::updateChapterRead";
   }
 
   QTextStream newInFile(&newFile);
@@ -83,11 +83,11 @@ void Utils::updateChapterRead(const QString& mangaName, const QString& chapterNa
 
 // Return true if chapter has been read
 bool Utils::isChapterRead(const QString &mangaName, const QString &chapterName) {
-  QDir mangaDir(_scansDirectory.path()+"/"+mangaName);
+  QDir mangaDir(m_scansDirectory.path()+"/"+mangaName);
 
   QFile file(mangaDir.path()+"/db.txt");
   if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-    qDebug() << "Error while opening db in read only within Utils::initdb";
+    qDebug() << "Error while opening db in read only within Utils::isChapterRead";
   }
 
   QTextStream inFile(&file);
@@ -116,7 +116,7 @@ bool Utils::isChapterRead(const QString &mangaName, const QString &chapterName) 
 QList<bool> Utils::areChaptersRead(const QString& mangaName) {
   QList<bool> res;
 
-  QDir mangaDir(_scansDirectory.path()+"/"+mangaName);
+  QDir mangaDir(m_scansDirectory.path()+"/"+mangaName);
   QStringList chaptersDir = dirList(mangaDir, true);
   for (const QString& chapterName: chaptersDir) {
     res << isChapterRead(mangaName, chapterName);
@@ -135,7 +135,7 @@ bool Utils::isMangaRead(QList<bool> chaptersRead) {
 
 // Initialize db.txt within mangaName directory
 void Utils::initdb(const QString& mangaName) {
-  QDir mangaDir(_scansDirectory.path()+"/"+mangaName);
+  QDir mangaDir(m_scansDirectory.path()+"/"+mangaName);
   QStringList chaptersList = dirList(mangaDir, true);
 
   QFile file(mangaDir.path()+"/db.txt");
@@ -155,7 +155,7 @@ void Utils::initdb(const QString& mangaName) {
 
 // Add new chapter inside db
 void Utils::addChapter(const QString& mangaName, const QString& chapterName) {
-  QDir mangaDir(_scansDirectory.path()+"/"+mangaName);
+  QDir mangaDir(m_scansDirectory.path()+"/"+mangaName);
 
   QFile file(mangaDir.path()+"/db.txt");
   if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -205,20 +205,31 @@ bool Utils::removeDirectory(const QString& dirName) {
   return result;
 }
 
-const QDir& Utils::getScansDirectory(void) {
-  return _scansDirectory;
+int Utils::countChaptersToRead(QList<bool> const& p_chaptersReadState) {
+  int res = 0;
+  for (bool chapterRead: p_chaptersReadState)
+  {
+    if (!chapterRead) {
+      ++res;
+    }
+  }
+  return res;
 }
 
-QString Utils::getIconsPath(void) {
+const QDir& Utils::getScansDirectory() {
+  return m_scansDirectory;
+}
+
+QString Utils::getIconsPath() {
   return getSourceAbsolutePath()+"/icons";
 }
 
-QString Utils::getSourceAbsolutePath(void) {
+QString Utils::getSourceAbsolutePath() {
   QDir dir("./");
   dir.cd("../MangaReaderForLinux");
   return dir.absolutePath();
 }
 
-QString Utils::getScriptsAbsolutePath(void) {
+QString Utils::getScriptsAbsolutePath() {
   return getSourceAbsolutePath()+"/scripts";
 }

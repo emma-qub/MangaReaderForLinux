@@ -9,22 +9,22 @@ class ChapterInfoWidget: public QWidget {
 public:
   explicit ChapterInfoWidget(QWidget* parent = nullptr);
 
-  inline void setNumberFiles(const QString& numberFiles) { _numberFilesLabel->setText(numberFiles); }
-  inline void setTotalSize(const QString& totalSize) { _totalSizeLabel->setText(totalSize); }
-  inline void setLastModification(const QString& lastModification) { _lastModificationLabel->setText(lastModification); }
-  inline void setLastRead(const QString& lastRead) { _lastReadLabel->setText(lastRead); }
-  inline void setImgPreview(const QPixmap& imgPreview) { _imgPreviewLabel->setPixmap(imgPreview.scaled(_imgPreviewLabel->width(), _imgPreviewLabel->height(), Qt::KeepAspectRatio)); }
+  inline void setNumberFiles(const QString& numberFiles) { m_numberFilesLabel->setText(numberFiles); }
+  inline void setTotalSize(const QString& totalSize) { m_totalSizeLabel->setText(totalSize); }
+  inline void setLastModification(const QString& lastModification) { m_lastModificationLabel->setText(lastModification); }
+  inline void setLastRead(const QString& lastRead) { m_lastReadLabel->setText(lastRead); }
+  inline void setImgPreview(const QPixmap& imgPreview) { m_imgPreviewLabel->setPixmap(imgPreview.scaled(m_imgPreviewLabel->width(), m_imgPreviewLabel->height(), Qt::KeepAspectRatio)); }
 
 signals:
 
 public slots:
 
 private:
-  QLabel* _numberFilesLabel;
-  QLabel* _totalSizeLabel;
-  QLabel* _lastModificationLabel;
-  QLabel* _lastReadLabel;
-  QLabel* _imgPreviewLabel;
+  QLabel* m_numberFilesLabel;
+  QLabel* m_totalSizeLabel;
+  QLabel* m_lastModificationLabel;
+  QLabel* m_lastReadLabel;
+  QLabel* m_imgPreviewLabel;
 };
 
 #endif // CHAPTERINFOWIDGET_H

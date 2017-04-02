@@ -29,26 +29,26 @@ public:
   DownloadManager(const QString& mangaName = "", QObject* parent = nullptr);
 
   void append(const QStringList& urlList);
-  QString saveFileName(void);
-  virtual void clean(void);
+  QString saveFileName();
+  virtual void clean();
 
-  void stop(void);
-  void pause(void);
-  void resume(void);
+  void stop();
+  void pause();
+  void resume();
 
-  inline void setMangaName(const QString& mangaName) { _mangaName = mangaName; }
+  inline void setMangaName(const QString& mangaName) { m_mangaName = mangaName; }
 
 protected:
   void append(const QUrl& url);
 
 protected slots:
-  virtual void startNextDownload(void);
+  virtual void startNextDownload();
   virtual void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
-  virtual void downloadFinished(void);
-  virtual void downloadReadyRead(void);
+  virtual void downloadFinished();
+  virtual void downloadReadyRead();
 
 signals:
-  void done(void);
+  void done();
   void message(QString, DownloadManager::MessageStatus, bool newLine = true);
   void nbFilesDownloaded(int, int);
 
@@ -58,9 +58,9 @@ protected:
   QNetworkReply* currentDownload;
   QFile output;
   QTime downloadTime;
-  QString _mangaName;
-  QDir _scansDirectory;
-  QDir _mangaDirectory;
+  QString m_mangaName;
+  QDir m_scansDirectory;
+  QDir m_mangaDirectory;
   int downloadedCount;
   int totalCount;
   qint64 downloadSizeAtPause;
@@ -78,17 +78,17 @@ class DownloadHTMLManager: public DownloadManager {
 public:
   DownloadHTMLManager(const QString& mangaName = "", QObject* parent = nullptr);
 
-  inline QStringList getHTMLPages(void) const { return _htmlPages; }
-  inline void clearHTMLPages(void) { _htmlPages.clear(); }
+  inline QStringList getHTMLPages() const { return m_htmlPages; }
+  inline void clearHTMLPages() { m_htmlPages.clear(); }
 
-  virtual void clean(void);
+  virtual void clean();
 
 public slots:
-  virtual void startNextDownload(void);
-  virtual void downloadFinished(void);
+  virtual void startNextDownload();
+  virtual void downloadFinished();
 
 protected:
-  QStringList _htmlPages;
+  QStringList m_htmlPages;
 };
 
 #endif

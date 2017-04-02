@@ -16,7 +16,7 @@ public:
     DownloadRole = Qt::UserRole+104
   };
 
-  explicit MessageItemDelegate(QObject* parent = 0);
+  explicit MessageItemDelegate(QObject* parent = nullptr);
 
   virtual void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
 

@@ -15,7 +15,7 @@ public:
   void dragMoveEvent(QDragEnterEvent* event);
 
 signals:
-  void newChaptersDrop(void);
+  void newChaptersDrop();
 };
 
 #endif // CHAPTERSONPCVIEW_H

@@ -4,24 +4,25 @@
 
 MainWindow::MainWindow(QMainWindow* parent):
   QMainWindow(parent),
-  _chaptersDownloaded(0),
-  _totalChaptersToDownload(0) {
+  m_chaptersDownloaded(0),
+  m_totalChaptersToDownload(0) {
 
   QString appIconPath = Utils::getIconsPath()+"/appIcon.png";
   QIcon appIcon(appIconPath);
 
-  _mangaListWidget = new MangaListWidget;
-  _mangaReadWidget = new MangaReadWidget;
-  _mangaDownloadWidget = new MangaDownloadWidget;
+  m_mangaListWidget = new MangaListWidget;
+  m_mangaReadWidget = new MangaReadWidget;
+  m_mangaDownloadWidget = new MangaDownloadWidget;
 
-  _tabWidget = new QTabWidget;
-  _tabWidget->addTab(_mangaListWidget, QIcon(Utils::getIconsPath()+"/listIcon.png"), "");
-  _tabWidget->addTab(_mangaReadWidget, QIcon(Utils::getIconsPath()+"/readIcon.png"), "");
-  _tabWidget->addTab(_mangaDownloadWidget, QIcon(Utils::getIconsPath()+"/downloadIcon.png"), "");
+  m_tabWidget = new QTabWidget;
+  m_tabWidget->addTab(m_mangaListWidget, QIcon(Utils::getIconsPath()+"/listIcon.png"), "");
+  m_tabWidget->addTab(m_mangaReadWidget, QIcon(Utils::getIconsPath()+"/readIcon.png"), "");
+  m_tabWidget->addTab(m_mangaDownloadWidget, QIcon(Utils::getIconsPath()+"/downloadIcon.png"), "");
 
-  _tabWidget->setIconSize(QSize(60, 80));
-  _tabWidget->setTabPosition(QTabWidget::West);
-  _tabWidget->setFocusPolicy(Qt::NoFocus);
+  ///m_tabWidget->setIconSize(QSize(60, 80));
+  m_tabWidget->setIconSize(QSize(0, 0));
+  m_tabWidget->setTabPosition(QTabWidget::West);
+  m_tabWidget->setFocusPolicy(Qt::NoFocus);
 
   QString dockWidgetTitleStyle;
   dockWidgetTitleStyle += "QTabBar::tab {";
@@ -36,36 +37,47 @@ MainWindow::MainWindow(QMainWindow* parent):
 
   setStyleSheet(dockWidgetTitleStyle);
 
-  setCentralWidget(_tabWidget);
+  setCentralWidget(m_tabWidget);
+  layout()->setSpacing(0);
+  layout()->setContentsMargins(0, 0, 0, 0);
 
   setWindowTitle("Manga Manager");
   setWindowState(Qt::WindowMaximized);
   setWindowIcon(appIcon);
 
-  connect(_mangaListWidget, SIGNAL(chapterSelected(QString,QString)), this, SLOT(switchToRead(QString,QString)));
-  connect(_mangaListWidget, SIGNAL(mangaSelected(QString)), this, SLOT(switchToDownload(QString)));
+  connect(m_mangaListWidget, SIGNAL(chapterSelected(QString,QString)), this, SLOT(switchToRead(QString,QString)));
+  connect(m_mangaListWidget, SIGNAL(mangaSelected(QString)), this, SLOT(switchToDownload(QString)));
 
-  connect(_mangaDownloadWidget, SIGNAL(chapterSelected(QString, QString)), this, SLOT(switchToRead(QString,QString)));
-  connect(_mangaDownloadWidget, SIGNAL(initModelRequested(QString)), _mangaListWidget, SLOT(initModel(QString)));
-  connect(_mangaDownloadWidget, SIGNAL(downloading(bool)), _mangaListWidget, SLOT(setDownloadButtonDisabled(bool)));
-
-  connect(_mangaReadWidget, SIGNAL(chapterSelected(QString, QString)), _mangaListWidget, SLOT(updateReadChapter(QString, QString)));
+  connect(m_mangaDownloadWidget, SIGNAL(chapterSelected(QString, QString)), this, SLOT(switchToRead(QString,QString)));
+  connect(m_mangaDownloadWidget, SIGNAL(initModelRequested(QString)), m_mangaListWidget, SLOT(initModel(QString)));
+  connect(m_mangaDownloadWidget, SIGNAL(downloading(bool)), m_mangaListWidget, SLOT(setDownloadButtonDisabled(bool)));
 
   checkMangaDirectoryExists();
+
+
+  QFile file("../MangaReaderForLinux/css/MainWindow.css");
+  file.open(QFile::ReadOnly);
+  QString newStyleSheet = QLatin1String(file.readAll());
+  setStyleSheet(styleSheet() + newStyleSheet);
+
+
+  if (QFontDatabase::addApplicationFont("../MangaReaderForLinux/icons/FontAwesome/fonts/FontAwesome.otf") < 0) {
+    qWarning() << "FontAwesome cannot be loaded!";
+  }
 }
 
-void MainWindow::checkMangaDirectoryExists(void) {
+void MainWindow::checkMangaDirectoryExists() {
 
 }
 
 void MainWindow::switchToRead(QString mangaName, QString chapterName) {
-  _tabWidget->setCurrentWidget(_mangaReadWidget);
+  m_tabWidget->setCurrentWidget(m_mangaReadWidget);
 
-  _mangaReadWidget->switchManga(mangaName, chapterName);
+  m_mangaReadWidget->switchManga(mangaName, chapterName);
 }
 
 void MainWindow::switchToDownload(QString mangaName) {
-  _tabWidget->setCurrentWidget(_mangaDownloadWidget);
+  m_tabWidget->setCurrentWidget(m_mangaDownloadWidget);
 
-  _mangaDownloadWidget->searchForDownload(mangaName);
+  m_mangaDownloadWidget->searchForDownload(mangaName);
 }

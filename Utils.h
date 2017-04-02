@@ -8,7 +8,7 @@
 class Utils {
 
 public:
-  Utils(void);
+  Utils();
 
   static QStringList dirList(const QDir& dir, bool reverseOrder = false);
   static QStringList filesList(QDir& dir, const QStringList &nameFilters = QStringList());
@@ -19,17 +19,18 @@ public:
   static void initdb(const QString& mangaName);
   static void addChapter(const QString& mangaName, const QString& chapterName);
   static bool removeDirectory(const QString& dirName);
+  static int countChaptersToRead(QList<bool> const& p_chaptersReadState);
 
-  static const QDir& getScansDirectory(void);
-  static QString getIconsPath(void);
-  static QString getSourceAbsolutePath(void);
-  static QString getScriptsAbsolutePath(void);
+  static const QDir& getScansDirectory();
+  static QString getIconsPath();
+  static QString getSourceAbsolutePath();
+  static QString getScriptsAbsolutePath();
 
 private:
-  static void initdb(void);
+  static void initdb();
 
 public:
-  static QDir _scansDirectory;
+  static QDir m_scansDirectory;
 };
 
 #endif // UTILS_H

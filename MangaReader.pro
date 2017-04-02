@@ -14,7 +14,9 @@ SOURCES += \
     ChaptersOnWebView.cpp \
     ChaptersOnPCView.cpp \
     BrowseDirectoryDialog.cpp \
-    NotificationDialog.cpp
+    NotificationDialog.cpp \
+    MangaListDelegate.cxx \
+    ChapterListWidget.cxx
 
 HEADERS += \
     MainWindow.h \
@@ -31,11 +33,14 @@ HEADERS += \
     ChaptersOnWebView.h \
     ChaptersOnPCView.h \
     BrowseDirectoryDialog.h \
-    NotificationDialog.h
+    NotificationDialog.h \
+    MangaListDelegate.hxx \
+    ChapterListWidget.hxx
 
 QT += \
     widgets \
     network \
     webview
 
-CONFIG += c++11
+CONFIG += \
+    c++11

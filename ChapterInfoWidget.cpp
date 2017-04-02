@@ -3,27 +3,27 @@
 ChapterInfoWidget::ChapterInfoWidget(QWidget* parent) :
   QWidget(parent) {
 
-  _numberFilesLabel = new QLabel;
+  m_numberFilesLabel = new QLabel;
   QFormLayout* numberFilesLayout = new QFormLayout;
-  numberFilesLayout->addRow("Number of pages:", _numberFilesLabel);
+  numberFilesLayout->addRow("Number of pages:", m_numberFilesLabel);
 
-  _totalSizeLabel = new QLabel;
+  m_totalSizeLabel = new QLabel;
   QFormLayout* totalSizeLayout = new QFormLayout;
-  numberFilesLayout->addRow("Total size:", _totalSizeLabel);
+  numberFilesLayout->addRow("Total size:", m_totalSizeLabel);
 
-  _lastModificationLabel = new QLabel;
+  m_lastModificationLabel = new QLabel;
   QFormLayout* lastModificationLayout = new QFormLayout;
-  numberFilesLayout->addRow("Last modified:", _lastModificationLabel);
+  numberFilesLayout->addRow("Last modified:", m_lastModificationLabel);
 
-  _lastReadLabel = new QLabel;
+  m_lastReadLabel = new QLabel;
   QFormLayout* lastReadLayout = new QFormLayout;
-  numberFilesLayout->addRow("Last read:", _lastReadLabel);
+  numberFilesLayout->addRow("Last read:", m_lastReadLabel);
 
-  _imgPreviewLabel = new QLabel;
-  _imgPreviewLabel->setFixedHeight(500);
+  m_imgPreviewLabel = new QLabel;
+  m_imgPreviewLabel->setFixedHeight(500);
 
   QVBoxLayout* imgPreviewLayout = new QVBoxLayout;
-  imgPreviewLayout->addWidget(_imgPreviewLabel);
+  imgPreviewLayout->addWidget(m_imgPreviewLabel);
   imgPreviewLayout->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
   QVBoxLayout* mainLayout = new QVBoxLayout;

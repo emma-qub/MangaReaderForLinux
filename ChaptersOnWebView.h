@@ -12,7 +12,7 @@ public:
   void mouseMoveEvent(QMouseEvent* event);
 
 private:
-  QPoint _dragStartPosition;
+  QPoint m_dragStartPosition;
 };
 
 #endif // CHAPTERSONWEBVIEW_H

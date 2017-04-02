@@ -11,30 +11,30 @@ public:
   MangaReadWidget(QWidget* parent = nullptr);
 
 private:
-  QLineEdit* _selectLineEdit;
-  QComboBox* _mangasComboBox;
-  QDir _scansDirectory;
-  QDir _currentMangaDirectory;
-  QDir _currentChapterDirectory;
-  QComboBox* _chaptersComboBox;
-  QComboBox* _pagesComboBox;
-  QLabel* _nbPagesLabel;
-  QLabel* _currentPageLabel;
-  QStringList _chapterStringList;
-  int _currentPageNumber;
-  int _nbPagesCurrCh;
-  QScrollArea* _scrollArea;
-  QPushButton* _zoomButton;
-  QLabel* _zoomLabel;
-  QPoint _mousePosition;
-  QComboBox* _zoomComboBox;
+  QLineEdit* m_selectLineEdit;
+  QComboBox* m_mangasComboBox;
+  QDir m_scansDirectory;
+  QDir m_currentMangaDirectory;
+  QDir m_currentChapterDirectory;
+  QComboBox* m_chaptersComboBox;
+  QComboBox* m_pagesComboBox;
+  QLabel* m_nbPagesLabel;
+  QLabel* m_currentPageLabel;
+  QStringList m_chapterStringList;
+  int m_currentPageNumber;
+  int m_nbPagesCurrCh;
+  QScrollArea* m_scrollArea;
+  QPushButton* m_zoomButton;
+  QLabel* m_zoomLabel;
+  QPoint m_mousePosition;
+  QComboBox* m_zoomComboBox;
 
 public slots:
   void updateChaptersComboBox(QString mangaName);
-  void updatePagesComboBox(void);
+  void updatePagesComboBox();
   void changeChapter(QString chapterName);
   void changePage(int pageNumber);
-  void updateCurrentPage(void);
+  void updateCurrentPage();
   void switchManga(QString mangaName, QString chapterName);
 
 protected:
@@ -43,7 +43,7 @@ protected:
   void mouseMoveEvent(QMouseEvent* event);
 
 signals:
-  void chapterComboBoxUpdated(void);
+  void chapterComboBoxUpdated();
   void chapterSelected(QString, QString);
 };
 
