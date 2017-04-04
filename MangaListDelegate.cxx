@@ -20,7 +20,6 @@ void MangaListDelegate::paint(QPainter* p_painter, const QStyleOptionViewItem& p
   QRect textRect(rect.left()+2*leftShift, rect.top(), rect.width()-4*rect.height(), rect.height());
   auto chaptersToDownload = p_index.data(eAvailableChaptersRole).toInt();
   auto isOutOfDate = chaptersToDownload > 0;
-  auto isMangaRead = p_index.data(eIsMangaReadRole).toBool();
   auto chaptersToRead = p_index.data(eChaptersToReadRole).toInt();
   auto currentColor = p_index.data(eColorRole).value<QColor>();
   auto currentCircleColorSelected = currentColor;
@@ -73,7 +72,7 @@ void MangaListDelegate::paint(QPainter* p_painter, const QStyleOptionViewItem& p
   p_painter->setPen(textPen);
   auto textFont = QFont(QApplication::font());
   auto fontWeight = 1;
-  if (isMangaRead) {
+  if (chaptersToRead > 0) {
     fontWeight = 99;
   }
   textFont.setWeight(fontWeight);

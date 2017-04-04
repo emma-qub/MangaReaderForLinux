@@ -8,8 +8,7 @@ class MangaListDelegate: public QStyledItemDelegate {
 
 public:
   enum MangaDataRole {
-    eIsMangaReadRole = Qt::UserRole,
-    eChaptersToReadRole,
+    eChaptersToReadRole = Qt::UserRole,
     eChaptersCountRole,
     eAvailableChaptersRole,
     eColorRole

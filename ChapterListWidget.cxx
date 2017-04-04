@@ -57,6 +57,7 @@ ChapterListWidget::ChapterListWidget(QWidget* p_parent):
 void ChapterListWidget::setReadPercentage(int p_chaptersReadCount, int p_allChaptersCount) {
   float readPercentage = (100.0 * static_cast<float>(p_chaptersReadCount) / static_cast<float>(p_allChaptersCount));
   m_frontCover->setReadProgression(readPercentage);
+  emit progressionChanged(m_allChaptersCount - m_chaptersReadCount);
 }
 
 void ChapterListWidget::setAvailableDownloadCount(QModelIndex const& p_index) {
@@ -68,18 +69,18 @@ void ChapterListWidget::changeManga(QModelIndex const& p_index)
   m_chaptersModel->setRowCount(0);
   m_chaptersReadCount = 0;
 
-  auto mangaName = p_index.data().toString();
-  QString currDirStr = Utils::getScansDirectory().path() + "/" + mangaName;
+  m_currentMangaName = p_index.data().toString();
+  QString currDirStr = Utils::getScansDirectory().path() + "/" + m_currentMangaName;
 
   QDir currDir(currDirStr);
   QStringList currDirsList = Utils::dirList(currDir, true);
 
   auto frontCover = QPixmap(currDirStr+"/frontCover.jpg");
-  m_frontCover->setMangaName(mangaName);
+  m_frontCover->setMangaName(m_currentMangaName);
   m_frontCover->setFrontCover(frontCover);
   setAvailableDownloadCount(p_index);
 
-  QList<bool> areChaptersRead = Utils::areChaptersRead(mangaName);
+  QList<bool> areChaptersRead = Utils::areChaptersRead(m_currentMangaName);
 
   int k = 0;
   for (const QString& currChStr: currDirsList) {
@@ -125,6 +126,8 @@ void ChapterListWidget::updateReadState(QStandardItem* p_stateItem, bool p_isCha
   p_stateItem->setData(readIconColor, Qt::ForegroundRole);
   p_stateItem->setFont(font);
   p_stateItem->setText("\uf06e");
+  auto currentChapterName = m_chaptersModel->item(p_stateItem->row(), eChapterNameColumn)->text();
+  Utils::updateChapterRead(m_currentMangaName, currentChapterName, p_isChapterRead);
 }
 
 QModelIndex ChapterListWidget::getChapterIndex(QModelIndex const& p_index) {

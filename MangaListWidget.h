@@ -27,7 +27,6 @@ public slots:
 
 protected:
   void setRemainingChaptersToRead(QStandardItem* p_mangaItem, int p_remainingChaptersCount, int p_chaptersCount);
-  void setTextAccordingToRead(QStandardItem* p_mangaItem, bool p_read);
   void updateMangaData(QStandardItem* p_mangaItem);
   void updateReadProgression(QModelIndex const& p_index);
   void startNextCheck();
@@ -39,6 +38,7 @@ protected slots:
   void goToDownload();
   void checkAvailableChapterIsDone(int,QProcess::ExitStatus);
   void readStandardOutput();
+  void updateCurrentProgresseion(int p_currentRemainingToRead);
 
 signals:
   void chapterSelected(QString mangaName, QString chapterName);

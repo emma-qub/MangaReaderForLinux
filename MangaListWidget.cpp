@@ -83,6 +83,7 @@ MangaListWidget::MangaListWidget(QWidget* p_parent):
   /// Connect manga and chapter selections
   connect(m_chapterListWidget, &ChapterListWidget::chapterSelected, this, &MangaListWidget::goToRead);
   connect(m_chapterListWidget, &ChapterListWidget::downloadRequested, this, &MangaListWidget::goToDownload);
+  connect(m_chapterListWidget, &ChapterListWidget::progressionChanged, this, &MangaListWidget::updateCurrentProgresseion);
 
   /// Schedule a new available manga check every thirty minutes
   QTimer* timer = new QTimer(this);
@@ -114,6 +115,7 @@ void MangaListWidget::initModel(QString mangaSelected) {
   QModelIndex indexMangaSelected;
   for (const QString& mangaName: dirsList) {
     QStandardItem* currItem = new QStandardItem(mangaName);
+    currItem->setData(QColor(Qt::white), Qt::ForegroundRole);
     m_mangaModel->appendRow(currItem);
     updateMangaData(currItem);
 
@@ -154,14 +156,9 @@ void MangaListWidget::setRemainingChaptersToRead(QStandardItem* p_mangaItem, int
   p_mangaItem->setData(p_chaptersCount, MangaListDelegate::eChaptersCountRole);
 }
 
-void MangaListWidget::setTextAccordingToRead(QStandardItem* p_mangaItem, bool p_read) {
-  p_mangaItem->setData(p_read, MangaListDelegate::eIsMangaReadRole);
-}
-
 void MangaListWidget::updateMangaData(QStandardItem* p_mangaItem) {
   QList<bool> areChaptersRead = Utils::areChaptersRead(p_mangaItem->text());
   setRemainingChaptersToRead(p_mangaItem, Utils::countChaptersToRead(areChaptersRead), areChaptersRead.size());
-  setTextAccordingToRead(p_mangaItem, !Utils::isMangaRead(areChaptersRead));
 }
 
 void MangaListWidget::updateReadProgression(QModelIndex const& p_index) {
@@ -214,7 +211,6 @@ void MangaListWidget::goToRead(QModelIndex const& p_modelIndex) {
     return;
 
   emit chapterSelected(mangaName, chapterName);
-  updateMangaData(m_mangaModel->itemFromIndex(currentMangaIndex));
   updateReadProgression(currentMangaIndex);
 }
 
@@ -278,4 +274,9 @@ void MangaListWidget::checkAvailableChapterIsDone(int, QProcess::ExitStatus exit
 
 void MangaListWidget::readStandardOutput() {
   m_currentChaptersListOnWeb += m_checkAvailableChaptersProcess->readAllStandardOutput();
+}
+
+void MangaListWidget::updateCurrentProgresseion(int p_currentRemainingToRead) {
+  auto currentItem = m_mangaModel->itemFromIndex(m_mangaProxyModel->mapToSource(m_mangaListView->currentIndex()));
+  currentItem->setData(p_currentRemainingToRead, MangaListDelegate::eChaptersToReadRole);
 }

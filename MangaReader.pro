@@ -37,8 +37,7 @@ HEADERS += \
 
 QT += \
     widgets \
-    network \
-    webview
+    network
 
 CONFIG += \
     c++11

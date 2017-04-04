@@ -174,6 +174,7 @@ public slots:
 signals:
   void chapterSelected(QModelIndex const& p_chapterIndex);
   void downloadRequested();
+  void progressionChanged(int p_remainingChaptersToRead);
 
 protected:
   void updateReadState(QStandardItem* p_stateItem, bool p_isChapterRead);
@@ -187,6 +188,7 @@ private:
 private:
   int m_chaptersReadCount;
   int m_allChaptersCount;
+  QString m_currentMangaName;
   FrontCoverOverlay* m_frontCover;
   QStandardItemModel* m_chaptersModel;
   QTreeView* m_chaptersView;

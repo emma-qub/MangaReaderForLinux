@@ -3,7 +3,6 @@
 
 #include <QtWidgets>
 #include <QDir>
-#include <QtWebView>
 
 #include "DownloadManager.h"
 #include "MessageListView.h"
