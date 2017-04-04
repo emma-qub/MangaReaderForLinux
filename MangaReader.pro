@@ -9,7 +9,6 @@ SOURCES += \
     MessageListView.cpp \
     MessageListModel.cpp \
     MessageItemDelegate.cpp \
-    ChapterInfoWidget.cpp \
     AddMangaDialog.cpp \
     ChaptersOnWebView.cpp \
     ChaptersOnPCView.cpp \
@@ -28,7 +27,6 @@ HEADERS += \
     MessageListView.h \
     MessageListModel.h \
     MessageItemDelegate.h \
-    ChapterInfoWidget.h \
     AddMangaDialog.h \
     ChaptersOnWebView.h \
     ChaptersOnPCView.h \

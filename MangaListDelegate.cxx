@@ -37,6 +37,7 @@ void MangaListDelegate::paint(QPainter* p_painter, const QStyleOptionViewItem& p
 
   p_painter->setRenderHints(QPainter::Antialiasing);
 
+  /// Draw selection
   if (p_option.state & QStyle::State_Selected)
   {
     p_painter->setBrush(circleBrush);
