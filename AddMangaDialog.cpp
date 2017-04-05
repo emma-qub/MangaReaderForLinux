@@ -51,10 +51,8 @@ AddMangaDialog::AddMangaDialog(QWidget* parent):
 
   QLabel* detailsLabel = new QLabel("Details");
 
-  m_messageItemDelegate = new MessageItemDelegate;
   m_messageListModel = new MessageListModel(this);
   m_messageListView = new MessageListView;
-  m_messageListView->setItemDelegate(m_messageItemDelegate);
   m_messageListView->setModel(m_messageListModel);
 
 

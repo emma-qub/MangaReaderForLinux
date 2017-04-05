@@ -7,9 +7,6 @@
 #include "DownloadManager.h"
 #include "MessageListView.h"
 #include "MessageListModel.h"
-#include "MessageItemDelegate.h"
-#include "ChaptersOnWebView.h"
-#include "ChaptersOnPCView.h"
 
 class MangaDownloadWidget: public QWidget {
   Q_OBJECT
@@ -63,14 +60,14 @@ private:
   QLineEdit* m_selectLineEdit;
 
   QStringListModel* m_chaptersOnPCModel;
-  ChaptersOnPCView* m_chaptersOnPCView;
+  QListView* m_chaptersOnPCView;
 
   QPushButton* m_updateButton;
   QPushButton* m_downloadButton;
   QPushButton* m_selectAllButton;
 
   QStandardItemModel* m_chaptersOnWebModel;
-  ChaptersOnWebView* m_chaptersOnWebView;
+  QListView* m_chaptersOnWebView;
 
   QPushButton* m_clearTextEditButton;
   QPushButton* m_stopButton;
@@ -81,7 +78,6 @@ private:
 
   MessageListModel* m_messageModel;
   MessageListView* m_messageView;
-  MessageItemDelegate* m_messageItemDelegate;
 
   QProcess* m_getChaptersListProcess;
   QProcess* m_downloadChapterProcess;

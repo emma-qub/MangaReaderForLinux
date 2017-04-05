@@ -8,10 +8,7 @@ SOURCES += \
     DownloadManager.cpp \
     MessageListView.cpp \
     MessageListModel.cpp \
-    MessageItemDelegate.cpp \
     AddMangaDialog.cpp \
-    ChaptersOnWebView.cpp \
-    ChaptersOnPCView.cpp \
     BrowseDirectoryDialog.cpp \
     NotificationDialog.cpp \
     MangaListDelegate.cxx \
@@ -26,10 +23,7 @@ HEADERS += \
     DownloadManager.h \
     MessageListView.h \
     MessageListModel.h \
-    MessageItemDelegate.h \
     AddMangaDialog.h \
-    ChaptersOnWebView.h \
-    ChaptersOnPCView.h \
     BrowseDirectoryDialog.h \
     NotificationDialog.h \
     MangaListDelegate.hxx \

@@ -4,7 +4,6 @@
 #include <QtWidgets>
 #include <QNetworkReply>
 
-#include "MessageItemDelegate.h"
 #include "MessageListModel.h"
 #include "MessageListView.h"
 #include "DownloadManager.h"
@@ -38,7 +37,6 @@ private:
   QLineEdit* m_mangaNameLineEdit;
   QPushButton* m_addMangaButton;
 
-  MessageItemDelegate* m_messageItemDelegate;
   MessageListModel* m_messageListModel;
   MessageListView* m_messageListView;
 
