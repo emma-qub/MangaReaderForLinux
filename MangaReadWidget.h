@@ -11,40 +11,37 @@ public:
   MangaReadWidget(QWidget* parent = nullptr);
 
 private:
-  QLineEdit* m_selectLineEdit;
-  QComboBox* m_mangasComboBox;
   QDir m_scansDirectory;
   QDir m_currentMangaDirectory;
   QDir m_currentChapterDirectory;
-  QComboBox* m_chaptersComboBox;
-  QComboBox* m_pagesComboBox;
-  QLabel* m_nbPagesLabel;
-  QLabel* m_currentPageLabel;
   QStringList m_chapterStringList;
   int m_currentPageNumber;
   int m_nbPagesCurrCh;
-  QScrollArea* m_scrollArea;
-  QPushButton* m_zoomButton;
-  QLabel* m_zoomLabel;
   QPoint m_mousePosition;
-  QComboBox* m_zoomComboBox;
+  QScrollArea* m_scrollArea;
+  QLabel* m_zoomLabel;
+  QLabel* m_nbPagesLabel;
+  QLabel* m_currentPageLabel;
+  QPushButton* m_zoomButton;
+  QPushButton* m_goToListButton;
+  QComboBox* m_chaptersComboBox;
 
 public slots:
-  void updateChaptersComboBox(QString mangaName);
+  void updateChaptersComboBox(QString const& p_mangaName);
   void updatePagesComboBox();
-  void changeChapter(QString chapterName);
-  void changePage(int pageNumber);
+  void changeChapter(QString const& p_chapterName);
+  void changePage(int p_pageNumber);
   void updateCurrentPage();
-  void switchManga(QString mangaName, QString chapterName);
+  void switchManga(QString const& p_mangaName, QString const& p_chapterName);
 
 protected:
-  void keyReleaseEvent(QKeyEvent* event);
-  void mouseReleaseEvent(QMouseEvent* );
-  void mouseMoveEvent(QMouseEvent* event);
+  void keyReleaseEvent(QKeyEvent* p_event);
+  void mouseReleaseEvent(QMouseEvent* p_event);
+  void mouseMoveEvent(QMouseEvent* p_event);
 
 signals:
-  void chapterComboBoxUpdated();
-  void chapterSelected(QString, QString);
+  void goToListRequested();
+  void currentChapterChanged(QString const& p_chapterName);
 };
 
 #endif // MANGAREADWIDGET_H

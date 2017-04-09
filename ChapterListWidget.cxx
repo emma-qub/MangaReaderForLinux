@@ -112,22 +112,44 @@ void ChapterListWidget::changeManga(QModelIndex const& p_index)
   m_chaptersView->header()->hide();
 }
 
+void ChapterListWidget::markChapterAsRead(const QString& p_chapterName)
+{
+  auto possibleChapters = m_chaptersModel->findItems(p_chapterName);
+  if (possibleChapters.size() != 1) {
+    return;
+  }
+
+  auto currentChapterItem = possibleChapters.at(0);
+  m_chaptersView->setCurrentIndex(currentChapterItem->index());
+  updateReadState(currentChapterItem, true);
+}
+
 void ChapterListWidget::updateReadState(QStandardItem* p_stateItem, bool p_isChapterRead) {
+  /// Get items
+  auto currentRow = p_stateItem->row();
+  auto chapterTextItem = m_chaptersModel->item(currentRow, eChapterNameColumn);
+  auto chapterReadItem = m_chaptersModel->item(currentRow, eChapterReadColumn);
+
+  /// Font
   QFont font;
   font.setFamily("FontAwesome");
   font.setPixelSize(16);
   QColor readIconColor;
-  p_stateItem->setData(p_isChapterRead, eChapterReadRole);
+
+  /// Update state according to read or not
+  chapterReadItem->setFont(font);
+  chapterReadItem->setData(p_isChapterRead, eChapterReadRole);
   if (p_isChapterRead) {
     readIconColor = QColor::fromRgb(0x5c, 0xb8, 0x5c);
+    chapterReadItem->setText("\uf06e");
   } else {
     readIconColor = QColor::fromRgb(0x25, 0x28, 0x38);
+    chapterReadItem->setText("\uf070");
   }
-  p_stateItem->setData(readIconColor, Qt::ForegroundRole);
-  p_stateItem->setFont(font);
-  p_stateItem->setText("\uf06e");
-  auto currentChapterName = m_chaptersModel->item(p_stateItem->row(), eChapterNameColumn)->text();
-  Utils::updateChapterRead(m_currentMangaName, currentChapterName, p_isChapterRead);
+  chapterReadItem->setData(readIconColor, Qt::ForegroundRole);
+
+  /// Update db
+  Utils::updateChapterRead(m_currentMangaName, chapterTextItem->text(), p_isChapterRead);
 }
 
 QModelIndex ChapterListWidget::getChapterIndex(QModelIndex const& p_index) {

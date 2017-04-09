@@ -38,11 +38,12 @@ protected slots:
   void goToDownload();
   void checkAvailableChapterIsDone(int,QProcess::ExitStatus);
   void readStandardOutput();
-  void updateCurrentProgresseion(int p_currentRemainingToRead);
+  void updateCurrentProgression(int p_currentRemainingToRead);
 
 signals:
   void chapterSelected(QString mangaName, QString chapterName);
   void mangaSelected(QString mangaName);
+  void currentChapterChanged(QString const& p_chapterName);
 
 private:
   QDir m_scansDirectory;

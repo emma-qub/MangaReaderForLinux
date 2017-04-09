@@ -170,6 +170,7 @@ public:
 
 public slots:
   void changeManga(const QModelIndex& p_index);
+  void markChapterAsRead(QString const& p_chapterName);
 
 signals:
   void chapterSelected(QModelIndex const& p_chapterIndex);
