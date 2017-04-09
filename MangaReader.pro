@@ -15,7 +15,8 @@ SOURCES += \
     BrowseDirectoryDialog.cpp \
     NotificationDialog.cpp \
     MangaListDelegate.cxx \
-    ChapterListWidget.cxx
+    ChapterListWidget.cxx \
+    SlidingStackedWidget.cxx
 
 HEADERS += \
     MainWindow.h \
@@ -33,7 +34,8 @@ HEADERS += \
     BrowseDirectoryDialog.h \
     NotificationDialog.h \
     MangaListDelegate.hxx \
-    ChapterListWidget.hxx
+    ChapterListWidget.hxx \
+    SlidingStackedWidget.hxx
 
 QT += \
     widgets \

@@ -1,7 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtWidgets>
+#include <QMainWindow>
+
+#include "SlidingStackedWidget.hxx"
 #include "MangaListWidget.h"
 #include "MangaReadWidget.h"
 #include "MangaDownloadWidget.h"
@@ -30,7 +32,7 @@ private:
   MangaListWidget* m_mangaListWidget;
   MangaReadWidget* m_mangaReadWidget;
   MangaDownloadWidget* m_mangaDownloadWidget;
-  QStackedWidget* m_stackedWidget;
+  SlidingStackedWidget* m_stackedWidget;
   QTabWidget* m_tabWidget;
 
   int m_chaptersDownloaded;

@@ -12,7 +12,7 @@ MainWindow::MainWindow(QMainWindow* parent):
 
   m_mangaListWidget = new MangaListWidget;
   m_mangaReadWidget = new MangaReadWidget;
-  m_stackedWidget = new QStackedWidget;
+  m_stackedWidget = new SlidingStackedWidget(this);
   m_stackedWidget->addWidget(m_mangaListWidget);
   m_stackedWidget->addWidget(m_mangaReadWidget);
   m_stackedWidget->setCurrentIndex(eList);
@@ -77,7 +77,7 @@ void MainWindow::checkMangaDirectoryExists() {
 }
 
 void MainWindow::switchToRead(QString mangaName, QString chapterName) {
-  m_stackedWidget->setCurrentIndex(eRead);
+  m_stackedWidget->slideInNext();
 
   m_mangaReadWidget->switchManga(mangaName, chapterName);
 }
@@ -90,5 +90,5 @@ void MainWindow::switchToDownload(QString mangaName) {
 
 void MainWindow::switchToList()
 {
-  m_stackedWidget->setCurrentIndex(eList);
+  m_stackedWidget->slideInPrev();
 }

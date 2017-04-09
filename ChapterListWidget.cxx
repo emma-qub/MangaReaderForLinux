@@ -125,6 +125,8 @@ void ChapterListWidget::markChapterAsRead(const QString& p_chapterName)
 }
 
 void ChapterListWidget::updateReadState(QStandardItem* p_stateItem, bool p_isChapterRead) {
+  m_chaptersView->setFocus();
+
   /// Get items
   auto currentRow = p_stateItem->row();
   auto chapterTextItem = m_chaptersModel->item(currentRow, eChapterNameColumn);

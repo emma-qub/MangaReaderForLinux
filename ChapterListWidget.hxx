@@ -9,8 +9,6 @@
 #include <QFontMetrics>
 #include <QMouseEvent>
 
-#include <QDebug>
-
 class FrontCoverOverlay: public QWidget {
   Q_OBJECT
 

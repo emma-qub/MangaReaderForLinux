@@ -93,6 +93,8 @@ void MangaReadWidget::changeChapter(const QString& p_chapterName) {
   m_currentPageNumber = 0;
   updatePagesComboBox();
   emit currentChapterChanged(p_chapterName);
+
+  m_currentPageLabel->setFocus();
 }
 
 void MangaReadWidget::updatePagesComboBox() {
