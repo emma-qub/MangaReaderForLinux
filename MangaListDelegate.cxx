@@ -3,14 +3,12 @@
 #include <QApplication>
 #include <QFont>
 
-#include <QDebug>
-
 MangaListDelegate::MangaListDelegate(QObject* p_parent):
   QStyledItemDelegate(p_parent) {
-
 }
 
 void MangaListDelegate::paint(QPainter* p_painter, const QStyleOptionViewItem& p_option, const QModelIndex& p_index) const {
+  /// Initiate variables
   auto rect = p_option.rect;
   QRect circleRect(rect.left(), rect.top(), rect.height(), rect.height());
   int circlePadding = 5;

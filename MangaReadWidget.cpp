@@ -1,8 +1,15 @@
 #include "MangaReadWidget.h"
 #include "Utils.h"
 
-MangaReadWidget::MangaReadWidget(QWidget* parent) :
-  QWidget(parent),
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QMessageBox>
+#include <QScrollBar>
+#include <QKeyEvent>
+#include <QMouseEvent>
+
+MangaReadWidget::MangaReadWidget(QWidget* p_parent) :
+  QWidget(p_parent),
   m_scansDirectory(Utils::getScansDirectory()),
   m_currentMangaDirectory(),
   m_currentChapterDirectory(),
@@ -16,7 +23,7 @@ MangaReadWidget::MangaReadWidget(QWidget* parent) :
   /// Select chapter
   m_chaptersComboBox = new QComboBox;
   m_chaptersComboBox->setFixedWidth(300);
-  connect(m_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
+  connect(m_chaptersComboBox, SIGNAL(currentTextChanged(QString const&)), this, SLOT(changeChapter(QString const&)));
 
   /// Select page
   m_nbPagesLabel = new QLabel;
@@ -128,22 +135,12 @@ void MangaReadWidget::updateCurrentPage() {
 
 void MangaReadWidget::switchManga(const QString& p_mangaName, const QString& p_chapterName) {
   updateChaptersComboBox(p_mangaName);
+
   disconnect(m_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
   m_chaptersComboBox->setCurrentText(p_chapterName);
   connect(m_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
 
-  /// Force to change chapter since there are messed up signals when switching from read/download tabs
   changeChapter(p_chapterName);
-
-  /// Set focus to the page in order to let the user immediately read the chapter.
-  /// Otherwise, the mangas combo box has the focus and using the arrows
-  /// would end up updating the current manga.
-  m_currentPageLabel->setFocus();
-
-  /// For some reason, the previous setFocus mess up with the combo box.
-  if (m_chaptersComboBox->currentText() != p_chapterName) {
-    m_chaptersComboBox->setCurrentText(p_chapterName);
-  }
 }
 
 void MangaReadWidget::keyReleaseEvent(QKeyEvent* p_event) {

@@ -10,40 +10,28 @@ class SlidingStackedWidget: public QStackedWidget {
 public:
   enum Direction {
     eLeftToRight,
-    eRightToLeft,
-    eAutomatic
+    eRightToLeft
   };
 
-  enum PageIndex {
-    eListIndex,
-    eReadIndex
-  };
-
-  SlidingStackedWidget(QWidget* p_parent);
+  explicit SlidingStackedWidget(QWidget* p_parent);
 
 public slots:
   void slideInNext();
   void slideInPrev();
 
-signals:
-  void animationFinished();
-
 protected slots:
   void animationDone();
 
 protected:
-  void slideInWidget(int p_index, Direction p_direction = eAutomatic);
+  void slideInWidget(int p_index, Direction p_direction);
 
 private:
-  QWidget* m_mainWindow;
-  int m_speed;
-  QEasingCurve::Type m_animationType;
-  bool m_vertical;
+  static int const SPEED;
+  static QEasingCurve::Type const ANIMATION_TYPE;
   int m_now;
   int m_next;
   QPoint m_pointNow;
   bool m_active;
-  QList<QWidget*> m_blockedPageList;
 };
 
 #endif // SLIDINGSTACKEDWIDGET_HXX

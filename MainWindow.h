@@ -21,12 +21,9 @@ public:
   MainWindow(QMainWindow* parent = nullptr);
 
 protected slots:
-  void switchToRead(QString mangaName, QString chapterName);
-  void switchToDownload(QString mangaName);
+  void switchToRead(QString const& p_mangaName, QString const& p_chapterName);
+  void switchToDownload(QString const& p_mangaName);
   void switchToList();
-
-private:
-  void checkMangaDirectoryExists();
 
 private:
   MangaListWidget* m_mangaListWidget;
@@ -34,9 +31,6 @@ private:
   MangaDownloadWidget* m_mangaDownloadWidget;
   SlidingStackedWidget* m_stackedWidget;
   QTabWidget* m_tabWidget;
-
-  int m_chaptersDownloaded;
-  int m_totalChaptersToDownload;
 };
 
 #endif // MAINWINDOW_H

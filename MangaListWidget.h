@@ -22,7 +22,7 @@ public:
   MangaListWidget(QWidget* p_parent = nullptr);
 
 public slots:
-  void initModel(QString mangaSelected = "");
+  void initModel(QString p_mangaSelected = "");
   void addManga();
 
 protected:

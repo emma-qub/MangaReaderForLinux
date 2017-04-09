@@ -85,7 +85,7 @@ void ChapterListWidget::changeManga(QModelIndex const& p_index)
   int k = 0;
   for (const QString& currChStr: currDirsList) {
     if (k >= areChaptersRead.size()) {
-      QMessageBox::critical(this, "List error", "Error while tempting to edit manga read flags whithin MangaListWidget::initModel.");
+      QMessageBox::critical(this, "List error", "Error while tempting to edit manga read flags whithin ChapterListWidget::changeManga.");
       return;
     }
     bool isChapterRead = areChaptersRead.at(k);

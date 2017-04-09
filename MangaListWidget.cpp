@@ -39,9 +39,9 @@ MangaListWidget::MangaListWidget(QWidget* p_parent):
   m_mangaListView = new QListView;
   m_mangaListView->setModel(m_mangaProxyModel);
   connect(m_mangaListView->selectionModel(), &QItemSelectionModel::currentChanged, this, [this](QModelIndex const& p_index) {
-    if (p_index.isValid())
-    {
+    if (p_index.isValid()) {
       m_chapterListWidget->changeManga(p_index);
+      m_mangaListView->setFocus();
     }
   });
   m_mangaListView->setItemDelegate(new MangaListDelegate);
@@ -106,7 +106,7 @@ MangaListWidget::MangaListWidget(QWidget* p_parent):
 
 /// PUBLIC SLOTS
 
-void MangaListWidget::initModel(QString mangaSelected) {
+void MangaListWidget::initModel(QString p_mangaSelected) {
   /// Get every manga name
   m_scansDirectory.setFilter(QDir::Dirs);
   QStringList dirsList = Utils::dirList(m_scansDirectory);
@@ -114,7 +114,7 @@ void MangaListWidget::initModel(QString mangaSelected) {
   /// Clear model
   m_mangaModel->setRowCount(0);
 
-  ///
+  /// List every manga
   QModelIndex indexMangaSelected;
   for (const QString& mangaName: dirsList) {
     QStandardItem* currItem = new QStandardItem(mangaName);
@@ -122,11 +122,12 @@ void MangaListWidget::initModel(QString mangaSelected) {
     m_mangaModel->appendRow(currItem);
     updateMangaData(currItem);
 
-    if (mangaName == mangaSelected) {
+    if (mangaName == p_mangaSelected) {
       indexMangaSelected = m_mangaModel->indexFromItem(currItem);
     }
   }
 
+  /// Set right color according to manga location in list
   for (int k = 0; k < m_mangaModel->rowCount(); ++k) {
     auto currItem = m_mangaModel->item(k, 0);
     auto hue = k*(360/m_mangaModel->rowCount());
@@ -134,6 +135,7 @@ void MangaListWidget::initModel(QString mangaSelected) {
     currItem->setData(QColor::fromHsv(hue, satValue, satValue), MangaListDelegate::eColorRole);
   }
 
+  /// Select current manga
   if (indexMangaSelected.isValid())
     m_mangaListView->setCurrentIndex(indexMangaSelected);
 

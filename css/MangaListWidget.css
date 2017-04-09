@@ -1,7 +1,6 @@
 QSplitter {
   width: 0px;
   height: 1px;
-  /*border-left: 1px solid #333333;*/
 }
 
 QListView, QWidget#mangaListSubWidget {

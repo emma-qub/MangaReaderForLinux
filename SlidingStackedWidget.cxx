@@ -3,16 +3,15 @@
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
 
-SlidingStackedWidget::SlidingStackedWidget(QWidget* p_parent):
-  QStackedWidget(p_parent) {
+int const SlidingStackedWidget::SPEED = 1000;
+QEasingCurve::Type const SlidingStackedWidget::ANIMATION_TYPE = QEasingCurve::InOutQuint;
 
-  m_vertical = false;
-  m_speed = 1000;
-  m_animationType = QEasingCurve::InOutQuint;
-  m_now = 0;
-  m_next = 0;
-  m_pointNow = QPoint(0, 0);
-  m_active = false;
+SlidingStackedWidget::SlidingStackedWidget(QWidget* p_parent):
+  QStackedWidget(p_parent),
+  m_now(0),
+  m_next(0),
+  m_pointNow(QPoint(0, 0)),
+  m_active(false) {
 }
 
 void SlidingStackedWidget::slideInNext() {
@@ -55,8 +54,8 @@ void SlidingStackedWidget::slideInWidget(int p_index, Direction p_direction) {
   widget(next)->raise();
 
   auto animNow = new QPropertyAnimation(widget(now), "pos");
-  animNow->setDuration(m_speed);
-  animNow->setEasingCurve(m_animationType);
+  animNow->setDuration(SPEED);
+  animNow->setEasingCurve(ANIMATION_TYPE);
   animNow->setStartValue(pointNow);
   if (p_direction == eRightToLeft)
     animNow->setEndValue(QPoint(pointNow.x()-offsetX, pointNow.y()));
@@ -64,8 +63,8 @@ void SlidingStackedWidget::slideInWidget(int p_index, Direction p_direction) {
     animNow->setEndValue(QPoint(pointNow.x()+offsetX, pointNow.y()));
 
   auto animNext = new QPropertyAnimation(widget(next), "pos");
-  animNext->setDuration(m_speed);
-  animNext->setEasingCurve(m_animationType);
+  animNext->setDuration(SPEED);
+  animNext->setEasingCurve(ANIMATION_TYPE);
   if (p_direction == eRightToLeft)
     animNext->setStartValue(QPoint(pointNext.x()+offsetX, pointNext.y()));
   else if (p_direction == eLeftToRight)
@@ -88,5 +87,4 @@ void SlidingStackedWidget::animationDone() {
   widget(m_now)->hide();
   widget(m_now)->move(m_pointNow);
   m_active = false;
-  emit animationFinished();
 }
