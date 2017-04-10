@@ -1,5 +1,4 @@
 #include "MessageListModel.h"
-
 #include "MessageItemDelegate.h"
 
 MessageListModel::MessageListModel(QObject* parent, int maxLine):

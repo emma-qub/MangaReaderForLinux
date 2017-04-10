@@ -1,14 +1,22 @@
 #ifndef MANGADOWNLOADWIDGET_H
 #define MANGADOWNLOADWIDGET_H
 
-#include <QtWidgets>
+#include <QWidget>
+#include <QProcess>
 #include <QDir>
+#include <QQueue>
 
-#include "MessageListView.h"
-#include "MessageListModel.h"
-#include "MessageItemDelegate.h"
+class MessageListView;
+class MessageListModel;
+class MessageItemDelegate;
 #include "ChaptersOnWebView.h"
 #include "ChaptersOnPCView.h"
+
+class QStringListModel;
+class QProgressBar;
+class QPushButton;
+class QLabel;
+class QStandardItemModel;
 
 class MangaDownloadWidget: public QWidget {
   Q_OBJECT
@@ -25,11 +33,11 @@ public slots:
 
   void updateChaptersOnPCView();
 
-  void chaptersListUpdated(int,QProcess::ExitStatus);
+  void chaptersListUpdated(int, QProcess::ExitStatus);
   void chaptersListUpdateStarted();
   void getChaptersListUpdated();
 
-  void downloadFinished(int,QProcess::ExitStatus);
+  void downloadFinished(int, QProcess::ExitStatus);
   void nextDownloadHasStarted();
   void downloadChapters();
   void startNextDownload();
@@ -47,7 +55,7 @@ signals:
   void downloading(bool);
 
 protected:
-  virtual void keyReleaseEvent(QKeyEvent* p_event);
+  void keyReleaseEvent(QKeyEvent* p_event) override;
 
 private:
   QDir m_scansDirectory;

@@ -1,7 +1,6 @@
 #include "MangaListDelegate.hxx"
 
 #include <QApplication>
-#include <QFont>
 
 MangaListDelegate::MangaListDelegate(QObject* p_parent):
   QStyledItemDelegate(p_parent) {

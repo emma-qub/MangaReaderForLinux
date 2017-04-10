@@ -2,18 +2,20 @@
 #define MANGALISTWIDGET_H
 
 #include <QWidget>
-#include <QStandardItemModel>
-#include <QSortFilterProxyModel>
-#include <QDir>
-#include <QSplitter>
-#include <QListView>
 #include <QProcess>
 #include <QQueue>
 #include <QModelIndex>
-#include <QPushButton>
+#include <QDir>
 
-#include "ChapterListWidget.hxx"
+class ChapterListWidget;
 
+class QSortFilterProxyModel;
+class QListView;
+class QSplitter;
+class QPushButton;
+class QLineEdit;
+class QStandardItem;
+class QStandardItemModel;
 
 class MangaListWidget: public QWidget {
   Q_OBJECT
@@ -30,19 +32,18 @@ protected:
   void updateMangaData(QStandardItem* p_mangaItem);
   void updateReadProgression(QModelIndex const& p_index);
   void startNextCheck();
-  void setDownloadButtonDisabled(bool b);
 
 protected slots:
   void checkAvailableDownloads();
   void goToRead(QModelIndex const& p_modelIndex);
   void goToDownload();
-  void checkAvailableChapterIsDone(int,QProcess::ExitStatus);
+  void checkAvailableChapterIsDone(int, QProcess::ExitStatus);
   void readStandardOutput();
   void updateCurrentProgression(int p_currentRemainingToRead);
 
 signals:
   void chapterSelected(QString mangaName, QString chapterName);
-  void mangaSelected(QString mangaName);
+  void downloadMangaRequested(QString mangaName);
   void currentChapterChanged(QString const& p_chapterName);
 
 private:

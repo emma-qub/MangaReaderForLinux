@@ -3,11 +3,10 @@
 
 #include <QMainWindow>
 
-#include "SlidingStackedWidget.hxx"
-#include "MangaListWidget.h"
-#include "MangaReadWidget.h"
-#include "MangaDownloadWidget.h"
-#include "NotificationDialog.h"
+class SlidingStackedWidget;
+class MangaListWidget;
+class MangaReadWidget;
+class MangaDownloadWidget;
 
 class MainWindow: public QMainWindow {
   Q_OBJECT

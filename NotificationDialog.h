@@ -1,14 +1,15 @@
 #ifndef NOTIFICATIONDIALOG_H
 #define NOTIFICATIONDIALOG_H
 
-#include <QtWidgets>
+#include <QWidget>
+
+class QLabel;
 
 class NotificationDialog: public QWidget {
   Q_OBJECT
 
 public:
   NotificationDialog(const QString& iconPath, QWidget* parent = nullptr);
-  virtual ~NotificationDialog();
 
   void showPopup(const QString& title, const QString& message);
 

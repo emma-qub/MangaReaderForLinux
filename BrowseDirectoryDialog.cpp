@@ -1,5 +1,12 @@
 #include "BrowseDirectoryDialog.h"
 
+#include <QDir>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QFormLayout>
+#include <QLabel>
+#include <QFileDialog>
+
 BrowseDirectoryDialog::BrowseDirectoryDialog(QWidget* parent, Qt::WindowFlags flags):
   QDialog(parent, flags) {
 
@@ -34,7 +41,8 @@ BrowseDirectoryDialog::BrowseDirectoryDialog(QWidget* parent, Qt::WindowFlags fl
   setWindowTitle("Settup");
 }
 
-BrowseDirectoryDialog::~BrowseDirectoryDialog() {
+QString BrowseDirectoryDialog::getScansDirectory() const {
+  return m_scansDirectoryLineEdit->text();
 }
 
 void BrowseDirectoryDialog::checkDirectoryValid(const QString&) {

@@ -1,18 +1,21 @@
 #ifndef ADDMANGADIALOG_H
 #define ADDMANGADIALOG_H
 
-#include <QtWidgets>
-#include <QNetworkReply>
+#include <QDialog>
+#include <QDir>
+#include <QProcess>
 
-#include "MessageItemDelegate.h"
-#include "MessageListModel.h"
-#include "MessageListView.h"
+class MessageItemDelegate;
+class MessageListModel;
+class MessageListView;
+
+class QLineEdit;
 
 class AddMangaDialog: public QDialog {
   Q_OBJECT
 
 public:
-  explicit AddMangaDialog(QWidget* parent = nullptr);
+  explicit AddMangaDialog(QWidget* p_parent = nullptr);
 
   bool addManga();
   QStringList extractMangaInfo();
@@ -21,7 +24,7 @@ signals:
 
 public slots:
   void searchForManga();
-  void getMangaListFinished(int,QProcess::ExitStatus);
+  void getMangaListFinished(int, QProcess::ExitStatus);
   void getMangaListStarted();
 
 private:

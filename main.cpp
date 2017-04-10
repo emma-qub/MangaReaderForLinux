@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QSettings>
 
 #include "MainWindow.h"
 #include "BrowseDirectoryDialog.h"

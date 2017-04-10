@@ -1,16 +1,23 @@
 ﻿#include "AddMangaDialog.h"
 
 #include "Utils.h"
+#include "MessageItemDelegate.h"
+#include "MessageListModel.h"
+#include "MessageListView.h"
 
 #include <cmath>
 #include <iostream>
 
-#include <QDebug>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QFormLayout>
+#include <QLabel>
+#include <QTextStream>
 
 #define cerro(x) std::cerr << x <<std::endl;
 
-AddMangaDialog::AddMangaDialog(QWidget* parent):
-  QDialog(parent),
+AddMangaDialog::AddMangaDialog(QWidget* p_parent):
+  QDialog(p_parent),
   m_mangaList() {
 
   /// List manga process

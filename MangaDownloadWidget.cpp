@@ -1,5 +1,20 @@
 #include "MangaDownloadWidget.h"
+
 #include "Utils.h"
+#include "MessageListView.h"
+#include "MessageItemDelegate.h"
+#include "MessageListModel.h"
+
+#include <QLineEdit>
+#include <QCompleter>
+#include <QFormLayout>
+#include <QStringListModel>
+#include <QGroupBox>
+#include <QPushButton>
+#include <QProgressBar>
+#include <QLabel>
+#include <QTimer>
+#include <QStandardItemModel>
 
 
 MangaDownloadWidget::MangaDownloadWidget(QWidget* p_parent):

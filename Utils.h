@@ -3,7 +3,6 @@
 
 #include <QStringList>
 #include <QDir>
-#include <QObject>
 
 class Utils {
 

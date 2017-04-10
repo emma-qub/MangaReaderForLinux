@@ -1,12 +1,8 @@
 #include "Utils.h"
 
-#include <QProgressDialog>
-#include <QFile>
-#include <QTextStream>
-#include <QDebug>
-#include <QProgressBar>
-#include <QtAlgorithms>
 #include <QSettings>
+#include <QDebug>
+
 
 QDir Utils::m_scansDirectory(QSettings("ValentinMicheletINC", "MangaReader").value("ScansDirectory").toString());
 

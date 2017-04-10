@@ -2,6 +2,17 @@
 #include "Utils.h"
 #include "AddMangaDialog.h"
 #include "MangaListDelegate.hxx"
+#include "ChapterListWidget.hxx"
+
+#include <QPushButton>
+#include <QSortFilterProxyModel>
+#include <QLineEdit>
+#include <QHBoxLayout>
+#include <QSplitter>
+#include <QTimer>
+#include <QMessageBox>
+#include <QStandardItemModel>
+#include <QListView>
 
 
 /// PUBLIC
@@ -189,10 +200,6 @@ void MangaListWidget::startNextCheck() {
   m_checkAvailableChaptersProcess->start(Utils::getScriptsAbsolutePath()+"/updateChaptersList.sh", arguments);
 }
 
-void MangaListWidget::setDownloadButtonDisabled(bool b) {
-//  m_downloadButton->setDisabled(b);
-}
-
 
 /// PROTECTED SLOTS
 
@@ -227,10 +234,7 @@ void MangaListWidget::goToDownload() {
     return;
   }
 
-  QString mangaName;
-  currentItem->parent() == nullptr ? mangaName = currentItem->text() : mangaName = currentItem->parent()->text();
-
-  emit mangaSelected(mangaName);
+  emit downloadMangaRequested(currentItem->text());
 }
 
 void MangaListWidget::checkAvailableChapterIsDone(int, QProcess::ExitStatus exitStatus) {

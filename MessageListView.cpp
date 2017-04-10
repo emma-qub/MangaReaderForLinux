@@ -1,6 +1,6 @@
 #include "MessageListView.h"
-#include <QStringListModel>
-#include <QPainter>
+
+#include "MessageListModel.h"
 
 MessageListView::MessageListView(QWidget* parent):
   QListView(parent) {
@@ -9,8 +9,11 @@ MessageListView::MessageListView(QWidget* parent):
   setSelectionMode(QAbstractItemView::NoSelection);
 }
 
-void MessageListView::setModel(MessageListModel* model) {
-  QListView::setModel(model);
+void MessageListView::setModel(QAbstractItemModel* p_model) {
+  QListView::setModel(p_model);
 
-  connect(model, SIGNAL(scrollToBottomRequested()), this, SLOT(scrollToBottom()));
+  auto model = dynamic_cast<MessageListModel*>(p_model);
+  if (model != nullptr) {
+    connect(model, &MessageListModel::scrollToBottomRequested, this, &MessageListView::scrollToBottom);
+  }
 }

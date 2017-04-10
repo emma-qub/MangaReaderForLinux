@@ -3,7 +3,7 @@
 
 #include <QListView>
 
-#include "MessageListModel.h"
+class MessageListModel;
 
 class MessageListView: public QListView {
   Q_OBJECT
@@ -11,7 +11,7 @@ class MessageListView: public QListView {
 public:
   explicit MessageListView(QWidget* parent = nullptr);
 
-  virtual void setModel(MessageListModel* model);
+  void setModel(QAbstractItemModel* p_model) override;
 };
 
 #endif // MESSAGELISTVIEW_H

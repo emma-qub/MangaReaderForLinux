@@ -3,10 +3,11 @@
 
 #include <QWidget>
 #include <QDir>
-#include <QScrollArea>
-#include <QLabel>
-#include <QPushButton>
-#include <QComboBox>
+
+class QScrollArea;
+class QComboBox;
+class QLabel;
+class QPushButton;
 
 class MangaReadWidget: public QWidget {
   Q_OBJECT

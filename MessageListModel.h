@@ -2,7 +2,6 @@
 #define MESSAGELISTMODEL_H
 
 #include <QStandardItemModel>
-#include <QStandardItem>
 
 class MessageListModel: public QStandardItemModel {
   Q_OBJECT

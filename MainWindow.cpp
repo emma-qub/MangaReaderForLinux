@@ -1,6 +1,14 @@
 ﻿#include "MainWindow.h"
 #include "Utils.h"
+#include "MangaListWidget.h"
+#include "MangaReadWidget.h"
+#include "SlidingStackedWidget.hxx"
+#include "MangaDownloadWidget.h"
 
+#include <QFontDatabase>
+#include <QLayout>
+
+#include <QDebug>
 
 MainWindow::MainWindow(QMainWindow* parent):
   QMainWindow(parent) {
@@ -33,14 +41,13 @@ MainWindow::MainWindow(QMainWindow* parent):
   setWindowIcon(appIcon);
 
   connect(m_mangaListWidget, &MangaListWidget::chapterSelected, this, &MainWindow::switchToRead);
-  connect(m_mangaListWidget, &MangaListWidget::mangaSelected, this, &MainWindow::switchToDownload);
+  connect(m_mangaListWidget, &MangaListWidget::downloadMangaRequested, this, &MainWindow::switchToDownload);
 
   connect(m_mangaReadWidget, &MangaReadWidget::goToListRequested, this, &MainWindow::switchToList);
   connect(m_mangaReadWidget, &MangaReadWidget::currentChapterChanged, m_mangaListWidget, &MangaListWidget::currentChapterChanged);
 
   connect(m_mangaDownloadWidget, SIGNAL(chapterSelected(QString, QString)), this, SLOT(switchToRead(QString,QString)));
   connect(m_mangaDownloadWidget, SIGNAL(initModelRequested(QString)), m_mangaListWidget, SLOT(initModel(QString)));
-  connect(m_mangaDownloadWidget, SIGNAL(downloading(bool)), m_mangaListWidget, SLOT(setDownloadButtonDisabled(bool)));
 
   if (QFontDatabase::addApplicationFont("../MangaReaderForLinux/icons/FontAwesome/fonts/FontAwesome.otf") < 0) {
     qWarning() << "FontAwesome cannot be loaded!";

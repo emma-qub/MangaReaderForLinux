@@ -1,5 +1,10 @@
 #include "NotificationDialog.h"
 
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QTimer>
+#include <QPainter>
+#include <QStyleOptionToolBar>
 
 NotificationDialog::NotificationDialog(const QString& iconPath, QWidget* parent):
   QWidget(parent) {
@@ -51,9 +56,6 @@ NotificationDialog::NotificationDialog(const QString& iconPath, QWidget* parent)
 
   setWindowTitle("   Manga Reader Notification");
   setFixedSize(250, 100);
-}
-
-NotificationDialog::~NotificationDialog() {
 }
 
 void NotificationDialog::showPopup(const QString& title, const QString& message) {

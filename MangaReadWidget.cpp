@@ -1,12 +1,14 @@
 #include "MangaReadWidget.h"
 #include "Utils.h"
 
+#include <QComboBox>
+#include <QLabel>
+#include <QPushButton>
 #include <QHBoxLayout>
-#include <QVBoxLayout>
+#include <QScrollArea>
 #include <QMessageBox>
 #include <QScrollBar>
 #include <QKeyEvent>
-#include <QMouseEvent>
 
 MangaReadWidget::MangaReadWidget(QWidget* p_parent) :
   QWidget(p_parent),
