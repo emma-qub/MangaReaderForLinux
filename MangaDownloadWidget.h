@@ -4,7 +4,6 @@
 #include <QtWidgets>
 #include <QDir>
 
-#include "DownloadManager.h"
 #include "MessageListView.h"
 #include "MessageListModel.h"
 #include "MessageItemDelegate.h"
@@ -15,7 +14,7 @@ class MangaDownloadWidget: public QWidget {
   Q_OBJECT
 
 public:
-  MangaDownloadWidget(QWidget* parent = nullptr);
+  MangaDownloadWidget(QWidget* p_parent = nullptr);
 
 public slots:
   void updateChaptersList();
@@ -43,12 +42,12 @@ public slots:
   void stopDownload();
 
 signals:
-  void initModelRequested(QString);
-  void chapterSelected(QString, QString);
+  void initModelRequested(QString const&);
+  void chapterSelected(QString const&, QString const&);
   void downloading(bool);
 
 protected:
-  virtual void keyReleaseEvent(QKeyEvent* event);
+  virtual void keyReleaseEvent(QKeyEvent* p_event);
 
 private:
   QDir m_scansDirectory;

@@ -7,7 +7,6 @@
 #include "MessageItemDelegate.h"
 #include "MessageListModel.h"
 #include "MessageListView.h"
-#include "DownloadManager.h"
 
 class AddMangaDialog: public QDialog {
   Q_OBJECT
@@ -24,9 +23,6 @@ public slots:
   void searchForManga();
   void getMangaListFinished(int,QProcess::ExitStatus);
   void getMangaListStarted();
-//  void checkMangaName();
-//  void finish();
-//  void downloadPreviewImage();
 
 private:
   QProcess* m_listMangaProcess;
@@ -43,16 +39,6 @@ private:
   MessageListView* m_messageListView;
 
   QPushButton* m_finishButton;
-  //  QPushButton* m_cancelButton;
-
-//  DownloadHTMLManager m_downloadMangaListManager;
-//  DownloadHTMLManager m_downloadMangaInfoManager;
-//  DownloadManager m_downloadManager;
-
-//  QTime m_downloadTime;
-//  QFile m_output;
-//  QNetworkReply* m_networkReply;
-
 };
 
 #endif // ADDMANGADIALOG_H

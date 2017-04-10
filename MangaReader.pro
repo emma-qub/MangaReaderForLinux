@@ -5,7 +5,6 @@ SOURCES += \
     MangaReadWidget.cpp \
     Utils.cpp \
     MangaDownloadWidget.cpp \
-    DownloadManager.cpp \
     MessageListView.cpp \
     MessageListModel.cpp \
     MessageItemDelegate.cpp \
@@ -24,7 +23,6 @@ HEADERS += \
     MangaReadWidget.h \
     Utils.h \
     MangaDownloadWidget.h \
-    DownloadManager.h \
     MessageListView.h \
     MessageListModel.h \
     MessageItemDelegate.h \
@@ -38,8 +36,7 @@ HEADERS += \
     SlidingStackedWidget.hxx
 
 QT += \
-    widgets \
-    network
+    widgets
 
 CONFIG += \
     c++11

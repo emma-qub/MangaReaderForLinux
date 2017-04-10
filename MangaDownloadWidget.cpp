@@ -1,10 +1,9 @@
 #include "MangaDownloadWidget.h"
-#include "DownloadManager.h"
 #include "Utils.h"
 
 
-MangaDownloadWidget::MangaDownloadWidget(QWidget* parent):
-  QWidget(parent),
+MangaDownloadWidget::MangaDownloadWidget(QWidget* p_parent):
+  QWidget(p_parent),
   m_scansDirectory(Utils::getScansDirectory()),
   m_mangaList(Utils::dirList(m_scansDirectory)),
   m_currentMangaDirectory(),
@@ -531,9 +530,9 @@ void MangaDownloadWidget::stopDownload() {
 
 /// Key release event
 
-void MangaDownloadWidget::keyReleaseEvent(QKeyEvent* event) {
+void MangaDownloadWidget::keyReleaseEvent(QKeyEvent* p_event) {
   // Enter released
-  if ((event->key() == Qt::Key_Enter) || (event->key() == Qt::Key_Return)) {
+  if ((p_event->key() == Qt::Key_Enter) || (p_event->key() == Qt::Key_Return)) {
     QModelIndex index = m_chaptersOnPCView->currentIndex();
     if (index.isValid())
       goToRead(index);
