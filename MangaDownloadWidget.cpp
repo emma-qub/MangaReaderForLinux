@@ -2,7 +2,6 @@
 
 #include "Utils.h"
 #include "MessageListView.h"
-#include "MessageItemDelegate.h"
 #include "MessageListModel.h"
 
 #include <QLineEdit>
@@ -15,6 +14,7 @@
 #include <QLabel>
 #include <QTimer>
 #include <QStandardItemModel>
+#include <QKeyEvent>
 
 
 MangaDownloadWidget::MangaDownloadWidget(QWidget* p_parent):
@@ -50,7 +50,7 @@ MangaDownloadWidget::MangaDownloadWidget(QWidget* p_parent):
 
   m_chaptersOnPCModel = new QStringListModel;
 
-  m_chaptersOnPCView = new ChaptersOnPCView;
+  m_chaptersOnPCView = new QListView;
   m_chaptersOnPCView->setModel(m_chaptersOnPCModel);
   m_chaptersOnPCView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
@@ -68,7 +68,7 @@ MangaDownloadWidget::MangaDownloadWidget(QWidget* p_parent):
 
   m_chaptersOnWebModel = new QStandardItemModel;
 
-  m_chaptersOnWebView = new ChaptersOnWebView(this);
+  m_chaptersOnWebView = new QListView;
   m_chaptersOnWebView->setSelectionMode(QAbstractItemView::ExtendedSelection);
   m_chaptersOnWebView->setModel(m_chaptersOnWebModel);
   m_chaptersOnWebView->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -115,9 +115,7 @@ MangaDownloadWidget::MangaDownloadWidget(QWidget* p_parent):
   /// Message output
 
   m_messageView = new MessageListView;
-  m_messageItemDelegate = new MessageItemDelegate;
   m_messageModel = new MessageListModel;
-  m_messageView->setItemDelegate(m_messageItemDelegate);
   m_messageView->setModel(m_messageModel);
 
 

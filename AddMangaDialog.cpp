@@ -1,7 +1,6 @@
 ﻿#include "AddMangaDialog.h"
 
 #include "Utils.h"
-#include "MessageItemDelegate.h"
 #include "MessageListModel.h"
 #include "MessageListView.h"
 
@@ -43,10 +42,8 @@ AddMangaDialog::AddMangaDialog(QWidget* p_parent):
   /// Output message
   QLabel* detailsLabel = new QLabel("Details");
 
-  m_messageItemDelegate = new MessageItemDelegate;
   m_messageListModel = new MessageListModel(this);
   m_messageListView = new MessageListView;
-  m_messageListView->setItemDelegate(m_messageItemDelegate);
   m_messageListView->setModel(m_messageListModel);
 
   /// Finish button
@@ -80,6 +77,7 @@ void AddMangaDialog::searchForManga() {
 
 void AddMangaDialog::getMangaListFinished(int status, QProcess::ExitStatus exitStatus)
 {
+  Q_UNUSED(exitStatus)
   cerro(status);
   return;
 }

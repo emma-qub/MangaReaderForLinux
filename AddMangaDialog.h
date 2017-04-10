@@ -11,6 +11,7 @@ class MessageListView;
 
 class QLineEdit;
 
+
 class AddMangaDialog: public QDialog {
   Q_OBJECT
 
@@ -37,7 +38,6 @@ private:
   QLineEdit* m_mangaNameLineEdit;
   QPushButton* m_addMangaButton;
 
-  MessageItemDelegate* m_messageItemDelegate;
   MessageListModel* m_messageListModel;
   MessageListView* m_messageListView;
 

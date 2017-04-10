@@ -7,12 +7,8 @@ SOURCES += \
     MangaDownloadWidget.cpp \
     MessageListView.cpp \
     MessageListModel.cpp \
-    MessageItemDelegate.cpp \
     AddMangaDialog.cpp \
-    ChaptersOnWebView.cpp \
-    ChaptersOnPCView.cpp \
     BrowseDirectoryDialog.cpp \
-    NotificationDialog.cpp \
     MangaListDelegate.cxx \
     ChapterListWidget.cxx \
     SlidingStackedWidget.cxx
@@ -25,18 +21,12 @@ HEADERS += \
     MangaDownloadWidget.h \
     MessageListView.h \
     MessageListModel.h \
-    MessageItemDelegate.h \
     AddMangaDialog.h \
-    ChaptersOnWebView.h \
-    ChaptersOnPCView.h \
     BrowseDirectoryDialog.h \
-    NotificationDialog.h \
     MangaListDelegate.hxx \
     ChapterListWidget.hxx \
     SlidingStackedWidget.hxx
 
-QT += \
-    widgets
+QT +=  widgets
 
-CONFIG += \
-    c++11
+CONFIG += c++11

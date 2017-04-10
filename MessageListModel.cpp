@@ -1,5 +1,4 @@
 #include "MessageListModel.h"
-#include "MessageItemDelegate.h"
 
 MessageListModel::MessageListModel(QObject* parent, int maxLine):
   QStandardItemModel(parent),
@@ -8,26 +7,36 @@ MessageListModel::MessageListModel(QObject* parent, int maxLine):
 
 void MessageListModel::append(QString message, MessageStatus messageStatus, bool newLine) {
   QStandardItem* item = new QStandardItem;
+  item->setText(message);
+  item->setFont(QFont("Monospace"));
 
   switch(messageStatus) {
   case MessageStatus::Information:
-    item->setData(message, MessageItemDelegate::InformationRole);
+  {
+    item->setData(QColor("#4169e1"), Qt::ForegroundRole);
     break;
+  }
   case MessageStatus::Success:
-    item->setData(message, MessageItemDelegate::SuccessRole);
+  {
+    item->setData(QColor("#228b22"), Qt::ForegroundRole);
     break;
+  }
   case MessageStatus::Warning:
-    item->setData(message, MessageItemDelegate::WarningRole);
+  {
+    item->setData(QColor("#ff8c00"), Qt::ForegroundRole);
     break;
+  }
   case MessageStatus::Error:
-    item->setData(message, MessageItemDelegate::ErrorRole);
+  {
+    item->setData(QColor("#ff0000"), Qt::ForegroundRole);
     break;
+  }
   case MessageStatus::Download:
-    item->setData(message, MessageItemDelegate::DownloadRole);
-    break;
   default:
-    item->setData(message, MessageItemDelegate::DownloadRole);
+  {
+    item->setData(QColor("#333333"), Qt::ForegroundRole);
     break;
+  }
   }
 
   while (rowCount() > m_maxLines)
