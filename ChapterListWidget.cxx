@@ -171,9 +171,29 @@ ChapterListWidget::ChapterListWidget(QWidget* p_parent):
   connect(m_frontCover, &FrontCoverOverlay::downloadRequested, this, &ChapterListWidget::downloadRequested);
 
   setLayout(mainLayout);
+
+
+
+  /// Progressbar style
+  //  QString progressBarStyle(
+  //  "QProgressBar {"
+  //  "    border: 1px solid lightgrey;"
+  //  "    border-radius: 5px;"
+  //  "    text-align: center;"
+  //  "    font-weight: bold;"
+  //  "}"
+  //  "QProgressBar::chunk {"
+  //  "    background-color: #449D44;"
+  //  "    width: 10px;"
+  ////  "    margin: 0.5px;"
+  //  "}"
 }
 
 void ChapterListWidget::setReadPercentage(int p_chaptersReadCount, int p_allChaptersCount) {
+  if (p_allChaptersCount == 0)
+  {
+    return;
+  }
   float readPercentage = (100.0 * static_cast<float>(p_chaptersReadCount) / static_cast<float>(p_allChaptersCount));
   m_frontCover->setReadProgression(readPercentage);
   emit progressionChanged(m_allChaptersCount - m_chaptersReadCount);
@@ -251,22 +271,26 @@ void ChapterListWidget::updateReadState(QStandardItem* p_stateItem, bool p_isCha
   auto chapterTextItem = m_chaptersModel->item(currentRow, eChapterNameColumn);
   auto chapterReadItem = m_chaptersModel->item(currentRow, eChapterReadColumn);
 
-  /// Font
+  /// Fonts
   QFont font;
   font.setFamily("FontAwesome");
   font.setPixelSize(16);
   QColor readIconColor;
+  auto updatedFont = chapterTextItem->font();
 
   /// Update state according to read or not
-  chapterReadItem->setFont(font);
   chapterReadItem->setData(p_isChapterRead, eChapterReadRole);
   if (p_isChapterRead) {
+    updatedFont.setBold(false);
     readIconColor = QColor::fromRgb(0x5c, 0xb8, 0x5c);
     chapterReadItem->setText("\uf06e");
   } else {
+    updatedFont.setBold(true);
     readIconColor = QColor::fromRgb(0x25, 0x28, 0x38);
     chapterReadItem->setText("\uf070");
   }
+  chapterTextItem->setFont(updatedFont);
+  chapterReadItem->setFont(font);
   chapterReadItem->setData(readIconColor, Qt::ForegroundRole);
 
   /// Update db
