@@ -136,6 +136,10 @@ void MangaReadWidget::updateCurrentPage() {
 }
 
 void MangaReadWidget::switchManga(const QString& p_mangaName, const QString& p_chapterName) {
+  if (m_chaptersComboBox->currentText() == p_chapterName) {
+    return;
+  }
+
   updateChaptersComboBox(p_mangaName);
 
   disconnect(m_chaptersComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeChapter(QString)));
