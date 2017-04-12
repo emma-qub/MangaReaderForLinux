@@ -1,4 +1,4 @@
-#include "MessageListModel.h"
+#include "MessageListModel.hxx"
 
 MessageListModel::MessageListModel(QObject* parent, int maxLine):
   QStandardItemModel(parent),

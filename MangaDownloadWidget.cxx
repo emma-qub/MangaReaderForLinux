@@ -1,8 +1,8 @@
-#include "MangaDownloadWidget.h"
+#include "MangaDownloadWidget.hxx"
 
-#include "Utils.h"
-#include "MessageListView.h"
-#include "MessageListModel.h"
+#include "Utils.hxx"
+#include "MessageListView.hxx"
+#include "MessageListModel.hxx"
 
 #include <QLineEdit>
 #include <QCompleter>

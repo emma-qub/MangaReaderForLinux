@@ -1,8 +1,8 @@
-﻿#include "AddMangaDialog.h"
+﻿#include "AddMangaDialog.hxx"
 
-#include "Utils.h"
-#include "MessageListModel.h"
-#include "MessageListView.h"
+#include "Utils.hxx"
+#include "MessageListModel.hxx"
+#include "MessageListView.hxx"
 
 #include <cmath>
 #include <iostream>

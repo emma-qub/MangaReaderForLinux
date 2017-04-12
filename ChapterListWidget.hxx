@@ -37,7 +37,7 @@ private:
 
 
 
-#include "Utils.h"
+#include "Utils.hxx"
 
 class QStandardItem;
 class QStandardItemModel;

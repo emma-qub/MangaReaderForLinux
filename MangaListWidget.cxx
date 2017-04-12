@@ -1,6 +1,6 @@
-#include "MangaListWidget.h"
-#include "Utils.h"
-#include "AddMangaDialog.h"
+#include "MangaListWidget.hxx"
+#include "Utils.hxx"
+#include "AddMangaDialog.hxx"
 #include "MangaListDelegate.hxx"
 #include "ChapterListWidget.hxx"
 

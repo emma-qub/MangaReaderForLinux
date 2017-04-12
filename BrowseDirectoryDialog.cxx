@@ -1,4 +1,4 @@
-#include "BrowseDirectoryDialog.h"
+#include "BrowseDirectoryDialog.hxx"
 
 #include <QDir>
 #include <QLineEdit>

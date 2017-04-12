@@ -1,9 +1,9 @@
-﻿#include "MainWindow.h"
-#include "Utils.h"
-#include "MangaListWidget.h"
-#include "MangaReadWidget.h"
+﻿#include "MainWindow.hxx"
+#include "Utils.hxx"
+#include "MangaListWidget.hxx"
+#include "MangaReadWidget.hxx"
 #include "SlidingStackedWidget.hxx"
-#include "MangaDownloadWidget.h"
+#include "MangaDownloadWidget.hxx"
 
 #include <QFontDatabase>
 #include <QLayout>

@@ -1,6 +1,6 @@
-#include "MessageListView.h"
+#include "MessageListView.hxx"
 
-#include "MessageListModel.h"
+#include "MessageListModel.hxx"
 
 MessageListView::MessageListView(QWidget* parent):
   QListView(parent) {

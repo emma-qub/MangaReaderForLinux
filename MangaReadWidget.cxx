@@ -1,5 +1,5 @@
-#include "MangaReadWidget.h"
-#include "Utils.h"
+#include "MangaReadWidget.hxx"
+#include "Utils.hxx"
 
 #include <QComboBox>
 #include <QLabel>

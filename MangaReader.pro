@@ -1,28 +1,28 @@
 SOURCES += \
-    main.cpp \
-    MainWindow.cpp \
-    MangaListWidget.cpp \
-    MangaReadWidget.cpp \
-    Utils.cpp \
-    MangaDownloadWidget.cpp \
-    MessageListView.cpp \
-    MessageListModel.cpp \
-    AddMangaDialog.cpp \
-    BrowseDirectoryDialog.cpp \
+    main.cxx \
+    MainWindow.cxx \
+    MangaListWidget.cxx \
+    MangaReadWidget.cxx \
+    Utils.cxx \
+    MangaDownloadWidget.cxx \
+    MessageListView.cxx \
+    MessageListModel.cxx \
+    AddMangaDialog.cxx \
+    BrowseDirectoryDialog.cxx \
     MangaListDelegate.cxx \
     ChapterListWidget.cxx \
     SlidingStackedWidget.cxx
 
 HEADERS += \
-    MainWindow.h \
-    MangaListWidget.h \
-    MangaReadWidget.h \
-    Utils.h \
-    MangaDownloadWidget.h \
-    MessageListView.h \
-    MessageListModel.h \
-    AddMangaDialog.h \
-    BrowseDirectoryDialog.h \
+    MainWindow.hxx \
+    MangaListWidget.hxx \
+    MangaReadWidget.hxx \
+    Utils.hxx \
+    MangaDownloadWidget.hxx \
+    MessageListView.hxx \
+    MessageListModel.hxx \
+    AddMangaDialog.hxx \
+    BrowseDirectoryDialog.hxx \
     MangaListDelegate.hxx \
     ChapterListWidget.hxx \
     SlidingStackedWidget.hxx

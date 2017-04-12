@@ -1,9 +1,9 @@
 #include <QApplication>
 #include <QSettings>
 
-#include "MainWindow.h"
-#include "BrowseDirectoryDialog.h"
-#include "Utils.h"
+#include "MainWindow.hxx"
+#include "BrowseDirectoryDialog.hxx"
+#include "Utils.hxx"
 
 
 void checkScansDirectoryExists(){
