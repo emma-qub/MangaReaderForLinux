@@ -11,7 +11,8 @@ SOURCES += \
     BrowseDirectoryDialog.cxx \
     MangaListDelegate.cxx \
     ChapterListWidget.cxx \
-    SlidingStackedWidget.cxx
+    SlidingStackedWidget.cxx \
+    Downloader.cxx
 
 HEADERS += \
     MainWindow.hxx \
@@ -25,8 +26,9 @@ HEADERS += \
     BrowseDirectoryDialog.hxx \
     MangaListDelegate.hxx \
     ChapterListWidget.hxx \
-    SlidingStackedWidget.hxx
+    SlidingStackedWidget.hxx \
+    Downloader.hxx
 
 QT +=  widgets
 
-CONFIG += c++11
+CONFIG += c++14

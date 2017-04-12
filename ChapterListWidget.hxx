@@ -44,6 +44,8 @@ class QStandardItemModel;
 class QTreeView;
 class QLabel;
 
+class Downloader;
+
 class ChapterListWidget: public QWidget {
   Q_OBJECT
 
@@ -73,10 +75,12 @@ protected:
   void updateReadState(QStandardItem* p_stateItem, bool p_isChapterRead);
   QModelIndex getChapterIndex(QModelIndex const& p_index);
   void keyReleaseEvent(QKeyEvent* p_event) override;
-
-private:
   void updateChapters();
   void updateTitle();
+  void updateChaptersList(QStandardItem* p_chapterItem);
+
+protected slots:
+  void startDownload();
 
 private:
   int m_chaptersReadCount;
@@ -86,6 +90,7 @@ private:
   QStandardItemModel* m_chaptersModel;
   QTreeView* m_chaptersView;
   QLabel* m_chaptersTitleLabel;
+  Downloader* m_downloader;
 };
 
 #endif // CHAPTERLISTWIDGET_HXX

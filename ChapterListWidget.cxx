@@ -1,5 +1,6 @@
 #include "ChapterListWidget.hxx"
 #include "MangaListDelegate.hxx"
+#include "Downloader.hxx"
 
 #include <QVBoxLayout>
 #include <QApplication>
@@ -152,12 +153,20 @@ ChapterListWidget::ChapterListWidget(QWidget* p_parent):
   mainLayout->setContentsMargins(0, 0, 0, 0);
 
   connect(m_chaptersView, &QTreeView::doubleClicked, this, [this](QModelIndex const& p_index) {
+    if (m_chaptersModel->itemFromIndex(p_index)->isEnabled() == false) {
+      return;
+    }
+
     emit chapterSelected(getChapterIndex(p_index));
     updateReadState(m_chaptersModel->item(p_index.row(), eChapterReadColumn), true);
     ++m_chaptersReadCount;
     setReadPercentage(m_chaptersReadCount, m_allChaptersCount);
   });
   connect(m_chaptersView, &QTreeView::clicked, this,  [this](QModelIndex const& p_index) {
+    if (m_chaptersModel->itemFromIndex(p_index)->isEnabled() == false) {
+      return;
+    }
+
     if (p_index.column() == eChapterReadColumn) {
       bool newChapterReadState = !p_index.data(eChapterReadRole).toBool();
       auto chapterIndex = m_chaptersModel->itemFromIndex(p_index);
@@ -168,7 +177,10 @@ ChapterListWidget::ChapterListWidget(QWidget* p_parent):
     }
   });
 
-  connect(m_frontCover, &FrontCoverOverlay::downloadRequested, this, &ChapterListWidget::downloadRequested);
+  m_downloader = new Downloader(this);
+  //connect(m_frontCover, &FrontCoverOverlay::downloadRequested, this, &ChapterListWidget::downloadRequested);
+  connect(m_frontCover, &FrontCoverOverlay::downloadRequested, this, &ChapterListWidget::startDownload);
+  connect(m_downloader, &Downloader::chaptersListUpdated, this, &ChapterListWidget::updateChaptersList);
 
   setLayout(mainLayout);
 
@@ -190,8 +202,7 @@ ChapterListWidget::ChapterListWidget(QWidget* p_parent):
 }
 
 void ChapterListWidget::setReadPercentage(int p_chaptersReadCount, int p_allChaptersCount) {
-  if (p_allChaptersCount == 0)
-  {
+  if (p_allChaptersCount == 0) {
     return;
   }
   float readPercentage = (100.0 * static_cast<float>(p_chaptersReadCount) / static_cast<float>(p_allChaptersCount));
@@ -203,8 +214,7 @@ void ChapterListWidget::setAvailableDownloadCount(QModelIndex const& p_index) {
   m_frontCover->setAvailableDownloadCount(p_index.data(MangaListDelegate::eAvailableChaptersRole).toInt());
 }
 
-void ChapterListWidget::changeManga(QModelIndex const& p_index)
-{
+void ChapterListWidget::changeManga(QModelIndex const& p_index) {
   m_chaptersModel->setRowCount(0);
   m_chaptersReadCount = 0;
 
@@ -251,8 +261,7 @@ void ChapterListWidget::changeManga(QModelIndex const& p_index)
   m_chaptersView->header()->hide();
 }
 
-void ChapterListWidget::markChapterAsRead(const QString& p_chapterName)
-{
+void ChapterListWidget::markChapterAsRead(const QString& p_chapterName) {
   auto possibleChapters = m_chaptersModel->findItems(p_chapterName);
   if (possibleChapters.size() != 1) {
     return;
@@ -285,8 +294,12 @@ void ChapterListWidget::updateReadState(QStandardItem* p_stateItem, bool p_isCha
     readIconColor = QColor::fromRgb(0x5c, 0xb8, 0x5c);
     chapterReadItem->setText("\uf06e");
   } else {
+    if (chapterReadItem->isEnabled() == false) {
+      readIconColor = Qt::lightGray;
+    } else {
+      readIconColor = QColor::fromRgb(0x25, 0x28, 0x38);
+    }
     updatedFont.setBold(true);
-    readIconColor = QColor::fromRgb(0x25, 0x28, 0x38);
     chapterReadItem->setText("\uf070");
   }
   chapterTextItem->setFont(updatedFont);
@@ -309,5 +322,21 @@ void ChapterListWidget::keyReleaseEvent(QKeyEvent* p_event) {
     updateReadState(m_chaptersModel->item(currentIndex.row(), eChapterReadColumn), true);
     ++m_chaptersReadCount;
     setReadPercentage(m_chaptersReadCount, m_allChaptersCount);
+  }
+}
+
+void ChapterListWidget::startDownload() {
+  m_downloader->updateChaptersList(m_currentMangaName);
+}
+
+void ChapterListWidget::updateChaptersList(QStandardItem* p_chapterItem) {
+  auto chapterTitle = p_chapterItem->data(Downloader::eChapterTitleInURLRole).toString();
+
+  if (m_chaptersModel->findItems(chapterTitle).size() == 0) {
+    auto stateItem = new QStandardItem;
+    stateItem->setEnabled(false);
+    p_chapterItem->setEnabled(false);
+    m_chaptersModel->insertRow(0, {p_chapterItem, stateItem});
+    updateReadState(stateItem, false);
   }
 }

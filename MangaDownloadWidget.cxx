@@ -361,7 +361,6 @@ void MangaDownloadWidget::getChaptersListUpdated() {
   }
 }
 
-
 /// Download process SLOTS
 
 void MangaDownloadWidget::downloadFinished(int status, QProcess::ExitStatus exitStatus) {
