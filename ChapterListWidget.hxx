@@ -65,6 +65,7 @@ public:
 public slots:
   void changeManga(const QModelIndex& p_index);
   void markChapterAsRead(QString const& p_chapterName);
+  void updateChapterAdvancement(QStandardItem* p_item, int p_advancement);
 
 signals:
   void chapterSelected(QModelIndex const& p_chapterIndex);
@@ -77,9 +78,10 @@ protected:
   void keyReleaseEvent(QKeyEvent* p_event) override;
   void updateChapters();
   void updateTitle();
-  void updateChaptersList(QStandardItem* p_chapterItem);
 
 protected slots:
+  void fetchChaptersList();
+  void updateChaptersList(QStandardItem* p_chapterItem);
   void startDownload();
 
 private:
@@ -91,6 +93,7 @@ private:
   QTreeView* m_chaptersView;
   QLabel* m_chaptersTitleLabel;
   Downloader* m_downloader;
+  QList<QStandardItem*> m_chaptersToDownloadList;
 };
 
 #endif // CHAPTERLISTWIDGET_HXX

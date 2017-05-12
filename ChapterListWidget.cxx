@@ -11,6 +11,8 @@
 #include <QMessageBox>
 #include <QHeaderView>
 
+#include <QDebug>
+
 FrontCoverOverlay::FrontCoverOverlay(QWidget* p_parent):
   QWidget(p_parent),
   m_availableDownloadCount(0),
@@ -179,8 +181,10 @@ ChapterListWidget::ChapterListWidget(QWidget* p_parent):
 
   m_downloader = new Downloader(this);
   //connect(m_frontCover, &FrontCoverOverlay::downloadRequested, this, &ChapterListWidget::downloadRequested);
-  connect(m_frontCover, &FrontCoverOverlay::downloadRequested, this, &ChapterListWidget::startDownload);
-  connect(m_downloader, &Downloader::chaptersListUpdated, this, &ChapterListWidget::updateChaptersList);
+  connect(m_frontCover, &FrontCoverOverlay::downloadRequested, this, &ChapterListWidget::fetchChaptersList);
+  connect(m_downloader, &Downloader::chaptersListFetched, this, &ChapterListWidget::updateChaptersList);
+  connect(m_downloader, &Downloader::chaptersListfinished, this, &ChapterListWidget::startDownload);
+  connect(m_downloader, &Downloader::chapterDownloadAdvanced, this, &ChapterListWidget::updateChapterAdvancement);
 
   setLayout(mainLayout);
 
@@ -325,8 +329,9 @@ void ChapterListWidget::keyReleaseEvent(QKeyEvent* p_event) {
   }
 }
 
-void ChapterListWidget::startDownload() {
-  m_downloader->updateChaptersList(m_currentMangaName);
+void ChapterListWidget::fetchChaptersList() {
+  qDeleteAll(m_chaptersToDownloadList);
+  m_downloader->fetchChaptersList(m_currentMangaName);
 }
 
 void ChapterListWidget::updateChaptersList(QStandardItem* p_chapterItem) {
@@ -338,5 +343,16 @@ void ChapterListWidget::updateChaptersList(QStandardItem* p_chapterItem) {
     p_chapterItem->setEnabled(false);
     m_chaptersModel->insertRow(0, {p_chapterItem, stateItem});
     updateReadState(stateItem, false);
+    m_chaptersToDownloadList << p_chapterItem;
   }
+}
+
+void ChapterListWidget::startDownload()
+{
+  m_chaptersView->sortByColumn(0);
+  m_downloader->downloadAvailableChapters(m_chaptersToDownloadList);
+}
+
+void ChapterListWidget::updateChapterAdvancement(QStandardItem* p_item, int p_advancement) {
+  qDebug() << p_item->text() << p_advancement;
 }
