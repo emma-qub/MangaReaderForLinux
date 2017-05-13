@@ -55,6 +55,10 @@ void FrontCoverOverlay::setReadProgression(float p_percentageRead) {
   repaint();
 }
 
+void FrontCoverOverlay::chapterUpdateStarted() {
+
+}
+
 void FrontCoverOverlay::paintEvent(QPaintEvent *) {
   QPainter painter(this);
   QRect drawingRect(0, 0, width(), height());

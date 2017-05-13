@@ -7,12 +7,20 @@ class FrontCoverOverlay: public QWidget {
   Q_OBJECT
 
 public:
+  enum DownloadState {
+    eDownloadAvailable,
+    eUpdatingChapterList,
+    eDownloadingChapters,
+    eUpToDate
+  };
+
   explicit FrontCoverOverlay(QWidget* p_parent = nullptr);
 
   void setFrontCover(QPixmap const& p_frontCover);
   void setMangaName(QString const& p_mangaName);
   void setAvailableDownloadCount(int p_availableDownloadCount);
   void setReadProgression(float p_percentageRead);
+  void chapterUpdateStarted();
 
 protected:
   void paintEvent(QPaintEvent *) override;
