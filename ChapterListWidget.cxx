@@ -10,6 +10,8 @@
 #include <QTreeView>
 #include <QMessageBox>
 #include <QHeaderView>
+#include <QProgressBar>
+#include <QTimer>
 
 #include <QDebug>
 
@@ -150,6 +152,7 @@ ChapterListWidget::ChapterListWidget(QWidget* p_parent):
   m_chaptersView = new QTreeView;
   m_chaptersView->setModel(m_chaptersModel);
   m_chaptersView->setAlternatingRowColors(true);
+  m_chaptersView->setEditTriggers(QTreeView::NoEditTriggers);
 
   auto mainLayout = new QVBoxLayout;
   mainLayout->addWidget(m_frontCover);
@@ -192,21 +195,14 @@ ChapterListWidget::ChapterListWidget(QWidget* p_parent):
 
   setLayout(mainLayout);
 
-
-
-  /// Progressbar style
-  //  QString progressBarStyle(
-  //  "QProgressBar {"
-  //  "    border: 1px solid lightgrey;"
-  //  "    border-radius: 5px;"
-  //  "    text-align: center;"
-  //  "    font-weight: bold;"
-  //  "}"
-  //  "QProgressBar::chunk {"
-  //  "    background-color: #449D44;"
-  //  "    width: 10px;"
-  ////  "    margin: 0.5px;"
-  //  "}"
+  QString progressBarStyle(
+    "QProgressBar {"
+    "  border: none;"
+    "}"
+    "QProgressBar::chunk {"
+    "  background-color: #449D44;"
+    "}");
+  setStyleSheet(styleSheet() + progressBarStyle);
 }
 
 void ChapterListWidget::setReadPercentage(int p_chaptersReadCount, int p_allChaptersCount) {
@@ -248,10 +244,15 @@ void ChapterListWidget::changeManga(QModelIndex const& p_index) {
     bool isChapterRead = areChaptersRead.at(k);
 
     QStandardItem* currChItem = new QStandardItem(currChStr);
-    currChItem->setEditable(false);
 
     auto stateItem = new QStandardItem;
-    m_chaptersModel->appendRow({currChItem, stateItem});
+    auto progressItem = new QStandardItem;
+    m_chaptersModel->appendRow({currChItem, progressItem, stateItem});
+    auto progressBar = new QProgressBar;
+    progressBar->setFixedSize(50, 7);
+    progressBar->setTextVisible(false);
+    m_chaptersView->setIndexWidget(m_chaptersModel->indexFromItem(progressItem), progressBar);
+    progressBar->hide();
     updateReadState(stateItem, isChapterRead);
     if (isChapterRead) {
       ++m_chaptersReadCount;
@@ -263,6 +264,8 @@ void ChapterListWidget::changeManga(QModelIndex const& p_index) {
   setReadPercentage(m_chaptersReadCount, m_allChaptersCount);
 
   m_chaptersView->header()->setSectionResizeMode(eChapterNameColumn, QHeaderView::Stretch);
+  m_chaptersView->header()->setSectionResizeMode(eChapterProgressBarColumn, QHeaderView::Fixed);
+  m_chaptersView->header()->resizeSection(eChapterProgressBarColumn, 70);
   m_chaptersView->header()->setSectionResizeMode(eChapterReadColumn, QHeaderView::Fixed);
   m_chaptersView->header()->resizeSection(eChapterReadColumn, 30);
   m_chaptersView->header()->setStretchLastSection(false);
@@ -344,8 +347,14 @@ void ChapterListWidget::updateChaptersList(QStandardItem* p_chapterItem) {
   if (m_chaptersModel->findItems(chapterTitle).size() == 0) {
     auto stateItem = new QStandardItem;
     stateItem->setEnabled(false);
+    auto progressItem = new QStandardItem;
+    auto progressBar = new QProgressBar;
+    progressBar->setFixedSize(50, 7);
+    progressBar->setTextVisible(false);
     p_chapterItem->setEnabled(false);
-    m_chaptersModel->insertRow(0, {p_chapterItem, stateItem});
+    m_chaptersModel->insertRow(0, {p_chapterItem, progressItem, stateItem});
+    m_chaptersView->setIndexWidget(m_chaptersModel->indexFromItem(progressItem), progressBar);
+    progressBar->hide();
     updateReadState(stateItem, false);
     m_chaptersToDownloadList << p_chapterItem;
   }
@@ -358,5 +367,17 @@ void ChapterListWidget::startDownload()
 }
 
 void ChapterListWidget::updateChapterAdvancement(QStandardItem* p_item, int p_advancement) {
-  qDebug() << p_item->text() << p_advancement;
+  p_item->setData(QColor("#286090"), Qt::ForegroundRole);
+  auto progressIndex = m_chaptersModel->sibling(p_item->row(), eChapterProgressBarColumn, QModelIndex());
+  m_chaptersView->scrollTo(progressIndex, QAbstractItemView::PositionAtCenter);
+  auto progressBar = static_cast<QProgressBar*>(m_chaptersView->indexWidget(progressIndex));
+  progressBar->show();
+  progressBar->setValue(p_advancement);
+  if (p_advancement == 100) {
+    QTimer timer;
+    timer.singleShot(200, this, [progressBar](){progressBar->hide();});
+    p_item->setEnabled(true);
+    m_chaptersModel->itemFromIndex(m_chaptersModel->sibling(p_item->row(), eChapterReadColumn, QModelIndex()))->setEnabled(true);
+    p_item->setData(QColor(Qt::black), Qt::ForegroundRole);
+  }
 }

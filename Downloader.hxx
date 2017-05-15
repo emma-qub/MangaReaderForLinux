@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QProcess>
-#include <QQueue>
+#include <QStack>
 
 class QStandardItem;
 
@@ -31,6 +31,9 @@ public slots:
   void readyReadStandardOutput();
   void downloadAvailableChapters(QList<QStandardItem*> const& chapterIndexes);
 
+protected:
+  void updatedb();
+
 protected slots:
   void startNextDownload();
   void getDownloadInfo();
@@ -38,7 +41,7 @@ protected slots:
 private:
   QProcess* m_fetchChaptersListProcess;
   QProcess* m_downloadChapterProcess;
-  QQueue<QStandardItem*> m_chaptersQueue;
+  QStack<QStandardItem*> m_chaptersStack;
   int m_totalCount;
   int m_downloadedCount;
   QString m_currentMangaName;

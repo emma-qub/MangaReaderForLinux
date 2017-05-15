@@ -60,6 +60,7 @@ class ChapterListWidget: public QWidget {
 public:
   enum ChapterListColumns {
     eChapterNameColumn = 0,
+    eChapterProgressBarColumn,
     eChapterReadColumn
   };
   enum ChapterDataRole {

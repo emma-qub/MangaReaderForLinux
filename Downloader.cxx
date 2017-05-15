@@ -7,7 +7,7 @@
 
 Downloader::Downloader(QObject *p_parent):
   QObject(p_parent),
-  m_chaptersQueue(),
+  m_chaptersStack(),
   m_downloadedCount(0),
   m_totalCount(0),
   m_currentItem(nullptr) {
@@ -22,11 +22,11 @@ Downloader::Downloader(QObject *p_parent):
   m_downloadChapterProcess = new QProcess(this);
 //  connect(m_downloadChapterProcess, &QProcess::started, this, &Downloader::);
   connect(m_downloadChapterProcess, &QProcess::readyReadStandardOutput, this, &Downloader::getDownloadInfo);
-//  connect(m_downloadChapterProcess, &QProcess::qOverload<int, QProcess::ExitStatus>(&QProcess::finished), this, &Downloader::);
+  connect(m_downloadChapterProcess, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), this, &Downloader::startNextDownload);
 }
 
 Downloader::~Downloader() {
-  qDeleteAll(m_chaptersQueue);
+  qDeleteAll(m_chaptersStack);
 }
 
 void Downloader::fetchChaptersList(QString const& p_mangaName) {
@@ -68,10 +68,10 @@ void Downloader::readyReadStandardOutput() {
 
 void Downloader::downloadAvailableChapters(QList<QStandardItem*> const& chapterItems) {
   for (auto chapterItem: chapterItems) {
-    m_chaptersQueue.enqueue(chapterItem);
+    m_chaptersStack.push_back(chapterItem);
   }
 
-  m_totalCount = m_chaptersQueue.size();
+  m_totalCount = m_chaptersStack.size();
   m_downloadedCount = 0;
 
   emit downloading(true);
@@ -80,7 +80,7 @@ void Downloader::downloadAvailableChapters(QList<QStandardItem*> const& chapterI
 }
 
 void Downloader::startNextDownload() {
-  if (m_chaptersQueue.isEmpty()) {
+  if (m_chaptersStack.isEmpty()) {
     m_totalCount = 0;
     m_downloadedCount = 0;
 
@@ -89,7 +89,7 @@ void Downloader::startNextDownload() {
     return;
   }
 
-  m_currentItem = m_chaptersQueue.dequeue();
+  m_currentItem = m_chaptersStack.pop();
   auto chapterTitle = m_currentItem->data(eChapterTitleInURLRole).toString();
   auto chapterURL = m_currentItem->data(eChapterURLRole).toString();
 
@@ -109,6 +109,10 @@ void Downloader::getDownloadInfo() {
 
   int chapterAdvance = static_cast<int>(ip*100.f / np);
   emit chapterDownloadAdvanced(m_currentItem, chapterAdvance);
+
+  if (chapterAdvance == 100) {
+    updatedb();
+  }
 //  emit m_pagesDownloadedLabel->setText("Page "+downloadOutput);
 
 //  float nc = static_cast<float>(m_totalCount);
@@ -118,4 +122,8 @@ void Downloader::getDownloadInfo() {
 //  int chaptersAdvance = static_cast<int>(ic*100.f / nc);
 
 //  m_chaptersProgressBar->setValue(chaptersAdvance + mangaStep);
+}
+
+void Downloader::updatedb() {
+  Utils::addChapter(m_currentMangaName, m_currentItem->text());
 }
