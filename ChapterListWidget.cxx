@@ -167,7 +167,7 @@ ChapterListWidget::ChapterListWidget(QWidget* p_parent):
     }
 
     emit chapterSelected(getChapterIndex(p_index));
-    updateReadState(m_chaptersModel->item(p_index.row(), eChapterReadColumn), true);
+    updateReadState(m_chaptersModel->item(p_index.row(), eChapterReadColumn), true, true);
     ++m_chaptersReadCount;
     setReadPercentage(m_chaptersReadCount, m_allChaptersCount);
   });
@@ -180,7 +180,7 @@ ChapterListWidget::ChapterListWidget(QWidget* p_parent):
       bool newChapterReadState = !p_index.data(eChapterReadRole).toBool();
       auto chapterIndex = m_chaptersModel->itemFromIndex(p_index);
       chapterIndex->setData(newChapterReadState, eChapterReadRole);
-      updateReadState(chapterIndex, newChapterReadState);
+      updateReadState(chapterIndex, newChapterReadState, true);
       newChapterReadState ? ++m_chaptersReadCount : --m_chaptersReadCount;
       setReadPercentage(m_chaptersReadCount, m_allChaptersCount);
     }
@@ -248,12 +248,7 @@ void ChapterListWidget::changeManga(QModelIndex const& p_index) {
     auto stateItem = new QStandardItem;
     auto progressItem = new QStandardItem;
     m_chaptersModel->appendRow({currChItem, progressItem, stateItem});
-    auto progressBar = new QProgressBar;
-    progressBar->setFixedSize(50, 7);
-    progressBar->setTextVisible(false);
-    m_chaptersView->setIndexWidget(m_chaptersModel->indexFromItem(progressItem), progressBar);
-    progressBar->hide();
-    updateReadState(stateItem, isChapterRead);
+    updateReadState(stateItem, isChapterRead, false);
     if (isChapterRead) {
       ++m_chaptersReadCount;
     }
@@ -280,10 +275,10 @@ void ChapterListWidget::markChapterAsRead(const QString& p_chapterName) {
 
   auto currentChapterItem = possibleChapters.at(0);
   m_chaptersView->setCurrentIndex(currentChapterItem->index());
-  updateReadState(currentChapterItem, true);
+  updateReadState(currentChapterItem, true, true);
 }
 
-void ChapterListWidget::updateReadState(QStandardItem* p_stateItem, bool p_isChapterRead) {
+void ChapterListWidget::updateReadState(QStandardItem* p_stateItem, bool p_isChapterRead, bool p_hasToUpdatedb) {
   m_chaptersView->setFocus();
 
   /// Get items
@@ -318,7 +313,10 @@ void ChapterListWidget::updateReadState(QStandardItem* p_stateItem, bool p_isCha
   chapterReadItem->setData(readIconColor, Qt::ForegroundRole);
 
   /// Update db
-  Utils::updateChapterRead(m_currentMangaName, chapterTextItem->text(), p_isChapterRead);
+  if (p_hasToUpdatedb)
+  {
+    Utils::updateChapterRead(m_currentMangaName, chapterTextItem->text(), p_isChapterRead);
+  }
 }
 
 QModelIndex ChapterListWidget::getChapterIndex(QModelIndex const& p_index) {
@@ -330,7 +328,7 @@ void ChapterListWidget::keyReleaseEvent(QKeyEvent* p_event) {
   if (p_event->key() == Qt::Key_Return || p_event->key() == Qt::Key_Enter) {
     auto currentIndex = m_chaptersView->currentIndex();
     emit chapterSelected(getChapterIndex(currentIndex));
-    updateReadState(m_chaptersModel->item(currentIndex.row(), eChapterReadColumn), true);
+    updateReadState(m_chaptersModel->item(currentIndex.row(), eChapterReadColumn), true, true);
     ++m_chaptersReadCount;
     setReadPercentage(m_chaptersReadCount, m_allChaptersCount);
   }
@@ -355,7 +353,7 @@ void ChapterListWidget::updateChaptersList(QStandardItem* p_chapterItem) {
     m_chaptersModel->insertRow(0, {p_chapterItem, progressItem, stateItem});
     m_chaptersView->setIndexWidget(m_chaptersModel->indexFromItem(progressItem), progressBar);
     progressBar->hide();
-    updateReadState(stateItem, false);
+    updateReadState(stateItem, false, true);
     m_chaptersToDownloadList << p_chapterItem;
   }
 }

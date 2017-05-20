@@ -82,7 +82,7 @@ signals:
   void progressionChanged(int p_remainingChaptersToRead);
 
 protected:
-  void updateReadState(QStandardItem* p_stateItem, bool p_isChapterRead);
+  void updateReadState(QStandardItem* p_stateItem, bool p_isChapterRead, bool p_hasToUpdatedb);
   QModelIndex getChapterIndex(QModelIndex const& p_index);
   void keyReleaseEvent(QKeyEvent* p_event) override;
   void updateChapters();
