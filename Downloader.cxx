@@ -79,15 +79,27 @@ void Downloader::downloadAvailableChapters(QList<QStandardItem*> const& chapterI
   startNextDownload();
 }
 
+void Downloader::cleanCurrentChapterItem() {
+  emit currentChapterItemAboutToBeDeleted(m_currentItem);
+  delete m_currentItem;
+  m_currentItem = nullptr;
+}
+
 void Downloader::startNextDownload() {
   if (m_chaptersStack.isEmpty()) {
     m_totalCount = 0;
     m_downloadedCount = 0;
 
+    // Clean currentItem
+    cleanCurrentChapterItem();
+
     //emit initModelRequested(m_selectLineEdit->text());
     emit downloading(false);
     return;
   }
+
+  // Clean currentItem
+  cleanCurrentChapterItem();
 
   m_currentItem = m_chaptersStack.pop();
   auto chapterTitle = m_currentItem->data(eChapterTitleInURLRole).toString();

@@ -192,6 +192,7 @@ ChapterListWidget::ChapterListWidget(QWidget* p_parent):
   connect(m_downloader, &Downloader::chaptersListFetched, this, &ChapterListWidget::updateChaptersList);
   connect(m_downloader, &Downloader::chaptersListfinished, this, &ChapterListWidget::startDownload);
   connect(m_downloader, &Downloader::chapterDownloadAdvanced, this, &ChapterListWidget::updateChapterAdvancement);
+  connect(m_downloader, &Downloader::currentChapterItemAboutToBeDeleted, this, &ChapterListWidget::cleanCurrentChapterItem);
 
   setLayout(mainLayout);
 
@@ -358,10 +359,19 @@ void ChapterListWidget::updateChaptersList(QStandardItem* p_chapterItem) {
   }
 }
 
-void ChapterListWidget::startDownload()
-{
+void ChapterListWidget::startDownload() {
   m_chaptersView->sortByColumn(0);
   m_downloader->downloadAvailableChapters(m_chaptersToDownloadList);
+}
+
+void ChapterListWidget::cleanCurrentChapterItem(QStandardItem* p_currentChapterItem) {
+  int chapterIndex = m_chaptersToDownloadList.indexOf(p_currentChapterItem);
+  if (chapterIndex == -1) {
+    qDebug() << "Cannot find current chapter item in download list.";
+    return;
+  }
+  // Downloader will delete this item, so just remove it from list here
+  m_chaptersToDownloadList.takeAt(chapterIndex);
 }
 
 void ChapterListWidget::updateChapterAdvancement(QStandardItem* p_item, int p_advancement) {

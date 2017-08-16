@@ -25,6 +25,7 @@ signals:
   void chaptersListFetched(QStandardItem* p_newChapterItem);
   void downloading(bool p_downloading);
   void chapterDownloadAdvanced(QStandardItem* p_currentChapterItem, int p_advancement);
+  void currentChapterItemAboutToBeDeleted(QStandardItem* p_currentChapterItem);
 
 public slots:
   void fetchChaptersList(const QString& p_mangaName);
@@ -33,6 +34,7 @@ public slots:
 
 protected:
   void updatedb();
+  void cleanCurrentChapterItem();
 
 protected slots:
   void startNextDownload();

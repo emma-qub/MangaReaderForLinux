@@ -92,6 +92,7 @@ protected slots:
   void fetchChaptersList();
   void updateChaptersList(QStandardItem* p_chapterItem);
   void startDownload();
+  void cleanCurrentChapterItem(QStandardItem* p_currentChapterItem);
 
 private:
   int m_chaptersReadCount;
