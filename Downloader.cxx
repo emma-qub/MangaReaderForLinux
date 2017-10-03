@@ -16,13 +16,21 @@ Downloader::Downloader(QObject *p_parent):
   m_fetchChaptersListProcess = new QProcess(this);
   connect(m_fetchChaptersListProcess, &QProcess::started, this, &Downloader::chaptersListStarted);
   connect(m_fetchChaptersListProcess, &QProcess::readyReadStandardOutput, this, &Downloader::readyReadStandardOutput);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
   connect(m_fetchChaptersListProcess, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), this, &Downloader::chaptersListfinished);
+#else
+  connect<void(QProcess::*)(int, QProcess::ExitStatus)>(m_fetchChaptersListProcess, &QProcess::finished, this, &Downloader::chaptersListfinished);
+#endif
 
   /// Process to download available chapters
   m_downloadChapterProcess = new QProcess(this);
 //  connect(m_downloadChapterProcess, &QProcess::started, this, &Downloader::);
   connect(m_downloadChapterProcess, &QProcess::readyReadStandardOutput, this, &Downloader::getDownloadInfo);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
   connect(m_downloadChapterProcess, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), this, &Downloader::startNextDownload);
+#else
+  connect<void(QProcess::*)(int, QProcess::ExitStatus)>(m_downloadChapterProcess, &QProcess::finished, this, &Downloader::startNextDownload);
+#endif
 }
 
 Downloader::~Downloader() {
