@@ -43,7 +43,7 @@ void Downloader::fetchChaptersList(QString const& p_mangaName) {
   }
 
   m_currentMangaName = p_mangaName;
-  QStringList arguments({p_mangaName});
+  QStringList arguments({p_mangaName.toLower().replace("-", "_")});
   m_fetchChaptersListProcess->start(Utils::getScriptsAbsolutePath()+"/updateChaptersList.sh", arguments);
 }
 

@@ -196,7 +196,7 @@ void MangaListWidget::startNextCheck() {
   QStringList arguments;
   QStandardItem* currentMangaItem = m_mangaModel->itemFromIndex(m_currentIndex);
   currentMangaItem->setData(QColor("#286090"), Qt::ForegroundRole);
-  arguments << currentMangaItem->text();
+  arguments << currentMangaItem->text().toLower().replace("-", "_");
   m_checkAvailableChaptersProcess->start(Utils::getScriptsAbsolutePath()+"/updateChaptersList.sh", arguments);
 }
 
@@ -254,12 +254,14 @@ void MangaListWidget::checkAvailableChapterIsDone(int, QProcess::ExitStatus exit
 
     QStringList chaptersUrlAndTitleOnWebList = m_currentChaptersListOnWeb.split("\n", QString::SkipEmptyParts);
     for (const QString& titleAndUrl: chaptersUrlAndTitleOnWebList) {
-      QString tempUrl = titleAndUrl.split(";").first();
-      tempUrl.trimmed();
-      if (tempUrl.endsWith('/')) {
-        tempUrl.truncate(tempUrl.length()-1);
-      }
-      QString currentTitle = tempUrl.split('/').last();
+//    QString tempUrl = titleAndUrl.split(";").first();
+//    tempUrl.trimmed();
+//    if (tempUrl.endsWith('/')) {
+//      tempUrl.truncate(tempUrl.length()-1);
+//    }
+//    QString currentTitle = tempUrl.split('/').last();
+      QString currentTitle = currChapterDirStr.split('/').last()+"-"+titleAndUrl.split(";").last();
+
       if (!chaptersListOnPC.contains(currentTitle)) {
         isNotUpToDate = true;
         ++newChaptersAvailableCount;
